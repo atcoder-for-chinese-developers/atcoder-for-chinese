@@ -12,26 +12,40 @@
 			var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
 			var t=a.toString()+b.toString()+c.toString();
 			document.write("<td>ABC"+t+"</td>");
-			if(i>=20){
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_a\"> ABC"+t+"A </a>");
-				if(i==269)document.write(" <a href=\"translation/ABC269_A_translation.html\">des</a>");
-				document.write("</td>");
-			}else document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_1\"> ABC"+t+"A </a></td>");
-			if(i>=20)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_b\"> ABC"+t+"B </a></td>");
-			else document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_2\"> ABC"+t+"B </a></td>");
-			if(i>=20)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_c\"> ABC"+t+"C </a></td>");
-			else document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_3\"> ABC"+t+"C </a></td>");
-			if(i>=20)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_d\"> ABC"+t+"D </a></td>");
-			else document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_4\"> ABC"+t+"D </a></td>");
-			if(i>=126)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_e\"> ABC"+t+"E </a></td>");
-			else document.write("<td> </td>");
-			if(i>=126)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_f\"> ABC"+t+"F </a></td>");
-			else document.write("<td> </td>");
-			if(i>=212)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_g\"> ABC"+t+"G </a></td>");
-			else document.write("<td> </td>");
-			if(i>=233)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_h\"> ABC"+t+"Ex </a></td>");
-			else if(i>=212)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_h\"> ABC"+t+"H </a></td>");
-			else document.write("<td> </td>");
+			if(i>=20)
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_a\"> ABC"+t+"A </a><a href=\"translation/ABC"+t+"_A_translation.html\">des</a> <a href=\"solution/ABC"+t+"_A_solution.html\">sol</a></td>");
+			else
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_1\"> ABC"+t+"A </a><a href=\"translation/ABC"+t+"_A_translation.html\">des</a> <a href=\"solution/ABC"+t+"_A_solution.html\">sol</a></td>");
+			if(i>=20)
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_b\"> ABC"+t+"B </a><a href=\"translation/ABC"+t+"_B_translation.html\">des</a> <a href=\"solution/ABC"+t+"_B_solution.html\">sol</a></td>");
+			else
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_2\"> ABC"+t+"B </a><a href=\"translation/ABC"+t+"_B_translation.html\">des</a> <a href=\"solution/ABC"+t+"_B_solution.html\">sol</a></td>");
+			if(i>=20)
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_c\"> ABC"+t+"C </a><a href=\"translation/ABC"+t+"_C_translation.html\">des</a> <a href=\"solution/ABC"+t+"_C_solution.html\">sol</a></td>");
+			else
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_3\"> ABC"+t+"C </a><a href=\"translation/ABC"+t+"_C_translation.html\">des</a> <a href=\"solution/ABC"+t+"_C_solution.html\">sol</a></td>");
+			if(i>=20)
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_d\"> ABC"+t+"D </a><a href=\"translation/ABC"+t+"_D_translation.html\">des</a> <a href=\"solution/ABC"+t+"_D_solution.html\">sol</a></td>");
+			else
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_4\"> ABC"+t+"D </a><a href=\"translation/ABC"+t+"_D_translation.html\">des</a> <a href=\"solution/ABC"+t+"_D_solution.html\">sol</a></td>");
+			if(i>=126)
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_e\"> ABC"+t+"E </a><a href=\"translation/ABC"+t+"_E_translation.html\">des</a> <a href=\"solution/ABC"+t+"_E_solution.html\">sol</a></td>");
+			else
+				document.write("<td> </td>");
+			if(i>=126)
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_f\"> ABC"+t+"F </a><a href=\"translation/ABC"+t+"_F_translation.html\">des</a> <a href=\"solution/ABC"+t+"_F_solution.html\">sol</a></td>");
+			else
+				document.write("<td> </td>");
+			if(i>=212)
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_g\"> ABC"+t+"G </a><a href=\"translation/ABC"+t+"_G_translation.html\">des</a> <a href=\"solution/ABC"+t+"_G_solution.html\">sol</a></td>");
+			else
+				document.write("<td> </td>");
+			if(i>=233)
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_h\"> ABC"+t+"Ex </a><a href=\"translation/ABC"+t+"_Ex_translation.html\">des</a> <a href=\"solution/ABC"+t+"_Ex_solution.html\">sol</a></td>");
+			else if(i>=212)
+				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_h\"> ABC"+t+"H </a><a href=\"translation/ABC"+t+"_H_translation.html\">des</a> <a href=\"solution/ABC"+t+"_H_solution.html\">sol</a></td>");
+			else
+				document.write("<td> </td>");
 			
 			document.write("</tr>");
 		}
