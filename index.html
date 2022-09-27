@@ -1,7 +1,38 @@
 <head>
-	
+	<title>AtCoder for Chinese</title>
 </head>
 <body>
-	<h1>Atcoder for Chinese</h1>
+	<h1>AtCoder for Chinese</h1>
 	
+	<script>
+		document.write("<table border=\"2 \"cellpadding=\"10\">");
+		document.write("<tr><td>Contest</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H/Ex</td>");
+		for(let i=270;i>=1;i--){
+			document.write("<tr>");
+			var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
+			var t=a.toString()+b.toString()+c.toString();
+			document.write("<td>ABC"+t+"</td>");
+			if(i>=20)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_a\"> ABC"+t+"A </a></td>");
+			else document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_1\"> ABC"+t+"A </a></td>");
+			if(i>=20)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_b\"> ABC"+t+"B </a></td>");
+			else document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_2\"> ABC"+t+"B </a></td>");
+			if(i>=20)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_c\"> ABC"+t+"C </a></td>");
+			else document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_3\"> ABC"+t+"C </a></td>");
+			if(i>=20)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_d\"> ABC"+t+"D </a></td>");
+			else document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_4\"> ABC"+t+"D </a></td>");
+			if(i>=126)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_e\"> ABC"+t+"E </a></td>");
+			else document.write("<td> </td>");
+			if(i>=126)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_f\"> ABC"+t+"F </a></td>");
+			else document.write("<td> </td>");
+			if(i>=212)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_g\"> ABC"+t+"G </a></td>");
+			else document.write("<td> </td>");
+			if(i>=233)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_h\"> ABC"+t+"Ex </a></td>");
+			else if(i>=212)document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_h\"> ABC"+t+"H </a></td>");
+			else document.write("<td> </td>");
+			
+			document.write("</tr>");
+		}
+		document.write("</table>");
+	</script>
+
 </body>
