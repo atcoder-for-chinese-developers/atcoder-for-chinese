@@ -28,6 +28,7 @@
 		var x=new Array(505);
 		var y=new Array(505);
 		var siz=new Array(505);
+		var Lim=8;
 x[1]=[0,520,1189,1565];
 x[2]=[124,298,623,1418];
 x[3]=[0,668,824,2033];
@@ -298,192 +299,54 @@ x[267]=[0,61,524,864,1313,1939,2561,2422];
 x[268]=[0,0,676,1309,1927,1807,2311,2560];
 x[269]=[0,0,384,612,1030,1601,2440,3178];
 x[270]=[0,0,625,1300,1211,1834,2220,3159];
-		// var Charl=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
-		// var Charu=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-		// for(let i=270;i>=1;i--){
-		// 	if(i>211)siz[i]=8;
-		// 	else if(i>125)siz[i]=6;
-		// 	else siz[i]=4;
-		// 	y[i]=new Array(siz[i]);
-		// 	for(let j=0;j<siz[i];j++){
-		// 		if(x[i][j]==100000)y[i][j]="class=\"diff-black\"";
-		// 		else if(x[i][j]<400)y[i][j]="class=\"diff-grey\"";
-		// 		else if(x[i][j]<800)y[i][j]="class=\"diff-brown\"";
-		// 		else if(x[i][j]<1200)y[i][j]="class=\"diff-green\"";
-		// 		else if(x[i][j]<1600)y[i][j]="class=\"diff-cyan\"";
-		// 		else if(x[i][j]<2000)y[i][j]="class=\"diff-blue\"";
-		// 		else if(x[i][j]<2400)y[i][j]="class=\"diff-yellow\"";
-		// 		else if(x[i][j]<2800)y[i][j]="class=\"diff-orange\"";
-		// 		else y[i][j]="class=\"diff-red\"";
-		// 	}
-		// }
-		// var abc="abc",arc="arc",agc="agc";
-		// var ABC="ABC",arc="ARC",agc="AGC";
-		// var webA="<td><a href=\"https://atcoder.jp/contests/abc";
-		// var tasA="/tasks/abc",endA=" </a>",trbA="<a href=\"translation/ABC";
-		// var treA="_translation.html\">题面</a> <a href=\"solution/ABC";
-		// for(let i=270;i>=233;i--){
-		// 	var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
-		// 	var t=a.toString()+b.toString()+c.toString();
-		// 	for(let j=0;j<8;j++){
-		// 		var uC=Charu[j],lC="_"+Charl[j]+"\" ";
-		// 		document.write(webA+t+tasA+t+lC+y[i][j]+"> "+ABC+t+uC+endA+
-		// 					   traA+t+"_"+uC+treA+t+"_"+uC+"_solution.html\">题解</a></td>");
-		// 	}
-		// }
+		var Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+		var Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 		for(let i=270;i>=1;i--){
+			if(i>211)siz[i]=8;
+			else if(i>125)siz[i]=6;
+			else siz[i]=4;
+			y[i]=new Array(siz[i]);
+			for(let j=0;j<siz[i];j++){
+				if(x[i][j]==100000)y[i][j]="class=\"diff-black\"";
+				else if(x[i][j]<400)y[i][j]="class=\"diff-grey\"";
+				else if(x[i][j]<800)y[i][j]="class=\"diff-brown\"";
+				else if(x[i][j]<1200)y[i][j]="class=\"diff-green\"";
+				else if(x[i][j]<1600)y[i][j]="class=\"diff-cyan\"";
+				else if(x[i][j]<2000)y[i][j]="class=\"diff-blue\"";
+				else if(x[i][j]<2400)y[i][j]="class=\"diff-yellow\"";
+				else if(x[i][j]<2800)y[i][j]="class=\"diff-orange\"";
+				else y[i][j]="class=\"diff-red\"";
+			}
+		}
+		var abc="abc",arc="arc",agc="agc";
+		var ABC="ABC",arc="ARC",agc="AGC";
+		var webA="<td><a href=\"https://atcoder.jp/contests/abc";
+		var tasA="/tasks/abc",endA=" </a>",trbA="<a href=\"translation/ABC";
+		var treA="_translation.html\">题面</a> <a href=\"solution/ABC";
+		var solA="_solution.html\">题解</a></td>";
+		for(let i=270;i>19;i--){
 			document.write("<tr>");
-			
 			var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
 			var t=a.toString()+b.toString()+c.toString();
 			document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
-			// problem A. ---------------------------------------------------------------------------------------
-			var diff_pA=x[i][1],colA;
-			if(diff_pA==100000)colA="class=\"diff-black\"";
-			else if(diff_pA<400)colA="class=\"diff-grey\"";
-			else if(diff_pA<800)colA="class=\"diff-brown\"";
-			else if(diff_pA<1200)colA="class=\"diff-green\"";
-			else if(diff_pA<1600)colA="class=\"diff-cyan\"";
-			else if(diff_pA<2000)colA="class=\"diff-blue\"";
-			else if(diff_pA<2400)colA="class=\"diff-yellow\"";
-			else if(diff_pA<2800)colA="class=\"diff-orange\"";
-			else colA="class=\"diff-red\"";
-			if(i>=20)
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_a\" "+colA+"> ABC"+t+"A </a><a href=\"translation/ABC"+t+"_A_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_A_solution.html\">题解</a></td>");
-			else
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_1\" "+colA+"> ABC"+t+"A </a><a href=\"translation/ABC"+t+"_A_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_A_solution.html\">题解</a></td>");
-
-			//problem B.-----------------------------------------------------------------------------------------
-			var diff_pB=x[i][1],colB;
-			if(diff_pB==100000)colB="class=\"diff-black\"";
-			else if(diff_pB<400)colB="class=\"diff-grey\"";
-			else if(diff_pB<800)colB="class=\"diff-brown\"";
-			else if(diff_pB<1200)colB="class=\"diff-green\"";
-			else if(diff_pB<1600)colB="class=\"diff-cyan\"";
-			else if(diff_pB<2000)colB="class=\"diff-blue\"";
-			else if(diff_pB<2400)colB="class=\"diff-yellow\"";
-			else if(diff_pB<2800)colB="class=\"diff-orange\"";
-			else colB="class=\"diff-red\"";
-			if(i>=20)
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_b\" "+colB+"> ABC"+t+"B </a><a href=\"translation/ABC"+t+"_B_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_B_solution.html\">题解</a></td>");
-			else
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_2\" "+colB+"> ABC"+t+"B </a><a href=\"translation/ABC"+t+"_B_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_B_solution.html\">题解</a></td>");
-
-			//problem C.-----------------------------------------------------------------------------------------
-			var diff_pC=x[i][2],colC;
-			if(diff_pC==100000)colC="class=\"diff-black\"";
-			else if(diff_pC<400)colC="class=\"diff-grey\"";
-			else if(diff_pC<800)colC="class=\"diff-brown\"";
-			else if(diff_pC<1200)colC="class=\"diff-green\"";
-			else if(diff_pC<1600)colC="class=\"diff-cyan\"";
-			else if(diff_pC<2000)colC="class=\"diff-blue\"";
-			else if(diff_pC<2400)colC="class=\"diff-yellow\"";
-			else if(diff_pC<2800)colC="class=\"diff-orange\"";
-			else colC="class=\"diff-red\"";
-			if(i>=20)
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_c\" "+colC+"> ABC"+t+"C </a><a href=\"translation/ABC"+t+"_C_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_C_solution.html\">题解</a></td>");
-			else
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_3\" "+colC+"> ABC"+t+"C </a><a href=\"translation/ABC"+t+"_C_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_C_solution.html\">题解</a></td>");
-
-			//problem D.-----------------------------------------------------------------------------------------
-			var diff_pD=x[i][3],colD;
-			if(diff_pD==100000)colD="class=\"diff-black\"";
-			else if(diff_pD<400)colD="class=\"diff-grey\"";
-			else if(diff_pD<800)colD="class=\"diff-brown\"";
-			else if(diff_pD<1200)colD="class=\"diff-green\"";
-			else if(diff_pD<1600)colD="class=\"diff-cyan\"";
-			else if(diff_pD<2000)colD="class=\"diff-blue\"";
-			else if(diff_pD<2400)colD="class=\"diff-yellow\"";
-			else if(diff_pD<2800)colD="class=\"diff-orange\"";
-			else colD="class=\"diff-red\"";
-			if(i>=20)
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_d\" "+colD+"> ABC"+t+"D </a><a href=\"translation/ABC"+t+"_D_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_D_solution.html\">题解</a></td>");
-			else
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_4\" "+colD+"> ABC"+t+"D </a><a href=\"translation/ABC"+t+"_D_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_D_solution.html\">题解</a></td>");
-
-			//problem E.-----------------------------------------------------------------------------------------
-			if(i>=126){
-				var diff_pE=x[i][4],colE;
-				if(diff_pE==100000)colE="class=\"diff-black\"";
-				else if(diff_pE<400)colE="class=\"diff-grey\"";
-				else if(diff_pE<800)colE="class=\"diff-brown\"";
-				else if(diff_pE<1200)colE="class=\"diff-green\"";
-				else if(diff_pE<1600)colE="class=\"diff-cyan\"";
-				else if(diff_pE<2000)colE="class=\"diff-blue\"";
-				else if(diff_pE<2400)colE="class=\"diff-yellow\"";
-				else if(diff_pE<2800)colE="class=\"diff-orange\"";
-				else colE="class=\"diff-red\"";
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_e\" "+colE+"> ABC"+t+"E </a><a href=\"translation/ABC"+t+"_E_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_E_solution.html\">题解</a></td>");
+			for(let j=0;j<siz[i];j++){
+				var uC=Charu[j],lC="_"+Charl[j]+"\" ";if(j==7&&i>232)uC="Ex";
+				document.write(webA+t+tasA+t+lC+y[i][j]+"> "+ABC+t+uC+endA+trbA+t+"_"+uC+treA+t+"_"+uC+solA);
 			}
-			else
-				document.write("<td> </td>");
-
-			//problem F.-----------------------------------------------------------------------------------------
-			if(i>=126){
-				var diff_pF=x[i][5],colF;
-				if(diff_pF==100000)colF="class=\"diff-black\"";
-				else if(diff_pF<400)colF="class=\"diff-grey\"";
-				else if(diff_pF<800)colF="class=\"diff-brown\"";
-				else if(diff_pF<1200)colF="class=\"diff-green\"";
-				else if(diff_pF<1600)colF="class=\"diff-cyan\"";
-				else if(diff_pF<2000)colF="class=\"diff-blue\"";
-				else if(diff_pF<2400)colF="class=\"diff-yellow\"";
-				else if(diff_pF<2800)colF="class=\"diff-orange\"";
-				else colF="class=\"diff-red\"";
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_f\" "+colF+"> ABC"+t+"F </a><a href=\"translation/ABC"+t+"_F_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_F_solution.html\">题解</a></td>");
+			for(let j=siz[i];j<Lim;j++)document.write("<td> </td>");
+			document.write("<tr>");
+		}
+		for(let i=19;i>=1;i--){
+			document.write("<tr>");
+			var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
+			var t=a.toString()+b.toString()+c.toString();
+			document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
+			for(let j=0;j<siz[i];j++){
+				var uC=Charu[j],lC="_"+(j+1).toString()+"\" ";if(j==7&&i>232)uC="Ex";
+				document.write(webA+t+tasA+t+lC+y[i][j]+"> "+ABC+t+uC+endA+trbA+t+"_"+uC+treA+t+"_"+uC+solA);
 			}
-			else
-				document.write("<td> </td>");
-
-			//problem G.-----------------------------------------------------------------------------------------
-			if(i>=212){
-				var diff_pG=x[i][6],colG;
-				if(diff_pG==100000)colG="class=\"diff-black\"";
-				else if(diff_pG<400)colG="class=\"diff-grey\"";
-				else if(diff_pG<800)colG="class=\"diff-brown\"";
-				else if(diff_pG<1200)colG="class=\"diff-green\"";
-				else if(diff_pG<1600)colG="class=\"diff-cyan\"";
-				else if(diff_pG<2000)colG="class=\"diff-blue\"";
-				else if(diff_pG<2400)colG="class=\"diff-yellow\"";
-				else if(diff_pG<2800)colG="class=\"diff-orange\"";
-				else colG="class=\"diff-red\"";
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_g\" "+colG+"> ABC"+t+"G </a><a href=\"translation/ABC"+t+"_G_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_G_solution.html\">题解</a></td>");
-			}
-			else
-				document.write("<td> </td>");
-
-			//problem H.-----------------------------------------------------------------------------------------
-			if(i>=233){
-				var diff_pH=x[i][7],colH;
-				if(diff_pH==100000)colH="class=\"diff-black\"";
-				else if(diff_pH<400)colH="class=\"diff-grey\"";
-				else if(diff_pH<800)colH="class=\"diff-brown\"";
-				else if(diff_pH<1200)colH="class=\"diff-green\"";
-				else if(diff_pH<1600)colH="class=\"diff-cyan\"";
-				else if(diff_pH<2000)colH="class=\"diff-blue\"";
-				else if(diff_pH<2400)colH="class=\"diff-yellow\"";
-				else if(diff_pH<2800)colH="class=\"diff-orange\"";
-				else colH="class=\"diff-red\"";
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_h\" "+colH+"> ABC"+t+"Ex </a><a href=\"translation/ABC"+t+"_Ex_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_Ex_solution.html\">题解</a></td>");
-			}
-			else if(i>=212){
-				var diff_pH=x[i][7],colH;
-				if(diff_pH==100000)colH="class=\"diff-black\"";
-				else if(diff_pH<400)colH="class=\"diff-grey\"";
-				else if(diff_pH<800)colH="class=\"diff-brown\"";
-				else if(diff_pH<1200)colH="class=\"diff-green\"";
-				else if(diff_pH<1600)colH="class=\"diff-cyan\"";
-				else if(diff_pH<2000)colH="class=\"diff-blue\"";
-				else if(diff_pH<2400)colH="class=\"diff-yellow\"";
-				else if(diff_pH<2800)colH="class=\"diff-orange\"";
-				else colH="class=\"diff-red\"";
-				document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"/tasks/abc"+t+"_h\" "+colH+"> ABC"+t+"H </a><a href=\"translation/ABC"+t+"_H_translation.html\">题面</a> <a href=\"solution/ABC"+t+"_H_solution.html\">题解</a></td>");
-			}
-			else
-				document.write("<td> </td>");
-			
-			document.write("</tr>");
-			//end.-------------------------------------------------------------------------------------------------
+			for(let j=siz[i];j<Lim;j++)document.write("<td> </td>");
+			document.write("<tr>");
 		}
 		document.write("</table>");
 	</script>
