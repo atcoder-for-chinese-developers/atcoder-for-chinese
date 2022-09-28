@@ -3,12 +3,6 @@
 	<title>AtCoder 中文版</title>
 </head>
 <style type="text/css">
-	body{
-
-		background: url("https://cdn.luogu.com.cn/upload/image_hosting/305fjed9.png");
-		background-size: cover;
-		background-attachment: fixed;
-	}
 	.diff-red    {color: #ff0000;}
 	.diff-orange {color: #ff8000;}
 	.diff-yellow {color: #c0c000;}
@@ -18,6 +12,8 @@
 	.diff-brown  {color: #804000;}
 	.diff-grey   {color: #808080;}
 	.diff-black  {color: #000000;}
+	.link-grey   {color: #404040;}
+	.link-white  {color: #d0d0d0;}
 </style>
 <body>
 	<h1>AtCoder 中文版</h1>
@@ -322,13 +318,13 @@ x[270]=[0,0,625,1300,1211,1834,2220,3159];
 		var ABC="ABC",arc="ARC",agc="AGC";
 		var webA="<td><a href=\"https://atcoder.jp/contests/abc";
 		var tasA="/tasks/abc",endA=" </a>",trbA="<a href=\"translation/ABC";
-		var treA="_translation.html\">题面</a> <a href=\"solution/ABC";
-		var solA="_solution.html\">题解</a></td>";
+		var treA="_translation.html\"  class=link-grey>题面</a> <a href=\"solution/ABC";
+		var solA="_solution.html\"  class=link-grey>题解</a></td>";
 		for(let i=270;i>19;i--){
 			document.write("<tr>");
 			var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
 			var t=a.toString()+b.toString()+c.toString();
-			document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
+			document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"\" class=link-grey>ABC"+t+"</a></td>");
 			for(let j=0;j<siz[i];j++){
 				var uC=Charu[j],lC="_"+Charl[j]+"\" ";if(j==7&&i>232)uC="Ex";
 				document.write(webA+t+tasA+t+lC+y[i][j]+"> "+ABC+t+uC+endA+trbA+t+"_"+uC+treA+t+"_"+uC+solA);
