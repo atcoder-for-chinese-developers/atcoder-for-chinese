@@ -324,25 +324,15 @@ x[270]=[0,0,625,1300,1211,1834,2220,3159];
 		var tasA="/tasks/abc",endA=" </a>",trbA="<a href=\"translation/ABC";
 		var treA="_translation.html\">题面</a> <a href=\"solution/ABC";
 		var solA="_solution.html\">题解</a></td>";
-		for(let i=270;i>19;i--){
+		for(let i=270;i;i--){
 			document.write("<tr>");
 			var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
 			var t=a.toString()+b.toString()+c.toString();
 			document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
 			for(let j=0;j<siz[i];j++){
-				var uC=Charu[j],lC="_"+Charl[j]+"\" ";if(j==7&&i>232)uC="Ex";
-				document.write(webA+t+tasA+t+lC+y[i][j]+"> "+ABC+t+uC+endA+trbA+t+"_"+uC+treA+t+"_"+uC+solA);
-			}
-			for(let j=siz[i];j<Lim;j++)document.write("<td> </td>");
-			document.write("<tr>");
-		}
-		for(let i=19;i>=1;i--){
-			document.write("<tr>");
-			var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
-			var t=a.toString()+b.toString()+c.toString();
-			document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
-			for(let j=0;j<siz[i];j++){
-				var uC=Charu[j],lC="_"+(j+1).toString()+"\" ";if(j==7&&i>232)uC="Ex";
+				var uC=Charu[j],lC="_"+Charl[j]+"\" ";
+				if(j==7&&i>232)uC="Ex";
+				if(i<20)lC="_"+(j+1).toString()+"\" ";
 				document.write(webA+t+tasA+t+lC+y[i][j]+"> "+ABC+t+uC+endA+trbA+t+"_"+uC+treA+t+"_"+uC+solA);
 			}
 			for(let j=siz[i];j<Lim;j++)document.write("<td> </td>");
