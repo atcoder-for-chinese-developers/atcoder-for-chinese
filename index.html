@@ -12,6 +12,7 @@
 	.diff-brown  {color: #804000;}
 	.diff-grey   {color: #808080;}
 	.diff-black  {color: #000000;}
+	.link-black  {color: #404040;}
 	a:link{
 		text-decoration: none;
 	}
@@ -60,8 +61,8 @@
 		var ABC="ABC",arc="ARC",agc="AGC";
 		var webA="<td><a href=\"https://atcoder.jp/contests/abc";
 		var tasA="/tasks/abc",endA=" </a>",trbA="<a href=\"translation/ABC";
-		var treA="_translation.html\">题面</a> <a href=\"solution/ABC";
-		var solA="_solution.html\">题解</a></td>";
+		var treA="_translation.html\" class=link-black>题面</a> <a href=\"solution/ABC";
+		var solA="_solution.html\" class=link-black>题解</a></td>";
 		for(let i=270;i;i--){
 			document.write("<tr>");
 			var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
