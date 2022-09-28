@@ -12,15 +12,26 @@
 	.diff-brown  {color: #804000;}
 	.diff-grey   {color: #808080;}
 	.diff-black  {color: #000000;}
+	a:link{
+		text-decoration: none;
+	}
+	a:visited{
+		text-decoration: none;
+	}
 </style>
 <body>
-	<h1>AtCoder 中文版</h1>
+	<h1>
+	<p align="center">
+		AtCoder 中文版
+	</p>
+	</h1>
 	<!-- -->
 	<script type="text/javascript" src="1.json"></script>
 	<script>
 		console.log(x[0]);
 	</script>
 	<script>
+		document.write("<p align=\"center\">")
 		document.write("<table border=\"2 \"cellpadding=\"10\">");
 		document.write("<tr><td>比赛</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H/Ex</td>");
 		var y=new Array(505);
@@ -66,5 +77,6 @@
 			document.write("<tr>");
 		}
 		document.write("</table>");
+		document.write("</p>");
 	</script>
 </body>
