@@ -1,5 +1,3 @@
-
-
 <meta charset="UTF-8">
 <head>
 	<title>AtCoder 中文版</title>
@@ -23,6 +21,15 @@
 	a:visited{
 		text-decoration: none;
 	}
+	.difficulty-circle {
+		display: inline-block;
+		border-radius: 50%;
+		border-style: solid;
+		border-width: 1px;
+		margin-right: 5px;
+		height: 12px;
+		width: 12px;
+	}
 </style>
 <body>
 	<h1>
@@ -34,14 +41,15 @@
 	<script type="text/javascript" src="1.json"></script>
     <script type="text/javascript" src="2.json"></script>
 	<script>
-		console.log(x[0]);
-	</script>
-	<script>
 		document.write("<p align=\"center\">")
 		document.write("<table border=\"2 \"cellpadding=\"10\">");
 		document.write("<tr><td>比赛</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H/Ex</td>");
 		var y=new Array(505);
 		var siz=new Array(505);
+		
+		
+		var Val=new Array(505);
+		var RG=new Array(505);
         
         var Ava_tre=new Array(505);
         for(let i=1;i<=270;i++) Ava_tre[i] = new Array(10);
@@ -64,16 +72,56 @@
 			else if(i>125)siz[i]=6;
 			else siz[i]=4;
 			y[i]=new Array(siz[i]);
+			Val[i]=new Array(siz[i]);
+			RG[i]=new Array(siz[i]);
 			for(let j=0;j<siz[i];j++){
-				if(x[i][j]==100000)y[i][j]="class=\"diff-black\"";
-				else if(x[i][j]<400)y[i][j]="class=\"diff-grey\"";
-				else if(x[i][j]<800)y[i][j]="class=\"diff-brown\"";
-				else if(x[i][j]<1200)y[i][j]="class=\"diff-green\"";
-				else if(x[i][j]<1600)y[i][j]="class=\"diff-cyan\"";
-				else if(x[i][j]<2000)y[i][j]="class=\"diff-blue\"";
-				else if(x[i][j]<2400)y[i][j]="class=\"diff-yellow\"";
-				else if(x[i][j]<2800)y[i][j]="class=\"diff-orange\"";
-				else y[i][j]="class=\"diff-red\"";
+				if(x[i][j]==100000){
+					RG[i][j]="rgb(0,0,0)";
+					Val[i][j]="100";
+					y[i][j]="class=\"diff-black\"";
+				}
+				else if(x[i][j]<400){
+					RG[i][j]="rgb(128,128,128)";
+					Val[i][j]="0";
+					y[i][j]="class=\"diff-grey\"";
+				}
+				else if(x[i][j]<800){
+					RG[i][j]="rgb(128,64,0)";
+					Val[i][j]=((x[i][j]-400)/4).toString();
+					y[i][j]="class=\"diff-brown\"";
+				}
+				else if(x[i][j]<1200){
+					RG[i][j]="rgb(0,128,0)";
+					Val[i][j]=((x[i][j]-800)/4).toString();
+					y[i][j]="class=\"diff-green\"";
+				}
+				else if(x[i][j]<1600){
+					RG[i][j]="rgb(0,192,192)";
+					Val[i][j]=((x[i][j]-1200)/4).toString();
+					y[i][j]="class=\"diff-cyan\"";
+				}
+				else if(x[i][j]<2000){
+					RG[i][j]="rgb(0,0,255)";
+					Val[i][j]=((x[i][j]-1600)/4).toString();
+					y[i][j]="class=\"diff-blue\"";
+				}
+				else if(x[i][j]<2400){
+					RG[i][j]="rgb(192,192,0)";
+					Val[i][j]=((x[i][j]-2000)/4).toString();
+					y[i][j]="class=\"diff-yellow\"";
+				}
+				else if(x[i][j]<2800){
+					RG[i][j]="rgb(255,128,0)";
+					Val[i][j]=((x[i][j]-2400)/4).toString();
+					y[i][j]="class=\"diff-orange\"";
+				}
+				else {
+					if(x[i][j]<3200){
+						RG[i][j]="rgb(255,0,0)";
+						Val[i][j]=((x[i][j]-2800)/4).toString();
+					}
+					y[i][j]="class=\"diff-red\"";
+				}
 			}
 		}
 		var abc="abc",arc="arc",agc="agc";
@@ -95,7 +143,16 @@
 				if(i<20)lC="_"+(j+1).toString()+"\" ";
                 var tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
                 var sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
-				document.write(webA+t+tasA+t+lC+y[i][j]+"> "+ABC+t+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+
+				if(x[i][j]<3200){
+					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+				}else if(x[i][j]<3600){
+					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+				}else if(x[i][j]<4000){
+					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+				}else{
+					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+				}
 			}
 			for(let j=siz[i];j<Lim;j++)document.write("<td> </td>");
 			document.write("<tr>");
