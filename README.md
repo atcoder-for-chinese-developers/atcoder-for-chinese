@@ -1,3 +1,9 @@
+# attention
+
+建议的方式是 fork 以后进行 pull request，不建议直接上传文件。
+
+最好不要写一篇就传一篇，建议一批一批来。
+
 # atcoder-for-chinese
 
 Atcoder Descripution and Solution for Chinese
