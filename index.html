@@ -2,6 +2,30 @@
 <head>
 	<title>AtCoder 中文版</title>
 	<link rel="shortcut icon" href="favicon.ico">
+	<style type="text/css">
+	#side-menu {
+            background-color: lightgrey;
+            display: block;
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            bottom: 0px;
+            width: 250px;
+            transition: transform 200ms ease-in;
+            transform: translateX(calc(-100% + 24px));
+        }
+ 
+        #side-menu:hover {
+            transform: translateX(0px);
+        }
+ 
+        #side-menu-inner {
+            display: block;
+            height: 100%;
+            width: calc(100% - 24px);
+            background-color: white;
+        }
+	</style>
 </head>
 <style type="text/css">
 	.diff-red    {color: #ff0000;}
@@ -30,28 +54,6 @@
 		height: 12px;
 		width: 12px;
 	}
-	#side-menu {
-            background-color: lightgrey;
-            display: block;
-            position: fixed;
-            top: 0px;
-            left: 0px;
-            bottom: 0px;
-            width: 250px;
-            transition: transform 200ms ease-in;
-            transform: translateX(calc(-100% + 24px));
-        }
- 
-        #side-menu:hover {
-            transform: translateX(0px);
-        }
- 
-        #side-menu-inner {
-            display: block;
-            height: 100%;
-            width: calc(100% - 24px);
-            background-color: white;
-        }
 </style>
 <body>
 	<h1>
