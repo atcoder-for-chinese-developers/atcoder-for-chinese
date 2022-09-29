@@ -14,7 +14,7 @@
 	.diff-grey   {color: #808080;}
 	.diff-black  {color: #000000;}
 	.link-white  {color: #ffffff;}
-    .link-black  {color: #000000;}
+    	.link-black  {color: #000000;}
 	a:link{
 		text-decoration: none;
 	}
@@ -30,6 +30,26 @@
 		height: 12px;
 		width: 12px;
 	}
+	#side-menu {
+		background-color: lightgrey;
+		display: block;
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		bottom: 0px;
+		width: 200px;
+		transition: transform 200ms ease-in;
+		transform: translateX(calc(-100% + 24px));
+	}
+	#side-menu:hover {
+		transform: translateX(0px);
+	}
+	#side-menu-inner {
+		display: block;
+		height: 100%;
+		width: calc(100% - 24px);
+		background-color: white;
+	}
 </style>
 <body>
 	<h1>
@@ -44,4 +64,9 @@
 	<script>
 		print();
 	</script>
+	<div id="side-menu">
+		<div id="side-menu-inner">
+			<a href="https://github.com/atcoder-for-chinese-developers">Github</a>
+		</div>
+	</div>
 </body>
