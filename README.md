@@ -61,4 +61,4 @@ Atcoder 中文版题解与题面。
 
 - [atcoder](atcoder.jp)
 
-- [kenkoooo](https://kenkoooo.com/atcoder/#/user/houzhiyuan)
+- [kenkoooo](https://kenkoooo.com/atcoder/#/user/)
