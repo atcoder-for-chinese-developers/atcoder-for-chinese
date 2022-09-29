@@ -13,7 +13,8 @@
 	.diff-brown  {color: #804000;}
 	.diff-grey   {color: #808080;}
 	.diff-black  {color: #000000;}
-	.link-black  {color: #404040;}
+	.link-white  {color: #ffffff;}
+    .link-black  {color: #000000;}
 	a:link{
 		text-decoration: none;
 	}
@@ -38,14 +39,31 @@
 	</h1>
 	<!-- -->
 	<script type="text/javascript" src="1.json"></script>
+    <script type="text/javascript" src="2.json"></script>
 	<script>
 		document.write("<p align=\"center\">")
 		document.write("<table border=\"2 \"cellpadding=\"10\">");
 		document.write("<tr><td>比赛</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H/Ex</td>");
 		var y=new Array(505);
 		var siz=new Array(505);
+		
+		
 		var Val=new Array(505);
 		var RG=new Array(505);
+        
+        var Ava_tre=new Array(505);
+        for(let i=1;i<=270;i++) Ava_tre[i] = new Array(10);
+        for(let i=1;i<=270;i++) for(let j=1;j<=10;j++)
+            Ava_tre[i][j] = 0;
+        for(let i=1;i<=list_tre[0];i++)
+            Ava_tre[list_tre[i][0]][list_tre[i][1]] = 1;
+        var Ava_sol=new Array(505);
+        for(let i=1;i<=270;i++) Ava_sol[i] = new Array(10);
+        for(let i=1;i<=270;i++) for(let j=1;j<=10;j++)
+            Ava_sol[i][j] = 0;
+        for(let i=1;i<=list_sol[0];i++)
+            Ava_sol[list_sol[i][0]][list_sol[i][1]] = 1;
+        
 		var Lim=8;
 		var Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 		var Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
@@ -110,8 +128,10 @@
 		var ABC="ABC",arc="ARC",agc="AGC";
 		var webA="<td><a href=\"https://atcoder.jp/contests/abc";
 		var tasA="/tasks/abc",endA=" </a>",trbA="<a href=\"translation/ABC";
-		var treA="_translation.html\" class=link-black>题面</a> <a href=\"solution/ABC";
-		var solA="_solution.html\" class=link-black>题解</a></td>";
+		var treA="_translation.html\" class=link-white>题面</a> <a href=\"solution/ABC";
+		var treA_Av="_translation.html\" class=link-black>题面</a> <a href=\"solution/ABC";
+        var solA="_solution.html\" class=link-white>题解</a></td>";
+        var solA_Av="_solution.html\" class=link-black>题解</a></td>";
 		for(let i=270;i;i--){
 			document.write("<tr>");
 			var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
@@ -121,14 +141,17 @@
 				var uC=Charu[j],lC="_"+Charl[j]+"\" ";
 				if(j==7&&i>232)uC="Ex";
 				if(i<20)lC="_"+(j+1).toString()+"\" ";
+                var tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
+                var sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
+
 				if(x[i][j]<3200){
-					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span>"+t+uC+endA+trbA+t+"_"+uC+treA+t+"_"+uC+solA);
+					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
 				}else if(x[i][j]<3600){
-					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span>"+t+uC+endA+trbA+t+"_"+uC+treA+t+"_"+uC+solA);
+					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
 				}else if(x[i][j]<4000){
-					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span>"+t+uC+endA+trbA+t+"_"+uC+treA+t+"_"+uC+solA);
+					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
 				}else{
-					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span>"+t+uC+endA+trbA+t+"_"+uC+treA+t+"_"+uC+solA);
+					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
 				}
 			}
 			for(let j=siz[i];j<Lim;j++)document.write("<td> </td>");
