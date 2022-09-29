@@ -20,12 +20,24 @@ Atcoder 中文版题解与题面。
 
 ```html
 <html lang="en">
-<title>ABC269A translation</title><!-- 记得改标题 ->
+<title>ABC270Ex translation</title><!-- 记得改标题 ->
 <script src="https://cdn.jsdelivr.net/npm/texme@1.2.0"></script>
 <textarea>
 
-// 这里写markdown
+## 题意
 
+## 数据范围
+
+## 输入格式
+
+## 输出格式
+
+## 样例
+
+### 样例一
+
+## 样例解释
+    
 </textarea>
 ```
 
