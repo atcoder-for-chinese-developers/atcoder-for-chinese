@@ -59,6 +59,6 @@ Atcoder 中文版题解与题面。
 
 # 友情链接
 
-- [atcoder](atcoder.jp)
+- [atcoder](https://atcoder.jp)
 
 - [kenkoooo](https://kenkoooo.com/atcoder/#/user/)
