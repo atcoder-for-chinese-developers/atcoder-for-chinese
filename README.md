@@ -18,7 +18,7 @@ Atcoder 中文版题解与题面。
 
 ```html
 <html lang="en">
-<title>ABC269A translation</title>//这里写标题
+<title>ABC269A translation</title><!-- 记得改标题 ->
 <script src="https://cdn.jsdelivr.net/npm/texme@1.2.0"></script>
 <textarea>
 
