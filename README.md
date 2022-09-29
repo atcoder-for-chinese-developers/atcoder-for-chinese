@@ -1,6 +1,8 @@
 # attention
 
-建议的方式是 fork 以后进行 pull request，不建议直接上传文件。
+~~建议的方式是 fork 以后进行 pull request，不建议直接上传文件。~~
+
+除了直接参与网页开发的人给了 owner 以外其他人只给了 member 权限，pull request 方式请自行学习。
 
 最好不要写一篇就传一篇，建议一批一批来。
 
