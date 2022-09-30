@@ -1,0 +1,47 @@
+<html lang="en">
+<title>ABC126B translation</title>
+<script src="https://cdn.jsdelivr.net/npm/texme@1.2.0"></script>
+<textarea>
+## 题意  
+
+给定一个长为 $4$ 的数字串 $S$，合法的 $S$ 有两种可能的格式：
+- $\texttt{YYMM}$ 格式：后两位数是可以表示月份（在 $1$ 至 $12$ 之间）。
+- $\texttt{MMYY}$ 格式：前两位数是可以表示月份（在 $1$ 至 $12$ 之间）。
+
+如果 $S$ 是 $\texttt{YYMM}$ 格式，输出 `YYMM`；如果 $S$ 是 $\texttt{MMYY}$ 格式，输出 `MMYY`。
+
+如果 $S$ 可以是两种格式，输出 `AMBIGUOUS`。
+
+如果 $S$ 不合法，输出 `NA`。
+
+## 样例输入 1
+```
+1905
+```
+
+## 样例输出 1
+```
+YYMM
+```
+
+## 样例输入 2
+```
+0112
+```
+
+## 样例输出 2
+```
+AMBIGUOUS
+```
+
+## 样例输入 3
+```
+1700
+```
+
+## 样例输出 3
+```
+NA
+```
+
+</textarea>
