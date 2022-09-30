@@ -38,7 +38,7 @@ function print()
 				CCC[i][j]="难度:"+x[i][j].toString();
 				if(x[i][j]==100000){
 					RG[i][j]="rgb(0,0,0)";
-					Val[i][j]="100";
+					Val[i][j]="0";
 					y[i][j]="class=\"diff-black\"";
 				}
 				else if(x[i][j]<400){
