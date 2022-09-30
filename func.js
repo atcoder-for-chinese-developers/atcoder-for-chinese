@@ -1,8 +1,10 @@
 function print()
 {
 document.write("<p align=\"center\">")
-		document.write("<table border=\"2 \"cellpadding=\"10\">");
-		document.write("<tr><td>比赛</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H/Ex</td>");
+		document.write("<table border=\"2 \" class=\'mytable\' >");
+		var Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+		var Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+		document.write("<tr><td>&nbsp;&nbsp;比赛</td><td>&nbsp;&nbsp;A</td><td>&nbsp;&nbsp;B</td><td>&nbsp;&nbsp;C</td><td>&nbsp;&nbsp;D</td><td>&nbsp;&nbsp;E</td><td>&nbsp;&nbsp;F</td><td>&nbsp;&nbsp;G</td><td>&nbsp;&nbsp;H/Ex</td>");
 		var y=new Array(505);
 		var siz=new Array(505);
 		
@@ -24,8 +26,6 @@ document.write("<p align=\"center\">")
             Ava_sol[list_sol[i][0]][list_sol[i][1]] = 1;
         
 		var Lim=8;
-		var Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
-		var Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 		for(let i=270;i>=1;i--){
 			if(i>211)siz[i]=8;
 			else if(i>125)siz[i]=6;
@@ -95,24 +95,26 @@ document.write("<p align=\"center\">")
 			document.write("<tr>");
 			var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
 			var t=a.toString()+b.toString()+c.toString();
-			document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
+			document.write("<td>&nbsp;&nbsp;<a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
 			for(let j=0;j<siz[i];j++){
 				var uC=Charu[j],lC="_"+Charl[j]+"\" ";
 				if(j==7&&i>232)uC="Ex";
 				if(i<20)lC="_"+(j+1).toString()+"\" ";
                 var tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
                 var sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
+				document.write(webA+t+tasA+t+lC+y[i][j]+"> ");
 				if(x[i][j]<3200){
-					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+					document.write("<span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span>");
 				}else if(x[i][j]<3600){
-					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+					document.write("<span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span>");
 				}else if(x[i][j]<4000){
-					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+					document.write("<span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span>");
 				}else if(x[i][j]<10000){
-					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+					document.write("<span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span>");
 				}else {
-					document.write(webA+t+tasA+t+lC+y[i][j]+"> "+"<span class=\"difficulty-circle\" style=\"border-color: rgb(0,0,0); background: linear-gradient(to top, rgb(0,0,0) 100%, rgba(0, 0, 0, 0) 100%) border-box;\"></span>"+uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+					document.write("<span class=\"difficulty-circle\" style=\"border-color: rgb(0,0,0); background: linear-gradient(to top, rgb(0,0,0) 100%, rgba(0, 0, 0, 0) 100%) border-box;\"></span>");
 				}
+				document.write(uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
 			}
 			for(let j=siz[i];j<Lim;j++)document.write("<td> </td>");
 			document.write("<tr>");
