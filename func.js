@@ -14,28 +14,20 @@ function buildw()
 	document.write("<p align=\"center\">")
 	document.write("<table border=\"2 \"cellpadding=\"10\">");
 	document.write("<tr><td>比赛</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H/Ex</td>");
-	var y=new Array(505);
-	var siz=new Array(505);
-	
-	var CCC=new Array(505);
-	var Val=new Array(505);
-	var RG=new Array(505);
-	
-	var Ava_tre=new Array(505);
-	var Ava_sol=new Array(505);
+	var y=new Array(505),siz=new Array(505),CCC=new Array(505),Val=new Array(505),RG=new Array(505),
+	    Ava_tre=new Array(505),Ava_sol=new Array(505);
 	
 	var x,list_tre,list_sol;
 	
-	readTextFile("https://raw.githubusercontent.com/psz2007/random-pic/main/test.json",function(text){
+	readTextFile("1.json",function(text){
 		x=JSON.parse(text)["diff-abc"];
 	});
-	readTextFile("https://raw.githubusercontent.com/psz2007/random-pic/main/test2.json",function(text){
+	readTextFile("2.json",function(text){
 		list_tre=JSON.parse(text)["list_tre"];
 	});
-	readTextFile("https://raw.githubusercontent.com/psz2007/random-pic/main/test2.json",function(text){
+	readTextFile("2.json",function(text){
 		list_sol=JSON.parse(text)["list_sol"];
 	});
-	
 	
 	for(let i=1;i<=270;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=270;i++) for(let j=1;j<=10;j++)
