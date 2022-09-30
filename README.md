@@ -4,7 +4,7 @@
 
 ~~建议的方式是 fork 以后进行 pull request，不建议直接上传文件。~~
 
-除了直接参与网页开发的人给了 owner 以外其他人只给了 member 权限，pull request 方式请自行学习。
+除了直接参与网页开发的人给了 owner 以外其他人只给了 member 权限，fork + pull request 方式请自行学习。
 
 最好不要写一篇就传一篇，建议一批一批来。
 
@@ -49,7 +49,7 @@ Atcoder 中文版题解与题面。
 
 题解则以官方题解为主，进行翻译（需要标注来源和原作者），个人题解也可以上传（建议标注作者）。
 
-同时在根目录下 `2.json` 中添加一项，在末尾添加一个二元组 $[\text{contestId}, \text{problemId}]$。
+同时在根目录下 `list.json` 中添加一项，在末尾添加一个二元组 $[\text{contestId}, \text{problemId}]$。
 
 注意 $\text{problemId}$ 取值范围为 $[0,7]$，分别对应 A ~ H 题。同时建议参考之前的格式，五个一行对齐。
 
