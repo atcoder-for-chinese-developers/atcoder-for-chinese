@@ -127,9 +127,9 @@ function buildw()
 	var ABC="ABC",arc="ARC",agc="AGC";
 	var webA="<td><a href=\"https://atcoder.jp/contests/abc";
 	var tasA="/tasks/abc",endA=" </a>",trbA="<a href=\"translation/ABC";
-	var treA="_translation.html\" class=link-white>题面</a> <a href=\"solution/ABC";
+	var treA="_translation.html\" class=link-disabled>题面</a> <a href=\"solution/ABC";
 	var treA_Av="_translation.html\" class=link-black>题面</a> <a href=\"solution/ABC";
-	var solA="_solution.html\" class=link-white>题解</a></td>";
+	var solA="_solution.html\" class=link-disabled>题解</a></td>";
 	var solA_Av="_solution.html\" class=link-black>题解</a></td>";
 	for(let i=abccnt;i;i--){
 		document.write("<tr>");
