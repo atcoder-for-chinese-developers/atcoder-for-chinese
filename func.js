@@ -102,7 +102,7 @@ document.write("<p align=\"center\">")
 				if(i<20)lC="_"+(j+1).toString()+"\" ";
                 var tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
                 var sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
-				document.write(webA+t+tasA+t+lC+y[i][j]+"> ");
+				document.write("&nbsp;&nbsp;"+webA+t+tasA+t+lC+y[i][j]+"> ");
 				if(x[i][j]<3200){
 					document.write("<span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span>");
 				}else if(x[i][j]<3600){
