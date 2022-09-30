@@ -9,41 +9,62 @@ function readTextFile(file,callback){
 	}
 	xhr.send();
 }
+function getabccnt(id){
+	if(id<126)
+		return 4;
+	if(id<212)
+		return 6;
+	return 8;
+}
+function getabcname(con,id){
+	if(41<con&&con<126&&id>1){
+		var rcon=con+16,rid=id-2;
+		return "arc"+(Math.floor(con/100)).toString()+(Math.floor(con%100/10)).toString()+(con%10).toString()+"_"+String.fromCharCode(rid+97);
+	}
+	return "abc"+(Math.floor(con/100)).toString()+(Math.floor(con%100/10)).toString()+(con%10).toString()+"_"+(con>19?String.fromCharCode(id+97):(id+1).toString());
+}
 function buildw()
 {
 	document.write("<p align=\"center\">")
 	document.write("<table border=\"2 \"cellpadding=\"10\">");
 	document.write("<tr><td>比赛</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H/Ex</td>");
-	var y=new Array(505),siz=new Array(505),CCC=new Array(505),Val=new Array(505),RG=new Array(505),
-	    Ava_tre=new Array(505),Ava_sol=new Array(505);
+	var Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+	var Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
+	var Lim=8,abccnt=270,mx=505;
 	
-	var x,list_tre,list_sol;
+	var y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
+	    Ava_tre=new Array(mx),Ava_sol=new Array(mx);
 	
-	readTextFile("1.json",function(text){
-		x=JSON.parse(text)["diff-abc"];
+	var x=new Array(mx),rawd,list_tre,list_sol;
+	
+	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json",function(text){
+		rawd=JSON.parse(text);
 	});
-	readTextFile("2.json",function(text){
+	readTextFile("list.json",function(text){
 		list_tre=JSON.parse(text)["list_tre"];
 	});
-	readTextFile("2.json",function(text){
+	readTextFile("list.json",function(text){
 		list_sol=JSON.parse(text)["list_sol"];
 	});
 	
-	for(let i=1;i<=270;i++) Ava_tre[i] = new Array(10);
-	for(let i=1;i<=270;i++) for(let j=1;j<=10;j++)
+	for(let i=1;i<=abccnt;i++) Ava_tre[i] = new Array(10);
+	for(let i=1;i<=abccnt;i++) for(let j=1;j<=10;j++)
 		Ava_tre[i][j] = 0;
 	for(let i=0;i<list_tre.length;i++)
 		Ava_tre[list_tre[i][0]][list_tre[i][1]] = 1;
-	for(let i=1;i<=270;i++) Ava_sol[i] = new Array(10);
-	for(let i=1;i<=270;i++) for(let j=1;j<=10;j++)
+	for(let i=1;i<=abccnt;i++) Ava_sol[i] = new Array(10);
+	for(let i=1;i<=abccnt;i++) for(let j=1;j<=10;j++)
 		Ava_sol[i][j] = 0;
 	for(let i=0;i<list_sol.length;i++)
-		Ava_sol[list_sol[i][0]][list_sol[i][1]] = 1;
+		Ava_sol[list_sol[i][0]][list_sol[i][1]]=1;
 	
-	var Lim=8;
-	var Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
-	var Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-	for(let i=270;i>=1;i--){
+	for(let i=1;i<=abccnt;i++){
+		x[i]=new Array(getabccnt(i));
+		for(let j=0;j<getabccnt(i);j++)
+			x[i][j]=Math.max(rawd[getabcname(i,j)]["difficulty"],0);
+	}
+	
+	for(let i=abccnt;i>=1;i--){
 		if(i>211)siz[i]=8;
 		else if(i>125)siz[i]=6;
 		else siz[i]=4;
@@ -110,7 +131,7 @@ function buildw()
 	var treA_Av="_translation.html\" class=link-black>题面</a> <a href=\"solution/ABC";
 	var solA="_solution.html\" class=link-white>题解</a></td>";
 	var solA_Av="_solution.html\" class=link-black>题解</a></td>";
-	for(let i=270;i;i--){
+	for(let i=abccnt;i;i--){
 		document.write("<tr>");
 		var a=Math.floor(i/100),b=Math.floor(i/10%10),c=i%10;
 		var t=a.toString()+b.toString()+c.toString();
