@@ -14,14 +14,18 @@ document.write("<p align=\"center\">")
         for(let i=1;i<=270;i++) Ava_tre[i] = new Array(10);
         for(let i=1;i<=270;i++) for(let j=1;j<=10;j++)
             Ava_tre[i][j] = 0;
-        for(let i=1;i<=list_tre[0];i++)
-            Ava_tre[list_tre[i][0]][list_tre[i][1]] = 1;
+        for(let i=1;i<=1e9;i++) {
+			if(list_tre[i][0] == -1) break;
+			Ava_tre[list_tre[i][0]][list_tre[i][1]] = 1;
+		}
         var Ava_sol=new Array(505);
         for(let i=1;i<=270;i++) Ava_sol[i] = new Array(10);
         for(let i=1;i<=270;i++) for(let j=1;j<=10;j++)
             Ava_sol[i][j] = 0;
-        for(let i=1;i<=list_sol[0];i++)
-            Ava_sol[list_sol[i][0]][list_sol[i][1]] = 1;
+        for(let i=1;i<=1e9;i++) {
+			if(list_sol[i][0] == -1) break;
+		    Ava_sol[list_sol[i][0]][list_sol[i][1]] = 1;	
+		}
         
 		var Lim=8;
 		var Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
