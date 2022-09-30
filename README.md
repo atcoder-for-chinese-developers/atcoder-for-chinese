@@ -1,10 +1,12 @@
-# attention
+# attention / 必读
 
 ~~建议的方式是 fork 以后进行 pull request，不建议直接上传文件。~~
 
 除了直接参与网页开发的人给了 owner 以外其他人只给了 member 权限，pull request 方式请自行学习。
 
 最好不要写一篇就传一篇，建议一批一批来。
+
+如果发现自己的文件没有更新，首先等待 github pages 进行部署，然后刷新，再不行就 Ctrl+F5 清除缓存。
 
 # atcoder-for-chinese
 
