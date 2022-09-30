@@ -20,7 +20,7 @@ Atcoder 中文版题解与题面。
 
 ```html
 <html lang="en">
-<title>ABC270Ex translation</title><!-- 记得改标题 ->
+<title>ABC270Ex translation</title><!-- 记得改标题 -->
 <script src="https://cdn.jsdelivr.net/npm/texme@1.2.0"></script>
 <textarea>
 
