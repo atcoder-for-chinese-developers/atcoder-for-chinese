@@ -1,7 +1,7 @@
 function print()
 {
 document.write("<p align=\"center\">")
-		document.write("<table border=\"2 \" class=\'mytable\' >");
+		document.write("<p align=\"center\"> <table border=\"2 \" class=\'mytable\' >");
 		var Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 		var Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 		document.write("<tr><td>&nbsp;&nbsp;比赛</td><td>&nbsp;&nbsp;A</td><td>&nbsp;&nbsp;B</td><td>&nbsp;&nbsp;C</td><td>&nbsp;&nbsp;D</td><td>&nbsp;&nbsp;E</td><td>&nbsp;&nbsp;F</td><td>&nbsp;&nbsp;G</td><td>&nbsp;&nbsp;H/Ex</td>");
