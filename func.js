@@ -61,7 +61,7 @@ function buildw()
 		x[i]=new Array(getabccnt(i));
 		cnt+=x[i].length;
 		for(let j=0;j<getabccnt(i);j++)
-			x[i][j]=!("difficulty" in rawd[getabcname(i,j)])?100000:Math.max(rawd[getabcname(i,j)]["difficulty"],0);
+			x[i][j]=!(getabcname(i,j) in rawd)||!("difficulty" in rawd[getabcname(i,j)])?100000:Math.max(rawd[getabcname(i,j)]["difficulty"],0);
 	}
 	
 	for(let i=abccnt;i>=1;i--){
