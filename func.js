@@ -25,9 +25,6 @@ function getabcname(con,id){
 }
 function buildw()
 {
-	document.write("<p align=\"center\">")
-	document.write("<table border=\"2 \"cellpadding=\"10\">");
-	document.write("<tr><td>比赛</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H/Ex</td>");
 	var Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 	var Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 	var Lim=8,abccnt=270,mx=505;
@@ -40,12 +37,14 @@ function buildw()
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json",function(text){
 		rawd=JSON.parse(text);
 	});
-	readTextFile("list.json",function(text){
+	readTextFile("https://raw.githubusercontent.com/psz2007/atcoder-for-chinese/main/list.json",function(text){
 		list_tre=JSON.parse(text)["list_tre"];
 	});
-	readTextFile("list.json",function(text){
+	readTextFile("https://raw.githubusercontent.com/psz2007/atcoder-for-chinese/main/list.json",function(text){
 		list_sol=JSON.parse(text)["list_sol"];
 	});
+	
+	var cnt=0,cnte=list_tre.length,cnts=list_sol.length;
 	
 	for(let i=1;i<=abccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=abccnt;i++) for(let j=1;j<=10;j++)
@@ -60,20 +59,20 @@ function buildw()
 	
 	for(let i=1;i<=abccnt;i++){
 		x[i]=new Array(getabccnt(i));
+		cnt+=x[i].length;
 		for(let j=0;j<getabccnt(i);j++)
-			x[i][j]=Math.max(rawd[getabcname(i,j)]["difficulty"],0);
+			x[i][j]=!("difficulty" in rawd[getabcname(i,j)])?100000:Math.max(rawd[getabcname(i,j)]["difficulty"],0);
 	}
 	
 	for(let i=abccnt;i>=1;i--){
-		if(i>211)siz[i]=8;
-		else if(i>125)siz[i]=6;
-		else siz[i]=4;
+		siz[i]=getabccnt(i);
 		y[i]=new Array(siz[i]);
 		Val[i]=new Array(siz[i]);
 		RG[i]=new Array(siz[i]);
 		CCC[i]=new Array(siz[i]);
 		for(let j=0;j<siz[i];j++){
 			CCC[i][j]="难度:"+x[i][j].toString();
+
 			if(x[i][j]==100000){
 				RG[i][j]="rgb(0,0,0)";
 				Val[i][j]="0";
@@ -114,15 +113,16 @@ function buildw()
 				Val[i][j]=((x[i][j]-2400)/4).toString();
 				y[i][j]="class=\"diff-orange\"";
 			}
-			else {
-				if(x[i][j]<3200){
-					RG[i][j]="rgb(255,0,0)";
-					Val[i][j]=((x[i][j]-2800)/4).toString();
-				}
+			else if(x[i][j]<3200){
+				RG[i][j]="rgb(255,0,0)";
+				Val[i][j]=((x[i][j]-2800)/4).toString();
 				y[i][j]="class=\"diff-red\"";
 			}
 		}
 	}
+	document.write("<p align=\"center\">");
+	document.write("<table border=\"2 \"cellpadding=\"10\">");
+	document.write("<tr><td>比赛</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H/Ex</td>");
 	var abc="abc",arc="arc",agc="agc";
 	var ABC="ABC",arc="ARC",agc="AGC";
 	var webA="<td><a href=\"https://atcoder.jp/contests/abc";
@@ -160,5 +160,8 @@ function buildw()
 		document.write("<tr>");
 	}
 	document.write("</table>");
+	document.write("<p align=\"center\">ABC 题面：<progress value=\""+cnte+"\" max=\""+cnt+"\"></progress>"+(Math.floor(cnte/cnt*10000)/100).toString()+"%</p>");
+	document.write("<p align=\"center\">ABC 题解：<progress value=\""+cnts+"\" max=\""+cnt+"\"></progress>"+(Math.floor(cnts/cnt*10000)/100).toString()+"%</p>");
+	console.log(cnt,cnte,cnts);
 	document.write("</p>");
 }
