@@ -37,10 +37,10 @@ function buildw()
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json",function(text){
 		rawd=JSON.parse(text);
 	});
-	readTextFile("https://raw.githubusercontent.com/psz2007/atcoder-for-chinese/main/list.json",function(text){
+	readTextFile("list.json",function(text){
 		list_tre=JSON.parse(text)["list_tre"];
 	});
-	readTextFile("https://raw.githubusercontent.com/psz2007/atcoder-for-chinese/main/list.json",function(text){
+	readTextFile("list.json",function(text){
 		list_sol=JSON.parse(text)["list_sol"];
 	});
 	
