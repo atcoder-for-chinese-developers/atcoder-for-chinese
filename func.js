@@ -121,8 +121,8 @@ function buildw()
 		}
 	}
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
-	document.write("<table class=\"ui celled sortable definition table segment\" style=\"width:100%;max-width=90%\">");
-	document.write("<thead><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H/Ex</th></thead><tbody>");
+	document.write("<table class=\"ui celled definition table segment\" style=\"width:100%;max-width=90%\">");
+	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H/Ex</th></thead><tbody>");
 	var abc="abc",arc="arc",agc="agc";
 	var ABC="ABC",arc="ARC",agc="AGC";
 	var webA="<td><a href=\"https://atcoder.jp/contests/abc";
