@@ -27,7 +27,7 @@ function buildw()
 {
 	var Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 	var Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-	var Lim=8,abccnt=270,mx=505;
+	var Lim=8,abccnt=271,mx=505;
 	
 	var y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
 	    Ava_tre=new Array(mx),Ava_sol=new Array(mx);
@@ -61,7 +61,7 @@ function buildw()
 		x[i]=new Array(getabccnt(i));
 		cnt+=x[i].length;
 		for(let j=0;j<getabccnt(i);j++)
-			x[i][j]=!("difficulty" in rawd[getabcname(i,j)])?100000:Math.max(rawd[getabcname(i,j)]["difficulty"],0);
+			x[i][j]=!(getabcname(i,j) in rawd)||!("difficulty" in rawd[getabcname(i,j)])?100000:Math.max(rawd[getabcname(i,j)]["difficulty"],0);
 	}
 	
 	for(let i=abccnt;i>=1;i--){
