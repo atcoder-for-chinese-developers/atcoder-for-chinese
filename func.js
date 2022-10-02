@@ -120,7 +120,7 @@ function buildw()
 			}
 		}
 	}
-	document.write("<div class=\"main ui container\">");
+	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	document.write("<table class=\"ui celled sortable definition table segment\" style=\"width:100%;max-width=90%\">");
 	document.write("<thead><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H/Ex</th></thead><tbody>");
 	var abc="abc",arc="arc",agc="agc";
@@ -160,8 +160,16 @@ function buildw()
 		document.write("</tr>");
 	}
 	document.write("</tbody></table>");
-	document.write("<p align=\"center\">ABC 题面：<progress value=\""+cnte+"\" max=\""+cnt+"\"></progress>"+(Math.floor(cnte/cnt*10000)/100).toString()+"%</p>");
-	document.write("<p align=\"center\">ABC 题解：<progress value=\""+cnts+"\" max=\""+cnt+"\"></progress>"+(Math.floor(cnts/cnt*10000)/100).toString()+"%</p>");
+	
+	var eper=(cnte/cnt*100).toFixed(3).toString(),sper=(cnts/cnt*100).toFixed(3).toString();
+	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+eper+"\" id=\"progress-tre\"><div class=\"bar\"></div><div class=\"label\">"+eper+"% 题面已完成</div></div></p>");
+	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+sper+"\" id=\"progress-sol\"><div class=\"bar\"></div><div class=\"label\">"+sper+"% 题解已完成</div></div></p>");
+	$('#progress-tre').progress({
+		percent:cnte/cnt*100
+	});
+	$('#progress-sol').progress({
+		percent:cnts/cnt*100
+	});
+	
 	console.log(cnt,cnte,cnts);
-	document.write("</div>");
 }

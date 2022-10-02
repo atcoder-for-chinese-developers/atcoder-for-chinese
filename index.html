@@ -35,13 +35,8 @@
 	}
 </style>
 <body>
-	<h1>
-	<p align="center">
-		AtCoder 中文版
-	</p>
-	</h1>
 	<script type="text/javascript" src="func.js"></script>
-	<div class="ui very thin visible sidebar vertical menu">
+	<div class="ui thin sidebar vertical menu">
 		<p class="item">
 			友情链接
 		</p>
@@ -59,8 +54,19 @@
 		</p>
 	</div>
 	<div class="pusher">
-		<script>
-			buildw();
-		</script>
+		<div class="main ui container">
+			<script>
+				buildw();
+				function sidebartoggle(){
+					$('.ui.sidebar').sidebar('toggle');
+				}
+			</script>
+			<p></p>
+			<p align="center">
+				<button class="ui button" onclick="sidebartoggle()">
+					显示/隐藏友链
+				</button>
+			</p>
+		</div>
 	</div>
 </body>
