@@ -2,6 +2,9 @@
 <head>
 	<title>AtCoder 中文版</title>
 	<link rel="shortcut icon" href="favicon.ico">
+	<link href="./semantic.min.css" rel="stylesheet" type="text/css">
+	<script src="./jquery.min.js"></script>
+	<script src="./semantic.min.js"></script>
 </head>
 <style type="text/css">
 	.diff-red      {color: #ff0000;}
@@ -30,26 +33,6 @@
 		height: 12px;
 		width: 12px;
 	}
-	#side-menu {
-		background-color: lightgrey;
-		display: block;
-		position: fixed;
-		top: 0px;
-		left: 0px;
-		bottom: 0px;
-		width: 200px;
-		transition: transform 200ms ease-in;
-		transform: translateX(calc(-100% + 24px));
-	}
-	#side-menu:hover {
-		transform: translateX(0px);
-	}
-	#side-menu-inner {
-		display: block;
-		height: 100%;
-		width: calc(100% - 24px);
-		background-color: white;
-	}
 </style>
 <body>
 	<h1>
@@ -58,14 +41,26 @@
 	</p>
 	</h1>
 	<script type="text/javascript" src="func.js"></script>
-	<script>
-		buildw();
-	</script>
-	<div id="side-menu">
-		<div id="side-menu-inner">
-			<p><a href="https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese"><img src="repo_icon.png" alt="Github Repo"></a></p>
-			<p><a href="https://atcoder.jp"><img src="atcoder.png" alt="AtCoder"></a></p>
-			<p><a href="https://kenkoooo.com/atcoder/#/"><img src="kenkoooo.png" alt="Kenkoooo AtCoder Problems"></a></p>
-		</div>
+	<div class="ui very thin visible sidebar vertical menu">
+		<p class="item">
+			友情链接
+		</p>
+		<p class="item">
+			<a href="https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese"><img src="repo_icon.png" alt="Github Repo" width="64" height="64"></a>
+		</p>
+		<p class="item">
+			<a href="https://atcoder.jp"><img src="atcoder.png" alt="AtCoder" width="64" height="64"></a>
+		</p>
+		<p class="item">
+			<a href="https://kenkoooo.com/atcoder/#/"><img src="kenkoooo.png" alt="Kenkoooo AtCoder Problems" width="64" height="64"></a>
+		</p>
+		<p class="item">
+			<a href="https://semantic-ui.com/"><img src="semantic_logo.png" alt="Semantic UI" width="64" height="64"></a>
+		</p>
+	</div>
+	<div class="pusher">
+		<script>
+			buildw();
+		</script>
 	</div>
 </body>
