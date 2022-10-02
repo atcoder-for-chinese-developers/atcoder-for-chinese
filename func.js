@@ -113,16 +113,16 @@ function buildw()
 				Val[i][j]=((x[i][j]-2400)/4).toString();
 				y[i][j]="class=\"diff-orange\"";
 			}
-			else if(x[i][j]<3200){
+			else{
 				RG[i][j]="rgb(255,0,0)";
 				Val[i][j]=((x[i][j]-2800)/4).toString();
 				y[i][j]="class=\"diff-red\"";
 			}
 		}
 	}
-	document.write("<p align=\"center\">");
-	document.write("<table border=\"2 \"cellpadding=\"10\">");
-	document.write("<tr><td>比赛</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H/Ex</td>");
+	document.write("<div class=\"main ui container\">");
+	document.write("<table class=\"ui celled sortable definition table segment\" style=\"width:100%;max-width=90%\">");
+	document.write("<thead><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H/Ex</th></thead><tbody>");
 	var abc="abc",arc="arc",agc="agc";
 	var ABC="ABC",arc="ARC",agc="AGC";
 	var webA="<td><a href=\"https://atcoder.jp/contests/abc";
@@ -157,11 +157,11 @@ function buildw()
 			document.write(uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
 		}
 		for(let j=siz[i];j<Lim;j++)document.write("<td> </td>");
-		document.write("<tr>");
+		document.write("</tr>");
 	}
-	document.write("</table>");
+	document.write("</tbody></table>");
 	document.write("<p align=\"center\">ABC 题面：<progress value=\""+cnte+"\" max=\""+cnt+"\"></progress>"+(Math.floor(cnte/cnt*10000)/100).toString()+"%</p>");
 	document.write("<p align=\"center\">ABC 题解：<progress value=\""+cnts+"\" max=\""+cnt+"\"></progress>"+(Math.floor(cnts/cnt*10000)/100).toString()+"%</p>");
 	console.log(cnt,cnte,cnts);
-	document.write("</p>");
+	document.write("</div>");
 }
