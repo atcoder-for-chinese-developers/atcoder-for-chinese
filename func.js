@@ -174,6 +174,7 @@ function buildw()
 	$('#progress-sol').progress({
 		percent:cnts/cnt*100
 	});
+	document.write("<hr>");
 	
 	console.log(cnt,cnte,cnts);
 }
