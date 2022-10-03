@@ -175,7 +175,7 @@ function buildw()
 		percent:cnts/cnt*100
 	});
 	document.write("<hr>");
-	document.write("<a href="https://semantic-ui.com/"><img src="repo_icon.png" alt="ATcoder" width="64" height="64" margin-left="30px"></a>")
+	document.write("<a href=\"https://semantic-ui.com/"><img src="repo_icon.png" alt="ATcoder" width="64" height="64" margin-left="30px"></a>\")
 	
 	console.log(cnt,cnte,cnts);
 }
