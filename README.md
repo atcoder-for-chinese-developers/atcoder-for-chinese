@@ -77,6 +77,8 @@ Atcoder 中文版题解与题面。
 
 - $2022.9.30$ 去除了对题目难度的静态存储，改为爬取 kenkoooo 的 api。
 
+- $2022.10.2$ 更新了 UI。
+
 # 友情链接
 
 - [atcoder](https://atcoder.jp)
