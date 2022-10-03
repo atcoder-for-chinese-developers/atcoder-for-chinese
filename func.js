@@ -23,6 +23,9 @@ function getabcname(con,id){
 	}
 	return "abc"+(Math.floor(con/100)).toString()+(Math.floor(con%100/10)).toString()+(con%10).toString()+"_"+(con>19?String.fromCharCode(id+97):(id+1).toString());
 }
+function sidebartoggle(){
+	$('.ui.sidebar').sidebar('toggle');
+}
 function buildw()
 {
 	var Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
@@ -121,6 +124,7 @@ function buildw()
 		}
 	}
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
+	document.write("<p align=\"center\"><button class=\"ui button\" onclick=\"sidebartoggle()\">显示/隐藏友链</button></p>");
 	document.write("<table class=\"ui celled definition table segment\" style=\"width:100%;max-width=90%\">");
 	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H/Ex</th></thead><tbody>");
 	var abc="abc",arc="arc",agc="agc";
