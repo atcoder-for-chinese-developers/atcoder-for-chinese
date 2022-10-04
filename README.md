@@ -79,6 +79,8 @@ Atcoder 中文版题解与题面。
 
 - $2022.10.2$ 更新了 UI。
 
+- $2022.10.4$ 支持了在 AT 中直接看翻译的 [插件](https://github.com/atcoder-for-chinese-developers/notwt-atcoder-for-chinese-helper)
+
 # 友情链接
 
 - [atcoder](https://atcoder.jp)
