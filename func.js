@@ -174,6 +174,5 @@ function buildw()
 	$('#progress-sol').progress({
 		percent:cnts/cnt*100
 	});
-	
 	console.log(cnt,cnte,cnts);
 }
