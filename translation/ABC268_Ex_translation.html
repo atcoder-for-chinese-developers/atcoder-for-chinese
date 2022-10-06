@@ -1,0 +1,87 @@
+<html lang="en">
+<title>ABC268Ex translation</title><!-- 记得改标题 -->
+<script src="https://cdn.jsdelivr.net/npm/texme@1.2.0"></script>
+<textarea>
+
+## 题意
+
+已知一个字符串 $S$，高桥会进行若干次操作（可以不操作）
+
+> 选择一个 $1\le i\le |S|$，然后把 $S_i$ 变成 `*`。
+
+高桥想让字符串 $S$ 满足对于 $N$ 个字符串 $T_1,T_2,...T_N$ 都不是 $S$ 的子串。
+
+求高桥的最小操作次数。
+
+## 数据范围
+
+- $1\le |S|,\sum |T_i|\le 5\times 10^5$
+- $T_i\ne T_j(i\ne j)$
+- $S,T_i$ 都由英文小写字母构成。
+
+## 输入格式
+
+第一行 $S$。
+
+第二行 $N$。
+
+接下来 $N$ 行，第 $i$ 行是 $T_i$。
+
+## 输出格式
+
+一行一个数，表示答案。
+
+## 样例
+
+### 样例输入 1
+
+```
+abcdefghijklmn
+3
+abcd
+ijk
+ghi
+```
+
+### 样例输出 1
+
+```
+2
+```
+
+### 样例解释 1
+
+操作 $1,9$ 这两个位置，使得字符串变成 `*bcdefgh*jklmn`。
+
+`abcd`,`ijk`,`ghi` 都不是这个串的子串。
+
+### 样例输入 2
+
+```
+atcoderbeginnercontest
+1
+abc
+```
+
+### 样例输出 2
+
+```
+0
+```
+
+### 样例输入 3
+
+```
+aaaaaaaaa
+2
+aa
+xyz
+```
+
+### 样例输出 3
+
+```
+4
+```
+    
+</textarea>
