@@ -204,7 +204,7 @@ function jumplink2(){
 }
 
 function gettitle(){
-	var t=window.location.href,s=t.substr(t.lastIndexOf("/")+1);
+	var t=escape(window.location.href),s=t.substr(t.lastIndexOf("/")+1);
 	var p=s.lastIndexOf(".html");
 	s=s.substr(0,p);
 	s=s.replace("_"," ");
