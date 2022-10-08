@@ -199,13 +199,13 @@ function jumplink1(){
 }
 
 function jumplink2(){
-	var t=window.location.href;
+	var t=escape(window.location.href);
 	window.location.href=getorglink(t);
 }
 
 function gettitle(){
 	var t=escape(window.location.href),s=t.substr(t.lastIndexOf("/")+1);
-	var p=s.IndexOf(".html");
+	var p=s.lastIndexOf(".html");
 	s=s.substr(0,p);
 	s=s.replace("_"," ");
 	s=s.replace("_"," ");
@@ -228,7 +228,7 @@ function gettitle(){
 				原题链接\
 			</div>\
 			<div class=\"hidden content\">\
-				"+getproblink(window.location.href)+"\
+				"+getproblink(escape(window.location.href))+"\
 			</div>\
 		</button>\
 	</div>\

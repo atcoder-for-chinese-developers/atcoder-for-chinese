@@ -199,7 +199,7 @@ function jumplink1(){
 }
 
 function jumplink2(){
-	var t=window.location.href;
+	var t=escape(window.location.href);
 	window.location.href=getorglink(t);
 }
 
@@ -228,7 +228,7 @@ function gettitle(){
 				原题链接\
 			</div>\
 			<div class=\"hidden content\">\
-				"+getproblink(window.location.href)+"\
+				"+getproblink(escape(window.location.href))+"\
 			</div>\
 		</button>\
 	</div>\
