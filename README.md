@@ -4,7 +4,7 @@
 
 ~~建议的方式是 fork 以后进行 pull request，不建议直接上传文件。~~
 
-除了直接参与网页开发的人给了 owner 以外其他人只给了 member 权限，fork + pull request 方式请自行学习。
+除了直接参与网页开发的人给了 owner 以外其他人只给了 member 权限，fork + pull request 方式请自行学习。（即使是 owner 也建议 fork + PR）
 
 最好不要写一篇就传一篇，建议一批一批来。
 
@@ -20,15 +20,14 @@ Atcoder 中文版题解与题面。
 
 ## 上传题解、题面方法：
 
-上传 html 文件，格式：
+上传一个后缀名为 `.md` 的 markdown 文件和一个后缀名为 `.html` 的 html 文件到 `translation` （题面翻译）或者 `solution` （题目题解）文件夹下。
 
-```html
-<html lang="en">
-<title>ABC270Ex translation</title><!-- 记得改标题 -->
-<script src="https://cdn.jsdelivr.net/npm/texme@1.2.0"></script>
-<textarea>
+两个文件文件名格式均为 `(比赛编号)_(题目编号)_translation/solution`，比如 `ABC001_A_translation`，`ABC270_Ex_solution`。
 
-## 题意
+md 文件内写入题解/题面内容，推荐格式为：
+
+```markdown
+## 题意 
 
 ## 数据范围
 
@@ -43,17 +42,19 @@ Atcoder 中文版题解与题面。
 ### 样例输出1
 
 ### 样例解释1
-    
-</textarea>
+
+### 样例输入2
+
+### 样例输出2
+
+### 样例解释2
 ```
 
-注意上传的题面应当尊重原题面，尽量不要有过度化简的题面（即不要把某些转化给翻译出来）。
-
-题解则以官方题解为主，进行翻译（需要标注来源和原作者），个人题解也可以上传（建议标注作者）。
+html 文件内容和根目录下 `example.html` 内容相同。
 
 同时在根目录下 `list.json` 中添加一项，在末尾添加一个二元组 $[\text{contestId}, \text{problemId}]$。
 
-注意 $\text{problemId}$ 取值范围为 $[0,7]$，分别对应 A ~ H 题。同时建议参考之前的格式，五个一行对齐。
+注意 $\text{problemId}$ 取值范围为 $[0,7]$，分别对应 A ~ Ex/H 题。同时建议参考之前的格式，五个一行对齐。
 
 ## 还没有实现的功能：
 
@@ -81,8 +82,16 @@ Atcoder 中文版题解与题面。
 
 - $2022.10.4$ 支持了在 AT 中直接看翻译的 [插件](https://github.com/atcoder-for-chinese-developers/notwt-atcoder-for-chinese-helper)
 
+- $2022.10.8$ 对题面和题解格式进行大改，更新了查看题解时的界面。
+
 # 友情链接
 
-- [atcoder](https://atcoder.jp)
+- [AtCoder](https://atcoder.jp)
 
-- [kenkoooo](https://kenkoooo.com/atcoder/#/user/)
+- [Kenkoooo AtCoder Problems](https://kenkoooo.com/atcoder/#/user/)
+
+- [Semantic UI](https://semantic-ui.com)
+
+- [Greasy Fork script](https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B)
+
+
