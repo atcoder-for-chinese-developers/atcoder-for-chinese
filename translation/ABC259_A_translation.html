@@ -1,0 +1,31 @@
+<html lang="en">
+<head>
+	<script src="mdstyle.js"></script>
+	<meta charset="utf-8">
+	<script>
+		document.write("<title>"+gettitle()+"</title>");
+	</script>
+	<link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css" rel="stylesheet" type="text/css">
+	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
+</head>
+<body style="background: #f5f5f5;">
+	<script>
+		function readTextFile(file,callback){
+			var xhr=new XMLHttpRequest();
+			xhr.overrideMimeType("application/md");
+			xhr.open("GET",file,false);
+			xhr.onreadystatechange=function(){
+				if(xhr.readyState===4&&xhr.status=="200"){
+					callback(xhr.responseText);
+				}
+			}
+			xhr.send();
+		}
+		var content="";
+		readTextFile(window.location.href.replace("html","md"),function(text){
+			content=text;
+		});
+		document.write("<textarea>"+content+"</textarea>");
+	</script>
+</body>
