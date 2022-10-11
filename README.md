@@ -60,7 +60,7 @@ html 文件内容和根目录下 `example.html` 内容相同。
 
 - ~~高亮有题解、题面的题目。~~
 
-- 支持 ARC、AGC。
+- ~~支持 ARC、AGC。~~
 
 - 爬取题目名称。
 
@@ -83,6 +83,8 @@ html 文件内容和根目录下 `example.html` 内容相同。
 - $2022.10.4$ 支持了在 AT 中直接看翻译的 [插件](https://github.com/atcoder-for-chinese-developers/notwt-atcoder-for-chinese-helper)
 
 - $2022.10.8$ 对题面和题解格式进行大改，更新了查看题解时的界面。
+
+- $2022.10.10$ 支持 ARC，AGC 题面题解提交，微调了样式。
 
 # 友情链接
 
