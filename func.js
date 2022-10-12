@@ -1,4 +1,4 @@
-function readTextFile(file,ext,callback,stat){
+function readTextFile(file,ext,callback){
 	let xhr=new XMLHttpRequest();
 	xhr.overrideMimeType("application/"+ext);
 	xhr.open("GET",file,false);
@@ -6,7 +6,6 @@ function readTextFile(file,ext,callback,stat){
 		if(xhr.readyState===4){
 			if(xhr.status=="200")
 				callback(xhr.responseText);
-			stat={retval:xhr.status};
 		}
 	}
 	xhr.send();
@@ -330,8 +329,6 @@ function writearc(rawd,list_tre,list_sol){
 			}else {
 				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
 			}
-			if(Ava_tre[i][j])
-				console.log(uC,endA,trbA,t,"_",uC,tre_cur,t,"_",uC,sol_cur);
 			document.write(uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
 		}
 		for(let j=siz[i]+w;j<Lim;j++)document.write("<td></td>");
