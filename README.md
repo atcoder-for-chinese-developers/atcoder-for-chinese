@@ -20,9 +20,9 @@ Atcoder 中文版题解与题面。
 
 ## 上传题解、题面方法：
 
-上传一个后缀名为 `.md` 的 markdown 文件和一个后缀名为 `.html` 的 html 文件到 `translation` （题面翻译）或者 `solution` （题目题解）文件夹下。
+上传一个后缀名为 `.md` 的 markdown 文件到 `translation` （题面翻译）或者 `solution` （题目题解）文件夹下。
 
-两个文件文件名格式均为 `(比赛编号)_(题目编号)_translation/solution`，比如 `ABC001_A_translation`，`ABC270_Ex_solution`。
+该文件文件名格式为 `(比赛编号)_(题目编号)_translation/solution`，比如 `ABC001_A_translation`，`ABC270_Ex_solution`。
 
 md 文件内写入题解/题面内容，推荐格式为：
 
@@ -50,11 +50,11 @@ md 文件内写入题解/题面内容，推荐格式为：
 ### 样例解释2
 ```
 
-html 文件内容和根目录下 `example.html` 内容相同。
-
 同时在根目录下 `list.json` 中添加一项，在末尾添加一个二元组 $[\text{contestId}, \text{problemId}]$。
 
 注意 $\text{problemId}$ 取值范围为 $[0,7]$，分别对应 A ~ Ex/H 题。同时建议参考之前的格式，五个一行对齐。
+
+特别的，F2 编号为 6。
 
 ## 还没有实现的功能：
 
@@ -85,6 +85,8 @@ html 文件内容和根目录下 `example.html` 内容相同。
 - $2022.10.8$ 对题面和题解格式进行大改，更新了查看题解时的界面。
 
 - $2022.10.10$ 支持 ARC，AGC 题面题解提交，微调了样式。
+
+- $2022.10.12$ 再次改变上传格式，不需要再上传 `.html` 文件。
 
 # 友情链接
 
