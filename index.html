@@ -56,7 +56,7 @@
 		var lnk=escape(window.location.href);
 		console.log(lnk);
 		if(lnk.indexOf("index.html")==-1){
-			window.location.href="/index.html";
+			window.location.href="atcoder-for-chinese/index.html";
 		}else if(lnk.indexOf("%3Fpage%3D")==-1){
 			console.log("main page");
 			document.write("<div class=\"ui main container\">");
@@ -69,13 +69,13 @@
 			console.log(name);
 			if(name.indexOf("sol")==-1){
 				console.log("prob page");
-				readTextFile("/translation/"+name+".html","html",function(text){
+				readTextFile("translation/"+name+".html","html",function(text){
 					content=text;
 				});
 				if(content!=""){
-					window.location.href="translation/"+name+".html";
+					window.location.href="atcoder-for-chinese/translation/"+name+".html";
 				}else{
-					readTextFile("/translation/"+name+".md","md",function(text){
+					readTextFile("translation/"+name+".md","md",function(text){
 						content=text;
 					});
 					let ttt="</scri";
@@ -84,13 +84,13 @@
 				}
 			}else{
 				console.log("solu page");
-				readTextFile("/solution/"+name+".html","html",function(text){
+				readTextFile("solution/"+name+".html","html",function(text){
 					content=text;
 				});
 				if(content!=""){
-					window.location.href="solution/"+name+".html";
+					window.location.href="atcoder-for-chinese/solution/"+name+".html";
 				}else{
-					readTextFile("/solution/"+name+".md","md",function(text){
+					readTextFile("solution/"+name+".md","md",function(text){
 						content=text;
 					});
 					let ttt="</scri";
