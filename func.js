@@ -3,10 +3,8 @@ function readTextFile(file,ext,callback){
 	xhr.overrideMimeType("application/"+ext);
 	xhr.open("GET",file,false);
 	xhr.onreadystatechange=function(){
-		if(xhr.readyState===4){
-			if(xhr.status=="200")
-				callback(xhr.responseText);
-		}
+		if(xhr.readyState===4)
+			callback(xhr.responseText,xhr.status);
 	}
 	xhr.send();
 }
