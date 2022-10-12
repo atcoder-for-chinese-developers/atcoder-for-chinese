@@ -73,13 +73,12 @@
 					content=text;
 				});
 				if(content!=""){
-					window.location.href="atcoder-for-chinese/translation/"+name+".html";
+					window.location.href="translation/"+name+".html";
 				}else{
 					readTextFile("translation/"+name+".md","md",function(text){
 						content=text;
 					});
-					let ttt="</scri";
-					document.write("<script src=\"mdstyle.js\">"+ttt+"pt>");
+					document.write("<script src=\"mdstyle.js\">"+"</scri"+"pt>");
 					document.write("<textarea>"+content+"</textarea>");
 				}
 			}else{
@@ -88,13 +87,12 @@
 					content=text;
 				});
 				if(content!=""){
-					window.location.href="atcoder-for-chinese/solution/"+name+".html";
+					window.location.href="solution/"+name+".html";
 				}else{
 					readTextFile("solution/"+name+".md","md",function(text){
 						content=text;
 					});
-					let ttt="</scri";
-					document.write("<script src=\"mdstyle.js\">"+ttt+"pt>");
+					document.write("<script src=\"mdstyle.js\">"+"</scri"+"pt>");
 					document.write("<textarea>"+content+"</textarea>");
 				}
 			}
