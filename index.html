@@ -54,7 +54,6 @@
 <body>
 	<script>
 		var lnk=escape(window.location.href);
-		console.log(lnk);
 		if(lnk.indexOf("index.html")==-1){
 			window.location.href="/atcoder-for-chinese/index.html";
 		}else if(lnk.indexOf("%3Fpage%3D")==-1){
@@ -63,40 +62,28 @@
 			buildw();
 			document.write("</div>");
 		}else{
-			console.log(lnk.indexOf("%3Fpage%3D"));
 			let pos=lnk.indexOf("%3Fpage%3D")+10,
 				name=lnk.substr(pos),content="",stat={retval:""};
-			console.log(name);
 			if(name.indexOf("sol")==-1){
 				console.log("prob page");
-				readTextFile("translation/"+name+".html","html",function(text){
+				readTextFile("translation/"+name+".md","md",function(text){
 					content=text;
 				},stat);
-				console.log(stat.retval);
 				if(stat.retval=="200"){
-					window.location.href="translation/"+name+".html";
-				}else{
-					readTextFile("translation/"+name+".md","md",function(text){
-						content=text;
-					});
 					document.write("<script src=\"mdstyle.js\">"+"</scri"+"pt>");
 					document.write("<textarea>"+content+"</textarea>");
-				}
+				}else
+					window.location.href="translation/"+name+".html";
 			}else{
 				console.log("solu page");
-				readTextFile("solution/"+name+".html","html",function(text){
+				readTextFile("solution/"+name+".md","md",function(text){
 					content=text;
 				},stat);
-				console.log(stat.retval);
 				if(stat.retval=="200"){
-					window.location.href="solution/"+name+".html";
-				}else{
-					readTextFile("solution/"+name+".md","md",function(text){
-						content=text;
-					});
 					document.write("<script src=\"mdstyle.js\">"+"</scri"+"pt>");
 					document.write("<textarea>"+content+"</textarea>");
-				}
+				}else
+					window.location.href="solution/"+name+".html";
 			}
 		}
 	</script>
