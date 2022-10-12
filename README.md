@@ -20,6 +20,8 @@ Atcoder 中文版题解与题面。
 
 ## 上传题解、题面方法：
 
+（注意，原来的格式仍然被支持，只是不再建议如此做。推荐使用最新的格式。之后将会把旧格式批量替换为新格式。）
+
 上传一个后缀名为 `.md` 的 markdown 文件到 `translation` （题面翻译）或者 `solution` （题目题解）文件夹下。
 
 该文件文件名格式为 `(比赛编号)_(题目编号)_translation/solution`，比如 `ABC001_A_translation`，`ABC270_Ex_solution`。
