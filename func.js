@@ -28,11 +28,10 @@ function getagccnt(id){
 function ext3(con){
 	return (Math.floor(con/100)).toString()+(Math.floor(con%100/10)).toString()+(con%10).toString();
 }
+var abctoarc=new Array(233);
 function getabcname(con,id){
-	if(41<con&&con<126&&id>1){
-		let rcon=con+16,rid=id-2;
-		return "arc"+ext3(con)+"_"+String.fromCharCode(rid+97);
-	}
+	if(abctoarc[con]!=undefined&&id>1)
+		return "arc"+ext3(abctoarc[con])+"_"+String.fromCharCode(id+95);
 	return "abc"+ext3(con)+"_"+(con>19?String.fromCharCode(id+97):(id+1).toString());
 }
 function getarcname(con,id){
@@ -93,14 +92,19 @@ function writeabc(rawd,list_tre,list_sol){
 		Ava_sol[i][j] = 0;
 	for(let i=0;i<list_sol.length;i++)
 		Ava_sol[list_sol[i][0]][list_sol[i][1]]=1;
-
-	for(let i=1;i<=abccnt;i++){
+	
+	for(let i=1,ri=58;i<=abccnt;i++){
 		x[i]=new Array(getabccnt(i));
 		cnt+=x[i].length;
+		let flg=0;
 		for(let j=0;j<getabccnt(i);j++)
-			x[i][j]=!(getabcname(i,j) in rawd)||!("difficulty" in rawd[getabcname(i,j)])?100000:Math.max(rawd[getabcname(i,j)]["difficulty"],0);
+			if(i<42||i>125||j<2||getabcname(i,j) in rawd)
+				x[i][j]=!(getabcname(i,j) in rawd)||!("difficulty" in rawd[getabcname(i,j)])?100000:Math.max(rawd[getabcname(i,j)]["difficulty"],0);
+			else
+				x[i][j]=!("difficulty" in rawd[getarcname(ri,j-2)])?100000:Math.max(rawd[getarcname(ri,j-2)]["difficulty"],0),flg=1,abctoarc[i]=ri;
+		ri+=flg;
 	}
-
+	console.log(abctoarc);
 	for(let i=abccnt;i>=1;i--){
 		siz[i]=getabccnt(i);
 		y[i]=new Array(siz[i]);
@@ -178,7 +182,7 @@ function writeabc(rawd,list_tre,list_sol){
 			if(i<20)lC="_"+(j+1).toString()+"\" ";
 			let tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
 			let sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
-			document.write(webA+t+tasA+t+lC+y[i][j]+">");
+			document.write(webA+t+"/tasks/"+getabcname(i,j)+"\" "+y[i][j]+">");
 			if(x[i][j]<3200){
 				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
 			}else if(x[i][j]<3600){
