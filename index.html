@@ -1,7 +1,24 @@
 <meta charset="UTF-8">
 <head>
-	<title>AtCoder 中文版</title>
+	<script>
+		function gettitle(){
+			var t=escape(window.location.href),s="";
+			if(t.lastIndexOf("%3Fpage%3D")!=-1)
+				s=t.substr(t.lastIndexOf("%3Fpage%3D")+10);
+			else
+				s=t.substr(t.lastIndexOf("/")+1),s=s.substr(0,s.lastIndexOf(".html"));
+			s=s.replace("_"," ");
+			s=s.replace("_"," ");
+			return s;
+		}
+		var t=escape(window.location.href);
+		if(t.indexOf("%3Fpage%3D")==-1)
+			document.write("<title>AtCoder 中文版</title>");
+		else
+			document.write("<title>"+gettitle()+"</title>");
+	</script>
 	<link rel="shortcut icon" href="images/favicon.ico">
+	<script type="text/javascript" src="func.js"></script>
 	<link href="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.css" rel="stylesheet" type="text/css">
 	<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.5.0/dist/semantic.min.js"></script>
@@ -35,10 +52,39 @@
 	}
 </style>
 <body>
-	<script type="text/javascript" src="func.js"></script>
-	<div class="main ui container">
-		<script>
+	<script>
+		var lnk=escape(window.location.href);
+		if(lnk.indexOf("index.html")==-1){
+			window.location.href="/atcoder-for-chinese/index.html";
+		}else if(lnk.indexOf("%3Fpage%3D")==-1){
+			console.log("main page");
+			document.write("<div class=\"ui main container\">");
 			buildw();
-		</script>
-	</div>
+			document.write("</div>");
+		}else{
+			let pos=lnk.indexOf("%3Fpage%3D")+10,
+				name=lnk.substr(pos),content="",stat={retval:""};
+			if(name.indexOf("sol")==-1){
+				console.log("prob page");
+				readTextFile("translation/"+name+".md","md",function(text){
+					content=text;
+				},stat);
+				if(stat.retval=="200"){
+					document.write("<script src=\"mdstyle.js\">"+"</scri"+"pt>");
+					document.write("<textarea>"+content+"</textarea>");
+				}else
+					window.location.href="translation/"+name+".html";
+			}else{
+				console.log("solu page");
+				readTextFile("solution/"+name+".md","md",function(text){
+					content=text;
+				},stat);
+				if(stat.retval=="200"){
+					document.write("<script src=\"mdstyle.js\">"+"</scri"+"pt>");
+					document.write("<textarea>"+content+"</textarea>");
+				}else
+					window.location.href="solution/"+name+".html";
+			}
+		}
+	</script>
 </body>

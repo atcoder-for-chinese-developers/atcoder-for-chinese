@@ -1,10 +1,12 @@
-function readTextFile(file,callback){
+function readTextFile(file,ext,callback,stat){
 	let xhr=new XMLHttpRequest();
-	xhr.overrideMimeType("application/json");
+	xhr.overrideMimeType("application/"+ext);
 	xhr.open("GET",file,false);
 	xhr.onreadystatechange=function(){
-		if(xhr.readyState===4&&xhr.status=="200"){
-			callback(xhr.responseText);
+		if(xhr.readyState===4){
+			if(xhr.status=="200")
+				callback(xhr.responseText);
+			stat.retval=xhr.status;
 		}
 	}
 	xhr.send();
@@ -164,11 +166,11 @@ function writeabc(rawd,list_tre,list_sol){
 	let abc="abc",arc="arc",agc="agc";
 	let ABC="ABC",ARC="ARC",AGC="AGC";
 	let webA="<td><a href=\"https://atcoder.jp/contests/abc";
-	let tasA="/tasks/abc",endA=" </a>",trbA="<a href=\"translation/ABC";
-	let treA="_translation.html\" class=link-disabled>题面</a> <a href=\"solution/ABC";
-	let treA_Av="_translation.html\" class=link-black>题面</a> <a href=\"solution/ABC";
-	let solA="_solution.html\" class=link-disabled>题解</a></td>";
-	let solA_Av="_solution.html\" class=link-black>题解</a></td>";
+	let tasA="/tasks/abc",endA=" </a>",trbA="<a href=\"?page=ABC";
+	let treA="_translation\" class=link-disabled>题面</a> <a href=\"?page=ABC";
+	let treA_Av="_translation\" class=link-black>题面</a> <a href=\"?page=ABC";
+	let solA="_solution\" class=link-disabled>题解</a></td>";
+	let solA_Av="_solution\" class=link-black>题解</a></td>";
 	for(let i=abccnt;i;i--){
 		document.write("<tr>");
 		let t=ext3(i);
@@ -300,11 +302,11 @@ function writearc(rawd,list_tre,list_sol){
 	let abc="abc",arc="arc",agc="agc";
 	let ABC="ABC",ARC="ARC",AGC="AGC";
 	let webA="<td><a href=\"https://atcoder.jp/contests/arc";
-	let tasA="/tasks/arc",endA=" </a>",trbA="<a href=\"translation/ARC";
-	let treA="_translation.html\" class=link-disabled>题面</a> <a href=\"solution/ARC";
-	let treA_Av="_translation.html\" class=link-black>题面</a> <a href=\"solution/ARC";
-	let solA="_solution.html\" class=link-disabled>题解</a></td>";
-	let solA_Av="_solution.html\" class=link-black>题解</a></td>";
+	let tasA="/tasks/arc",endA=" </a>",trbA="<a href=\"?page=ARC";
+	let treA="_translation\" class=link-disabled>题面</a> <a href=\"?page=ARC";
+	let treA_Av="_translation\" class=link-black>题面</a> <a href=\"?page=ARC";
+	let solA="_solution\" class=link-disabled>题解</a></td>";
+	let solA_Av="_solution\" class=link-black>题解</a></td>";
 	for(let i=arccnt;i;i--){
 		document.write("<tr>");
 		let t=ext3(i),w=57<i&&i<104?2:0;
@@ -328,6 +330,8 @@ function writearc(rawd,list_tre,list_sol){
 			}else {
 				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(0,0,0); background: linear-gradient(to top, rgb(0,0,0) 100%, rgba(0, 0, 0, 0) 100%) border-box;\"></span></ta>");
 			}
+			if(Ava_tre[i][j])
+				console.log(uC,endA,trbA,t,"_",uC,tre_cur,t,"_",uC,sol_cur);
 			document.write(uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
 		}
 		for(let j=siz[i]+w;j<Lim;j++)document.write("<td></td>");
@@ -435,11 +439,11 @@ function writeagc(rawd,list_tre,list_sol){
 	let abc="abc",arc="arc",agc="agc";
 	let ABC="ABC",ARC="ARC",AGC="AGC";
 	let webA="<td><a href=\"https://atcoder.jp/contests/agc";
-	let tasA="/tasks/agc",endA=" </a>",trbA="<a href=\"translation/AGC";
-	let treA="_translation.html\" class=link-disabled>题面</a> <a href=\"solution/AGC";
-	let treA_Av="_translation.html\" class=link-black>题面</a> <a href=\"solution/AGC";
-	let solA="_solution.html\" class=link-disabled>题解</a></td>";
-	let solA_Av="_solution.html\" class=link-black>题解</a></td>";
+	let tasA="/tasks/agc",endA=" </a>",trbA="<a href=\"?page=AGC";
+	let treA="_translation\" class=link-disabled>题面</a> <a href=\"?page=AGC";
+	let treA_Av="_translation\" class=link-black>题面</a> <a href=\"?page=AGC";
+	let solA="_solution\" class=link-disabled>题解</a></td>";
+	let solA_Av="_solution\" class=link-black>题解</a></td>";
 	for(let i=agccnt;i;i--){
 		if(i==42)
 			continue;
@@ -503,10 +507,10 @@ function writelinks(){
 function buildw(){
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	let rawd,list;
-	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json",function(text){
+	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json","json",function(text){
 		rawd=JSON.parse(text);
 	});
-	readTextFile("list.json",function(text){
+	readTextFile("list.json","json",function(text){
 		list=JSON.parse(text);
 	});
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"linkstoggle()\">友链</a></div>");
