@@ -14,7 +14,7 @@
 
 - $2\leq k_i\leq N$
 
-- $1\leq x_{i,1}<x_{i,2}<\dots<x_{i,k_i}\leq N$
+- $1\leq x_{i,1} < x_{i,2} < \dots < x_{i,k_i} \leq N$
 
 - 所有输入均为整数。
 
