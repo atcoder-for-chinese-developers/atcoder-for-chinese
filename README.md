@@ -6,7 +6,7 @@
 
 ~~建议的方式是 fork 以后进行 pull request，不建议直接上传文件。~~
 
-除了直接参与网页开发的人给了 owner 以外其他人只给了 member 权限，fork + pull request 方式请自行学习。（即使是 owner 也建议 fork + PR）
+除了直接参与网页开发的人给了 owner 以外其他人只给了 member 权限，fork + pull request 方式请[自行学习](https://www.luogu.com.cn/paste/c9atia7m)。（即使是 owner 也建议 fork + PR）
 
 最好不要写一篇就传一篇，建议一批一批来。
 
