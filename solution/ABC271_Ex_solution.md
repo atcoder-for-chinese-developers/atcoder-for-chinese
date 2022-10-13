@@ -1,8 +1,3 @@
-<html lang="en">
-<title>ABC270Ex translation</title><!-- 记得改标题 -->
-<script src="https://cdn.jsdelivr.net/npm/texme@1.2.0"></script>
-<textarea>
-
 考虑一个事实：两个不共线的向量 $\vec i,\vec j$ 可以把平面内的任意一个向量表示成 $x\vec i+y\vec j$ 的形式，其中 $x,y\in\mathbb R$。
 
 回到本题中，这里我们只能取 $x,y\in \mathbb N$，所以表示的向量集合会有变化：只能表示出这两个向量夹角内的向量。
@@ -59,6 +54,3 @@ signed main(){
 	}
 }
 ```
-
-</textarea>
-</html>
