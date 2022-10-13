@@ -319,7 +319,7 @@ function writearc(rawd,list_tre,list_sol){
 			if(i==120&&j==6)uC="F2",lC="_F2\" ";
 			let tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
 			let sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
-			document.write(webA+t+tasA+t+lC+y[i][j]+">");
+			document.write(webA+t+"/tasks/"+getarcname(i,j)+"\" "+y[i][j]+">");
 			if(x[i][j]<3200){
 				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
 			}else if(x[i][j]<3600){
