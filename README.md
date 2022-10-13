@@ -2,6 +2,8 @@
 
 # attention / 必读
 
+注意：写完题面/题解后建议在自己仓库里预览，以免出现渲染方式导致的问题。
+
 ~~建议的方式是 fork 以后进行 pull request，不建议直接上传文件。~~
 
 除了直接参与网页开发的人给了 owner 以外其他人只给了 member 权限，fork + pull request 方式请自行学习。（即使是 owner 也建议 fork + PR）
