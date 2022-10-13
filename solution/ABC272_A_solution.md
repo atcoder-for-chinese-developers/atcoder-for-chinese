@@ -7,7 +7,8 @@ int n,a[105],s;
 signed main(){
     cin>>n;
     for(int i=1;i<=n;i++)cin>>a[i],s+=a[i];
-    cout<<
+    cout<<s<<'\n';
+    return 0;
 }
 ```
 
