@@ -8,7 +8,7 @@ using namespace std;
 string a;
 signed main(){
     cin>>a;
-    cout<<a[(a.s)]
+    cout<<a[(a.s)]<<'\n';
     return 0;
 }
 ```
