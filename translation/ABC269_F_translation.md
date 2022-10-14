@@ -3,11 +3,13 @@
 有一个 $N$ 行 $M$ 列的棋盘 $A$，其中：
 
 $$
+
 A_{i,j}=
 \begin{cases}
 (i-1) \times M + j ,(i+j) \bmod 2 =0\\
 0 ,(i+j) \bmod 2 =1
 \end{cases}
+
 $$
 
 给出 $Q$ 个询问，每次询问：
