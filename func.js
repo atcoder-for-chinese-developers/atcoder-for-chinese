@@ -548,8 +548,8 @@ function buildw(){
 	});
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"linkstoggle()\">友链</a></div>");
 	
-	document.write("<p align=\"center\"><font style=\"font-size:2px;\">点击题目边的难度圆圈显示题目标签，现在暂时只支持 ABC。</font></p>");
-	document.write("<p align=\"center\"><font style=\"font-size:2px;\">题目旁的 tag(cnt) 表示当前题目标签的个数。</font></p>");
+	document.write("<p align=\"center\"><font style=\"font-size:16px;\">点击题目边的难度圆圈显示题目标签，现在暂时只支持 ABC。</font></p>");
+	document.write("<p align=\"center\"><font style=\"font-size:16px;\">题目旁的 tag(cnt) 表示当前题目标签的个数。</font></p>");
 	
 	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"]);
 	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"]);
