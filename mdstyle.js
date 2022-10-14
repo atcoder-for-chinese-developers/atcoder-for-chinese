@@ -30,30 +30,6 @@
 			"img {",
 			"  max-width: 100%;",
 			"}",
-			"pre, code, samp, kbd {",
-			"  color: #333;",
-			"  font-family: Menlo,Monaco,Consolas,\"Courier New\",monospace;",
-			"  font-size: 17px",
-			// "  border:10px",
-			"}",
-			"pre, blockquote {",
-			"  background: #eee;",
-			"  padding: 0.5em;",
-			"}",
-			"pre {",
-			"   display: block;",
-			"   padding: 8px;",
-			"   margin: 0 0 10px;",
-			"   font-size: 17px;",
-			"   line-height: 1.42857143;",
-			"   word-break: break-all;",
-			"   word-wrap: break-word;",
-			"   color: #333;",
-			"   background-color: #f5f5f5;",
-			"   border: 1px solid #ccc;",
-			"   border-radius: 3px;",
-			"   overflow:auto",
-			"}",
 			"blockquote {",
 			"  border-left: medium solid #ccc;",
 			"  margin: 1em 0;",
@@ -215,7 +191,7 @@ function gettitle(){
 }
 
 !function(){
-	document.write("<div style=\"background: #333333; padding: 0px;\">\
+	document.write("<div style=\"background: #333333; padding: 0px;\ top: 0px; position: sticky; z-index: 999;\">\
 		<button class=\"ui animated fade primary button\" onclick=\"jumplink1()\">\
 			<div class=\"visible content\">\
 				&nbsp;&nbsp;←返回主界面&nbsp;&nbsp;\
