@@ -215,7 +215,7 @@ function gettitle(){
 }
 
 !function(){
-	document.write("<div style=\"background: #333333; padding: 0px;\">\
+	document.write("<div style=\"background: #333333; padding: 0px;\ top: 0px; position: sticky; z-index: 999;\">\
 		<button class=\"ui animated fade primary button\" onclick=\"jumplink1()\">\
 			<div class=\"visible content\">\
 				&nbsp;&nbsp;←返回主界面&nbsp;&nbsp;\
