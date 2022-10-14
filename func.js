@@ -44,41 +44,57 @@ function getagcname(con,id){
 		return "agc028_f2";
 	return "agc"+ext3(con)+"_"+String.fromCharCode(id+97);
 }
+function getabcname_u(con,id){
+	return "ABC"+ext3(con)+"_"+(id>6?"Ex":String.fromCharCode(id+65));
+}
+function getarcname_u(con,id){
+	if(con==120&&id==6)
+		return "ARC120_F2";
+	return "ARC"+ext3(con)+"_"+String.fromCharCode(id+65);
+}
+function getagcname_u(con,id){
+	if(con==28&&id==6)
+		return "AGC028_F2";
+	return "AGC"+ext3(con)+"_"+String.fromCharCode(id+65);
+}
 function sidebartoggle(){
 	$('.ui.sidebar').sidebar('toggle');
 }
-function abctabletoggle(){
-	document.getElementById("abc-table").setAttribute("style","display: block;");
+function closealltables(){
+	document.getElementById("abc-table").setAttribute("style","display: none;");
 	document.getElementById("arc-table").setAttribute("style","display: none;");
 	document.getElementById("agc-table").setAttribute("style","display: none;");
 	document.getElementById("friend-links").setAttribute("style","display: none;");
+}
+function abctabletoggle(){
+	closealltables();
+	document.getElementById("abc-table").setAttribute("style","display: block;");
 }
 function arctabletoggle(){
-	document.getElementById("abc-table").setAttribute("style","display: none;");
+	closealltables();
 	document.getElementById("arc-table").setAttribute("style","display: block;");
-	document.getElementById("agc-table").setAttribute("style","display: none;");
-	document.getElementById("friend-links").setAttribute("style","display: none;");
 }
 function agctabletoggle(){
-	document.getElementById("abc-table").setAttribute("style","display: none;");
-	document.getElementById("arc-table").setAttribute("style","display: none;");
+	closealltables();
 	document.getElementById("agc-table").setAttribute("style","display: block;");
-	document.getElementById("friend-links").setAttribute("style","display: none;");
 }
 function linkstoggle(){
-	document.getElementById("abc-table").setAttribute("style","display: none;");
-	document.getElementById("arc-table").setAttribute("style","display: none;");
-	document.getElementById("agc-table").setAttribute("style","display: none;");
+	closealltables();
 	document.getElementById("friend-links").setAttribute("style","display: block;");
 }
-function writeabc(rawd,list_tre,list_sol){
+function tagtoggle(i,j){
+	document.getElementById("tag-"+getabcname(i,j)).setAttribute("style",
+		document.getElementById("tag-"+getabcname(i,j)).getAttribute("style")=="display: block;"?"display: none;":"display: block;"
+	);
+}
+function writeabc(rawd,tags,list_tre,list_sol){
 	let Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 	let Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-	let Lim=8,abccnt=0,mx=505;
+	let Lim=8,abccnt=0,mx=1005;
 	while(getabcname(abccnt+1,1)in rawd)abccnt++;
 	
 	let y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
-		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx);
+		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx),tg=new Array(mx);
 
 	let cnt=0,cnte=list_tre.length,cnts=list_sol.length;
 	
@@ -95,16 +111,23 @@ function writeabc(rawd,list_tre,list_sol){
 	
 	for(let i=1,ri=58;i<=abccnt;i++){
 		x[i]=new Array(getabccnt(i));
+		tg[i]=new Array(getabccnt(i));
 		cnt+=x[i].length;
 		let flg=0;
-		for(let j=0;j<getabccnt(i);j++)
+		for(let j=0;j<getabccnt(i);j++){
 			if(i<42||i>125||j<2||getabcname(i,j) in rawd)
 				x[i][j]=!(getabcname(i,j) in rawd)||!("difficulty" in rawd[getabcname(i,j)])?100000:Math.max(rawd[getabcname(i,j)]["difficulty"],0);
 			else
 				x[i][j]=!("difficulty" in rawd[getarcname(ri,j-2)])?100000:Math.max(rawd[getarcname(ri,j-2)]["difficulty"],0),flg=1,abctoarc[i]=ri;
+		}
 		ri+=flg;
 	}
-	console.log(abctoarc);
+	for(let i=1;i<=abccnt;i++)
+		for(let j=0;j<getabccnt(i);j++){
+			tg[i][j]=tags[getabcname_u(i,j)];
+			if(tg[i][j]!=undefined)
+				console.log(tg[i][j]);
+		}
 	for(let i=abccnt;i>=1;i--){
 		siz[i]=getabccnt(i);
 		y[i]=new Array(siz[i]);
@@ -166,12 +189,12 @@ function writeabc(rawd,list_tre,list_sol){
 	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H/Ex</th></thead><tbody>");
 	let abc="abc",arc="arc",agc="agc";
 	let ABC="ABC",ARC="ARC",AGC="AGC";
-	let webA="<td><a href=\"https://atcoder.jp/contests/abc";
+	let webA="<a href=\"https://atcoder.jp/contests/abc";
 	let tasA="/tasks/abc",endA=" </a>",trbA="<a href=\"?page=ABC";
 	let treA="_translation\" class=link-disabled>题面</a> <a href=\"?page=ABC";
 	let treA_Av="_translation\" class=link-black>题面</a> <a href=\"?page=ABC";
-	let solA="_solution\" class=link-disabled>题解</a></td>";
-	let solA_Av="_solution\" class=link-black>题解</a></td>";
+	let solA="_solution\" class=link-disabled>题解</a>";
+	let solA_Av="_solution\" class=link-black>题解</a>";
 	for(let i=abccnt;i;i--){
 		document.write("<tr>");
 		let t=ext3(i);
@@ -182,9 +205,9 @@ function writeabc(rawd,list_tre,list_sol){
 			if(i<20)lC="_"+(j+1).toString()+"\" ";
 			let tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
 			let sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
-			document.write(webA+t+"/tasks/"+getabcname(i,j)+"\" "+y[i][j]+">");
+			document.write("<td>");
 			if(x[i][j]<3200){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
+				document.write("<ta onclick=\"tagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
 			}else if(x[i][j]<3600){
 				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
 			}else if(x[i][j]<4000){
@@ -194,7 +217,16 @@ function writeabc(rawd,list_tre,list_sol){
 			}else {
 				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
 			}
+			document.write(webA+t+"/tasks/"+getabcname(i,j)+"\" "+y[i][j]+">");
 			document.write(uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+			document.write("<div id=\"tag-"+getabcname(i,j)+"\" style=\"display: none;\">");
+			if(tg[i][j]!=undefined){
+				for(let t=0;t<tg[i][j].length;t++){
+					document.write("<p class=\"ui tag label\">"+tg[i][j][t]+"</p>");
+				}
+				document.write("</div>&nbsp;tag("+tg[i][j].length+")");
+			}
+			document.write("</td>");
 		}
 		for(let j=siz[i];j<Lim;j++)document.write("<td> </td>");
 		document.write("</tr>");
@@ -212,15 +244,14 @@ function writeabc(rawd,list_tre,list_sol){
 	});
 	console.log(cnt,cnte,cnts);
 }
-function writearc(rawd,list_tre,list_sol){
+function writearc(rawd,tags,list_tre,list_sol){
 	let Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 	let Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-	let Lim=7,arccnt=0,mx=505;
+	let Lim=7,arccnt=0,mx=1005;
 	while(getarcname(arccnt+1,1)in rawd)arccnt++;
 	
 	let y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
 		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx);
-
 	let cnt=0,cnte=list_tre.length,cnts=list_sol.length;
 
 	for(let i=1;i<=arccnt;i++) Ava_tre[i] = new Array(10);
@@ -349,10 +380,10 @@ function writearc(rawd,list_tre,list_sol){
 	});
 	console.log(cnt,cnte,cnts);
 }
-function writeagc(rawd,list_tre,list_sol){
+function writeagc(rawd,tags,list_tre,list_sol){
 	let Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 	let Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
-	let Lim=7,agccnt=0,mx=505;
+	let Lim=7,agccnt=0,mx=1005;
 	while(agccnt==41||getagcname(agccnt+1,1)in rawd)agccnt++;
 	
 	let y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
@@ -505,18 +536,24 @@ function writelinks(){
 }
 function buildw(){
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
-	let rawd,list;
+	let rawd,list,tags;
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json","json",function(text){
 		rawd=JSON.parse(text);
 	});
 	readTextFile("list.json","json",function(text){
 		list=JSON.parse(text);
 	});
+	readTextFile("tags.json","json",function(text){
+		tags=JSON.parse(text);
+	});
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"linkstoggle()\">友链</a></div>");
 	
-	writeabc(rawd,list["abc_list_tre"],list["abc_list_sol"]);
-	writearc(rawd,list["arc_list_tre"],list["arc_list_sol"]);
-	writeagc(rawd,list["agc_list_tre"],list["agc_list_sol"]);
+	document.write("<p align=\"center\"><font style=\"font-size:2px;\">点击题目边的难度圆圈显示题目标签，现在暂时只支持 ABC。</font></p>");
+	document.write("<p align=\"center\"><font style=\"font-size:2px;\">题目旁的 tag(cnt) 表示当前题目标签的个数。</font></p>");
+	
+	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"]);
+	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"]);
+	writeagc(rawd,tags,list["agc_list_tre"],list["agc_list_sol"]);
 	writelinks();
 	abctabletoggle();
 }
