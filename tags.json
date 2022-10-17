@@ -5,5 +5,9 @@
 		"games"
 	],"AGC058_B":[
 		"dp","combinatorics"
+	],"ARC143_C":[
+		"games","greedy"
+	],"ARC143_B":[
+		"combinatorics"
 	]
 }
