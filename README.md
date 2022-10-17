@@ -106,6 +106,8 @@ md 文件内写入题解/题面内容，推荐格式为：
 
 - $2022.10.14$ 初步 tag 支持。
 
+- $2022.10.17$ 投票出了 [tag list 暂行版](https://www.luogu.com.cn/paste/2o35avos)。
+
 # 友情链接
 
 - [AtCoder](https://atcoder.jp)
