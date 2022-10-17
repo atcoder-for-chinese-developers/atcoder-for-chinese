@@ -619,9 +619,8 @@ function buildw(){
 	});
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"linkstoggle()\">友链</a></div>");
 	
-	document.write("<p align=\"center\"><font style=\"font-size:5px;\">点击题目边的难度圆圈显示题目标签。</font></p>");
-	document.write("<p align=\"center\"><font style=\"font-size:5px;\">题目旁的 tag(cnt) 表示当前题目标签的个数。</font></p>");
-//	注意这两行是临时的，请其他人不要修改字体大小了
+	document.write("<p align=\"center\"><font style=\"font-size:7px;\">单击题目旁的小方格展开题目标签列表，按钮上的数字表示标签个数。</font></p>");
+//	注意这行是临时的，请其他人不要修改字体大小了
 	
 	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"]);
 	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"]);
