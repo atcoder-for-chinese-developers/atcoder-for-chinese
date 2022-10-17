@@ -111,13 +111,24 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	for(let i=1;i<=abccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=abccnt;i++) for(let j=1;j<=10;j++)
 		Ava_tre[i][j] = 0;
-	for(let i=0;i<list_tre.length;i++)
-		Ava_tre[list_tre[i][0]][list_tre[i][1]] = 1;
+	for(let i=0;i<list_tre.length;i++){
+		let x=list_tre[i][0],y=list_tre[i][1];
+		if(x>abccnt||x<0||y>getabccnt(x)||y<0)
+			console.log(i,x,y),
+			alert("problem "+getabcname_u(x,y)+" does not exist");
+		else
+			Ava_tre[x][y]=1;
+	}
 	for(let i=1;i<=abccnt;i++) Ava_sol[i] = new Array(10);
 	for(let i=1;i<=abccnt;i++) for(let j=1;j<=10;j++)
 		Ava_sol[i][j] = 0;
-	for(let i=0;i<list_sol.length;i++)
-		Ava_sol[list_sol[i][0]][list_sol[i][1]]=1;
+	for(let i=0;i<list_sol.length;i++){
+		let x=list_sol[i][0],y=list_sol[i][1];
+		if(x>abccnt||x<0||y>getabccnt(x)||y<0)
+			alert("problem "+getabcname_u(x,y)+" does not exist");
+		else
+			Ava_sol[x][y]=1;
+	}
 	
 	for(let i=1,ri=58;i<=abccnt;i++){
 		x[i]=new Array(getabccnt(i));
@@ -266,13 +277,23 @@ function writearc(rawd,tags,list_tre,list_sol){
 	for(let i=1;i<=arccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=arccnt;i++) for(let j=1;j<=10;j++)
 		Ava_tre[i][j] = 0;
-	for(let i=0;i<list_tre.length;i++)
-		Ava_tre[list_tre[i][0]][list_tre[i][1]] = 1;
+	for(let i=0;i<list_tre.length;i++){
+		let x=list_tre[i][0],y=list_tre[i][1];
+		if(x>arccnt||x<0||y>getarccnt(x)||y<0)
+			alert("problem "+getarcname_u(x,y)+" does not exist");
+		else
+			Ava_tre[x][y]=1;
+	}
 	for(let i=1;i<=arccnt;i++) Ava_sol[i] = new Array(10);
 	for(let i=1;i<=arccnt;i++) for(let j=1;j<=10;j++)
 		Ava_sol[i][j] = 0;
-	for(let i=0;i<list_sol.length;i++)
-		Ava_sol[list_sol[i][0]][list_sol[i][1]]=1;
+	for(let i=0;i<list_sol.length;i++){
+		let x=list_sol[i][0],y=list_sol[i][1];
+		if(x>arccnt||x<0||y>getarccnt(x)||y<0)
+			alert("problem "+getarcname_u(x,y)+" does not exist");
+		else
+			Ava_sol[x][y]=1;
+	}
 	
 	for(let i=1;i<=arccnt;i++){
 		x[i]=new Array(getarccnt(i));
@@ -416,17 +437,27 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	for(let i=1;i<=agccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=agccnt;i++) for(let j=1;j<=10;j++)
 		Ava_tre[i][j] = 0;
-	for(let i=0;i<list_tre.length;i++)
-		Ava_tre[list_tre[i][0]][list_tre[i][1]] = 1;
+	for(let i=0;i<list_tre.length;i++){
+		let x=list_tre[i][0],y=list_tre[i][1];
+		if(x>agccnt||x<0||y>getagccnt(x)||y<0)
+			alert("problem "+getagcname_u(x,y)+" does not exist");
+		else
+			Ava_tre[x][y]=1;
+	}
 	for(let i=1;i<=agccnt;i++) Ava_sol[i] = new Array(10);
 	for(let i=1;i<=agccnt;i++) for(let j=1;j<=10;j++)
 		Ava_sol[i][j] = 0;
-	for(let i=0;i<list_sol.length;i++)
-		Ava_sol[list_sol[i][0]][list_sol[i][1]]=1;
+	for(let i=0;i<list_sol.length;i++){
+		let x=list_sol[i][0],y=list_sol[i][1];
+		if(x>agccnt||x<0||y>getagccnt(x)||y<0)
+			alert("problem "+getagcname_u(x,y)+" does not exist");
+		else
+			Ava_sol[x][y]=1;
+	}
 	
 	for(let i=1;i<=agccnt;i++){
-		x[i]=new Array(getabccnt(i));
-		tg[i]=new Array(getabccnt(i));
+		x[i]=new Array(getagccnt(i));
+		tg[i]=new Array(getagccnt(i));
 		cnt+=x[i].length;
 		for(let j=0;j<getagccnt(i);j++)
 			x[i][j]=!(getagcname(i,j) in rawd)||!("difficulty" in rawd[getagcname(i,j)])?100000:Math.max(rawd[getagcname(i,j)]["difficulty"],0);
