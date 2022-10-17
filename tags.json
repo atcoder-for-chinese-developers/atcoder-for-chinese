@@ -11,5 +11,9 @@
 		"combinatorics","math"
 	],"ARC143_A":[
 		"math","greedy"
+	],"ARC143_D":[
+		"graphs","constructive algorithms","dfs and similar","greedy"
+	],"ARC143_E":[
+		"graphs","constructive algorithms","dfs and similar","trees","dp"
 	]
 }
