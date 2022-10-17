@@ -104,7 +104,7 @@ inline void ypa(){
 	L=1;
 	for(int i=1;i<=p;i++)Q[++R]=X[i],dis[Q[R]]=1;
 	for(int i=1;i<=q;i++)ise[Y[i]]=1;
-	cout<<(bfs()-2)*2+p+q<<'\n';
+	write((bfs()-2)*2+p+q);
 }
 signed main(){init();for(int T=1;T;T--)ypa();flush();return 0;}
 ```
