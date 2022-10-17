@@ -82,9 +82,19 @@ function linkstoggle(){
 	closealltables();
 	document.getElementById("friend-links").setAttribute("style","display: block;");
 }
-function tagtoggle(i,j){
+function abctagtoggle(i,j){
 	document.getElementById("tag-"+getabcname(i,j)).setAttribute("style",
 		document.getElementById("tag-"+getabcname(i,j)).getAttribute("style")=="display: block;"?"display: none;":"display: block;"
+	);
+}
+function arctagtoggle(i,j){
+	document.getElementById("tag-"+getarcname(i,j)).setAttribute("style",
+		document.getElementById("tag-"+getarcname(i,j)).getAttribute("style")=="display: block;"?"display: none;":"display: block;"
+	);
+}
+function agctagtoggle(i,j){
+	document.getElementById("tag-"+getagcname(i,j)).setAttribute("style",
+		document.getElementById("tag-"+getagcname(i,j)).getAttribute("style")=="display: block;"?"display: none;":"display: block;"
 	);
 }
 function writeabc(rawd,tags,list_tre,list_sol){
@@ -123,11 +133,8 @@ function writeabc(rawd,tags,list_tre,list_sol){
 		ri+=flg;
 	}
 	for(let i=1;i<=abccnt;i++)
-		for(let j=0;j<getabccnt(i);j++){
+		for(let j=0;j<getabccnt(i);j++)
 			tg[i][j]=tags[getabcname_u(i,j)];
-			if(tg[i][j]!=undefined)
-				console.log(tg[i][j]);
-		}
 	for(let i=abccnt;i>=1;i--){
 		siz[i]=getabccnt(i);
 		y[i]=new Array(siz[i]);
@@ -185,7 +192,7 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	}
 
 	document.write("<div id=\"abc-table\">");
-	document.write("<table class=\"ui celled definition table segment\" style=\"width:100%;max-width=90%\">");
+	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
 	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H/Ex</th></thead><tbody>");
 	let abc="abc",arc="arc",agc="agc";
 	let ABC="ABC",ARC="ARC",AGC="AGC";
@@ -207,15 +214,15 @@ function writeabc(rawd,tags,list_tre,list_sol){
 			let sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
 			document.write("<td>");
 			if(x[i][j]<3200){
-				document.write("<ta onclick=\"tagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
+				document.write("<ta onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
 			}else if(x[i][j]<3600){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
+				document.write("<ta onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
 			}else if(x[i][j]<4000){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
+				document.write("<ta onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
 			}else if(x[i][j]<10000){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
+				document.write("<ta onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
 			}else {
-				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
+				document.write("<ta onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
 			}
 			document.write(webA+t+"/tasks/"+getabcname(i,j)+"\" "+y[i][j]+">");
 			document.write(uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
@@ -244,6 +251,7 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	});
 	console.log(cnt,cnte,cnts);
 }
+
 function writearc(rawd,tags,list_tre,list_sol){
 	let Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 	let Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
@@ -251,9 +259,10 @@ function writearc(rawd,tags,list_tre,list_sol){
 	while(getarcname(arccnt+1,1)in rawd)arccnt++;
 	
 	let y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
-		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx);
-	let cnt=0,cnte=list_tre.length,cnts=list_sol.length;
+		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx),tg=new Array(mx);
 
+	let cnt=0,cnte=list_tre.length,cnts=list_sol.length;
+	
 	for(let i=1;i<=arccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=arccnt;i++) for(let j=1;j<=10;j++)
 		Ava_tre[i][j] = 0;
@@ -267,13 +276,16 @@ function writearc(rawd,tags,list_tre,list_sol){
 	
 	for(let i=1;i<=arccnt;i++){
 		x[i]=new Array(getarccnt(i));
+		tg[i]=new Array(getarccnt(i));
 		cnt+=x[i].length;
 		for(let j=0;j<getarccnt(i);j++)
 			x[i][j]=!(getarcname(i,j) in rawd)||!("difficulty" in rawd[getarcname(i,j)])?100000:Math.max(rawd[getarcname(i,j)]["difficulty"],0);
 	}
-
+	for(let i=1;i<=arccnt;i++)
+		for(let j=57<i&&i<104?2:0;j<getarccnt(i);j++)
+			tg[i][j]=tags[getarcname_u(i,j)];
 	for(let i=arccnt;i>=1;i--){
-		siz[i]=getarccnt(i);
+		siz[i]=getabccnt(i);
 		y[i]=new Array(siz[i]);
 		Val[i]=new Array(siz[i]);
 		RG[i]=new Array(siz[i]);
@@ -329,16 +341,16 @@ function writearc(rawd,tags,list_tre,list_sol){
 	}
 
 	document.write("<div id=\"arc-table\">");
-	document.write("<table class=\"ui celled definition table segment\" style=\"width:100%;max-width=90%\">");
+	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
 	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>F2</th></thead><tbody>");
 	let abc="abc",arc="arc",agc="agc";
 	let ABC="ABC",ARC="ARC",AGC="AGC";
-	let webA="<td><a href=\"https://atcoder.jp/contests/arc";
+	let webA="<a href=\"https://atcoder.jp/contests/arc";
 	let tasA="/tasks/arc",endA=" </a>",trbA="<a href=\"?page=ARC";
 	let treA="_translation\" class=link-disabled>题面</a> <a href=\"?page=ARC";
 	let treA_Av="_translation\" class=link-black>题面</a> <a href=\"?page=ARC";
-	let solA="_solution\" class=link-disabled>题解</a></td>";
-	let solA_Av="_solution\" class=link-black>题解</a></td>";
+	let solA="_solution\" class=link-disabled>题解</a>";
+	let solA_Av="_solution\" class=link-black>题解</a>";
 	for(let i=arccnt;i;i--){
 		document.write("<tr>");
 		let t=ext3(i),w=57<i&&i<104?2:0;
@@ -350,19 +362,28 @@ function writearc(rawd,tags,list_tre,list_sol){
 			if(i==120&&j==6)uC="F2",lC="_F2\" ";
 			let tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
 			let sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
-			document.write(webA+t+"/tasks/"+getarcname(i,j)+"\" "+y[i][j]+">");
+			document.write("<td>");
 			if(x[i][j]<3200){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
+				document.write("<ta onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
 			}else if(x[i][j]<3600){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
+				document.write("<ta onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
 			}else if(x[i][j]<4000){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
+				document.write("<ta onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
 			}else if(x[i][j]<10000){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
+				document.write("<ta onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
 			}else {
-				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
+				document.write("<ta onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
 			}
+			document.write(webA+t+"/tasks/"+getarcname(i,j)+"\" "+y[i][j]+">");
 			document.write(uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+			document.write("<div id=\"tag-"+getarcname(i,j)+"\" style=\"display: none;\">");
+			if(tg[i][j]!=undefined){
+				for(let t=0;t<tg[i][j].length;t++){
+					document.write("<p class=\"ui tag label\">"+tg[i][j][t]+"</p>");
+				}
+				document.write("</div>&nbsp;tag("+tg[i][j].length+")");
+			}
+			document.write("</td>");
 		}
 		for(let j=siz[i]+w;j<Lim;j++)document.write("<td></td>");
 		document.write("</tr>");
@@ -380,6 +401,7 @@ function writearc(rawd,tags,list_tre,list_sol){
 	});
 	console.log(cnt,cnte,cnts);
 }
+
 function writeagc(rawd,tags,list_tre,list_sol){
 	let Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 	let Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
@@ -387,7 +409,9 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	while(agccnt==41||getagcname(agccnt+1,1)in rawd)agccnt++;
 	
 	let y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
-		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx),cnt=0,cnte=list_tre.length,cnts=list_sol.length;
+		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx),tg=new Array(mx);
+
+	let cnt=0,cnte=list_tre.length,cnts=list_sol.length;
 	
 	for(let i=1;i<=agccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=agccnt;i++) for(let j=1;j<=10;j++)
@@ -401,12 +425,15 @@ function writeagc(rawd,tags,list_tre,list_sol){
 		Ava_sol[list_sol[i][0]][list_sol[i][1]]=1;
 	
 	for(let i=1;i<=agccnt;i++){
-		x[i]=new Array(getagccnt(i));
+		x[i]=new Array(getabccnt(i));
+		tg[i]=new Array(getabccnt(i));
 		cnt+=x[i].length;
 		for(let j=0;j<getagccnt(i);j++)
 			x[i][j]=!(getagcname(i,j) in rawd)||!("difficulty" in rawd[getagcname(i,j)])?100000:Math.max(rawd[getagcname(i,j)]["difficulty"],0);
 	}
-	
+	for(let i=1;i<=agccnt;i++)
+	    for(let j=0;j<getagccnt(i);j++)
+	        tg[i][j]=tags[getagcname_u(i,j)];
 	for(let i=agccnt;i>=1;i--){
 		siz[i]=getagccnt(i);
 		y[i]=new Array(siz[i]);
@@ -464,16 +491,16 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	}
 
 	document.write("<div id=\"agc-table\">");
-	document.write("<table class=\"ui celled definition table segment\" style=\"width:100%;max-width=90%\">");
+	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
 	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>F2</th></thead><tbody>");
 	let abc="abc",arc="arc",agc="agc";
 	let ABC="ABC",ARC="ARC",AGC="AGC";
-	let webA="<td><a href=\"https://atcoder.jp/contests/agc";
+	let webA="<a href=\"https://atcoder.jp/contests/agc";
 	let tasA="/tasks/agc",endA=" </a>",trbA="<a href=\"?page=AGC";
 	let treA="_translation\" class=link-disabled>题面</a> <a href=\"?page=AGC";
 	let treA_Av="_translation\" class=link-black>题面</a> <a href=\"?page=AGC";
-	let solA="_solution\" class=link-disabled>题解</a></td>";
-	let solA_Av="_solution\" class=link-black>题解</a></td>";
+	let solA="_solution\" class=link-disabled>题解</a>";
+	let solA_Av="_solution\" class=link-black>题解</a>";
 	for(let i=agccnt;i;i--){
 		if(i==42)
 			continue;
@@ -485,19 +512,28 @@ function writeagc(rawd,tags,list_tre,list_sol){
 			if(i==28&&j==6)uC="F2",lC="_F2\" ";
 			let tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
 			let sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
-			document.write(webA+t+tasA+t+lC+y[i][j]+">");
+			document.write("<td>");
 			if(x[i][j]<3200){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
+				document.write("<ta onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
 			}else if(x[i][j]<3600){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
+				document.write("<ta onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
 			}else if(x[i][j]<4000){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
+				document.write("<ta onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
 			}else if(x[i][j]<10000){
-				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
+				document.write("<ta onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
 			}else {
-				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
+				document.write("<ta onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
 			}
+			document.write(webA+t+"/tasks/"+getagcname(i,j)+"\" "+y[i][j]+">");
 			document.write(uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+			document.write("<div id=\"tag-"+getagcname(i,j)+"\" style=\"display: none;\">");
+			if(tg[i][j]!=undefined){
+				for(let t=0;t<tg[i][j].length;t++){
+					document.write("<p class=\"ui tag label\">"+tg[i][j][t]+"</p>");
+				}
+				document.write("</div>&nbsp;tag("+tg[i][j].length+")");
+			}
+			document.write("</td>");
 		}
 		for(let j=siz[i];j<Lim;j++)document.write("<td> </td>");
 		document.write("</tr>");
@@ -515,6 +551,8 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	});
 	console.log(cnt,cnte,cnts);
 }
+
+
 function writelinks(){
 	document.write("<div id=\"friend-links\"><div class=\"ui fluid vertical menu\">\
 		<p class=\"item\">\
@@ -548,8 +586,9 @@ function buildw(){
 	});
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"linkstoggle()\">友链</a></div>");
 	
-	document.write("<p align=\"center\"><font style=\"font-size:16px;\">点击题目边的难度圆圈显示题目标签，现在暂时只支持 ABC。</font></p>");
-	document.write("<p align=\"center\"><font style=\"font-size:16px;\">题目旁的 tag(cnt) 表示当前题目标签的个数。</font></p>");
+	document.write("<p align=\"center\"><font style=\"font-size:5px;\">点击题目边的难度圆圈显示题目标签。</font></p>");
+	document.write("<p align=\"center\"><font style=\"font-size:5px;\">题目旁的 tag(cnt) 表示当前题目标签的个数。</font></p>");
+//	注意这两行是临时的，请其他人不要修改字体大小了
 	
 	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"]);
 	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"]);
