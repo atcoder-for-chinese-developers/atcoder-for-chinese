@@ -63,3 +63,5 @@ inline void ypa(){
 }
 signed main(){init();for(int T=1;T;T--)ypa();flush();return system("pause"),0;}
 ```
+
+(-- by cjn)
