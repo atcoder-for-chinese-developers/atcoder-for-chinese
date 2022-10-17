@@ -12,56 +12,6 @@
 
 具体实现可以维护一个 `ansx[i]`，表示这条边从什么点出发（从 $A_i$ 还是 $B_i$）。
 
-```cpp
-int n,m,a[200005],g,x[200005],y[200005],ansx[200005];
-namespace tarjan{
-int dfn[200005],low[200005],idx,bel[200005];
-int hd[200005],cnt=1;
-struct E{
-    int nxt,to,w;
-}e[400005];
-inline void add(Ci u,Ci v,Ci w){
-    e[++cnt]={hd[u],v,w};
-    hd[u]=cnt;
-}
-bool bridge[400005];
-void tarjan(Ci u,Ci ine){
-    dfn[u]=low[u]=++idx;
-    for(int i=hd[u];i;i=e[i].nxt){
-        int v=e[i].to;
-        if(!dfn[v]){
-            tarjan(v,i);
-            low[u]=min(low[u],low[v]);
-            if(low[v]>dfn[u])bridge[i]=bridge[i^1]=1;
-        }
-        else if(i!=(ine^1))low[u]=min(low[u],dfn[v]);
-    }
-}
-int C;
-void dfs(Ci u,Ci fa){
-    bel[u]=C;
-    for(int i=hd[u];i;i=e[i].nxt){
-        int v=e[i].to,id=e[i].w;
-        ansx[id]=u;//表示从 u → v+N
-        if(bel[v]||bridge[i])continue;
-        dfs(v,u);
-    }
-}
-void work(){
-    tarjan(1,0);//边双
-    for(int i=1;i<=n;i++)
-        if(!bel[i])++C,dfs(i,0);//处理每一个块
-}
-}
-inline void ypa(){
-    n=read();m=read();
-    for(int i=1;i<=m;i++)x[i]=read();
-    for(int i=1;i<=m;i++)y[i]=read();
-    for(int i=1;i<=m;i++)tarjan::add(x[i],y[i],i),tarjan::add(y[i],x[i],i);
-    tarjan::work();
-    for(int i=1;i<=m;i++)write((ansx[i]!=x[i]));
-}
-signed main(){init();for(int T=1;T;T--)ypa();flush();return system("pause"),0;}
-```
+[代码](https://atcoder.jp/contests/arc143/submissions/35636732)
 
 (-- by cjn)
