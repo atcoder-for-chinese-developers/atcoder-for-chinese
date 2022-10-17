@@ -192,7 +192,7 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	}
 
 	document.write("<div id=\"abc-table\">");
-	document.write("<table class=\"ui celled definition table segment\" style=\"width:100%;max-width=90%\">");
+	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
 	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H/Ex</th></thead><tbody>");
 	let abc="abc",arc="arc",agc="agc";
 	let ABC="ABC",ARC="ARC",AGC="AGC";
@@ -341,7 +341,7 @@ function writearc(rawd,tags,list_tre,list_sol){
 	}
 
 	document.write("<div id=\"arc-table\">");
-	document.write("<table class=\"ui celled definition table segment\" style=\"width:100%;max-width=90%\">");
+	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
 	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>F2</th></thead><tbody>");
 	let abc="abc",arc="arc",agc="agc";
 	let ABC="ABC",ARC="ARC",AGC="AGC";
@@ -491,7 +491,7 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	}
 
 	document.write("<div id=\"agc-table\">");
-	document.write("<table class=\"ui celled definition table segment\" style=\"width:100%;max-width=90%\">");
+	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
 	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>F2</th></thead><tbody>");
 	let abc="abc",arc="arc",agc="agc";
 	let ABC="ABC",ARC="ARC",AGC="AGC";
