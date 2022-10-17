@@ -8,6 +8,8 @@
 	],"ARC143_C":[
 		"games","greedy"
 	],"ARC143_B":[
-		"combinatorics"
+		"combinatorics","math"
+	],"ARC143_A":[
+		"math","greedy"
 	]
 }
