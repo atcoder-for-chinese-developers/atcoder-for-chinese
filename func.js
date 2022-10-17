@@ -223,28 +223,28 @@ function writeabc(rawd,tags,list_tre,list_sol){
 			if(i<20)lC="_"+(j+1).toString()+"\" ";
 			let tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
 			let sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
-			document.write("<td>");
+			document.write("<td>"+webA+t+"/tasks/"+getabcname(i,j)+"\" "+y[i][j]+">");
 			if(x[i][j]<3200){
-				document.write("<ta onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
 			}else if(x[i][j]<3600){
-				document.write("<ta onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
 			}else if(x[i][j]<4000){
-				document.write("<ta onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
 			}else if(x[i][j]<10000){
-				document.write("<ta onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
 			}else {
-				document.write("<ta onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
+				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
 			}
-			document.write(webA+t+"/tasks/"+getabcname(i,j)+"\" "+y[i][j]+">");
 			document.write(uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+			if(tg[i][j]!=undefined)
+				document.write("<div onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" style=\"position: relative;\"><a class=\"floating ui teal right label\">"+tg[i][j].length.toString()+"</a></div>");
 			document.write("<div id=\"tag-"+getabcname(i,j)+"\" style=\"display: none;\">");
 			if(tg[i][j]!=undefined){
 				for(let t=0;t<tg[i][j].length;t++){
 					document.write("<p class=\"ui tag label\">"+tg[i][j][t]+"</p>");
 				}
-				document.write("</div>&nbsp;tag("+tg[i][j].length+")");
 			}
-			document.write("</td>");
+			document.write("</div></td>");
 		}
 		for(let j=siz[i];j<Lim;j++)document.write("<td> </td>");
 		document.write("</tr>");
@@ -383,26 +383,27 @@ function writearc(rawd,tags,list_tre,list_sol){
 			if(i==120&&j==6)uC="F2",lC="_F2\" ";
 			let tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
 			let sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
-			document.write("<td>");
+			document.write("<td>"+webA+t+"/tasks/"+getarcname(i,j)+"\" "+y[i][j]+">");
 			if(x[i][j]<3200){
-				document.write("<ta onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
 			}else if(x[i][j]<3600){
-				document.write("<ta onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
 			}else if(x[i][j]<4000){
-				document.write("<ta onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
 			}else if(x[i][j]<10000){
-				document.write("<ta onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
 			}else {
-				document.write("<ta onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
+				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
 			}
-			document.write(webA+t+"/tasks/"+getarcname(i,j)+"\" "+y[i][j]+">");
 			document.write(uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+			if(tg[i][j]!=undefined)
+				document.write("<div onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" style=\"position: relative;\"><a class=\"floating ui teal right label\" style=\"z-index: 999;\">"+tg[i][j].length.toString()+"</a></div>");
 			document.write("<div id=\"tag-"+getarcname(i,j)+"\" style=\"display: none;\">");
 			if(tg[i][j]!=undefined){
 				for(let t=0;t<tg[i][j].length;t++){
 					document.write("<p class=\"ui tag label\">"+tg[i][j][t]+"</p>");
 				}
-				document.write("</div>&nbsp;tag("+tg[i][j].length+")");
+				// document.write("</div>&nbsp;tag("+tg[i][j].length+")");
 			}
 			document.write("</td>");
 		}
@@ -543,26 +544,27 @@ function writeagc(rawd,tags,list_tre,list_sol){
 			if(i==28&&j==6)uC="F2",lC="_F2\" ";
 			let tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
 			let sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
-			document.write("<td>");
+			document.write("<td>"+webA+t+"/tasks/"+getagcname(i,j)+"\" "+y[i][j]+">");
 			if(x[i][j]<3200){
-				document.write("<ta onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
 			}else if(x[i][j]<3600){
-				document.write("<ta onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
 			}else if(x[i][j]<4000){
-				document.write("<ta onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
 			}else if(x[i][j]<10000){
-				document.write("<ta onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
+				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"><span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
 			}else {
-				document.write("<ta onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
+				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
 			}
-			document.write(webA+t+"/tasks/"+getagcname(i,j)+"\" "+y[i][j]+">");
 			document.write(uC+endA+trbA+t+"_"+uC+tre_cur+t+"_"+uC+sol_cur);
+			if(tg[i][j]!=undefined)
+				document.write("<div onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" style=\"position: relative;\"><a class=\"floating ui teal right label\" style=\"z-index: 999;\">"+tg[i][j].length.toString()+"</a></div>");
 			document.write("<div id=\"tag-"+getagcname(i,j)+"\" style=\"display: none;\">");
 			if(tg[i][j]!=undefined){
 				for(let t=0;t<tg[i][j].length;t++){
 					document.write("<p class=\"ui tag label\">"+tg[i][j][t]+"</p>");
 				}
-				document.write("</div>&nbsp;tag("+tg[i][j].length+")");
+				// document.write("</div>&nbsp;tag("+tg[i][j].length+")");
 			}
 			document.write("</td>");
 		}
