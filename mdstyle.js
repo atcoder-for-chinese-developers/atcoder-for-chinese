@@ -230,7 +230,7 @@ let tg=[];
 function tagtoggle(){
 	for(let i=0;i<tg.length;i++){
 		document.getElementById("tags-"+i.toString()).setAttribute("style",
-			document.getElementById("tags-"+i.toString()).getAttribute("style")=="display: inline;"?"display: none;":"display: inline;"
+			document.getElementById("tags-"+i.toString()).getAttribute("style")=="display: none;"?"display: inline-block;":"display: none;"
 		);
 	}
 }
