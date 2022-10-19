@@ -619,8 +619,7 @@ function buildw(){
 	});
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"linkstoggle()\">友链</a></div>");
 	
-	document.write("<p align=\"center\"><font style=\"font-size:7px;\">单击题目旁的小方格展开题目标签列表，按钮上的数字表示标签个数。</font></p>");
-//	注意这行是临时的，请其他人不要修改字体大小了
+	document.write("<p align=\"center\"><font style=\"font-size:10px;\">单击题目旁的小方格展开题目标签列表，按钮上的数字表示标签个数。</font></p>");
 	
 	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"]);
 	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"]);

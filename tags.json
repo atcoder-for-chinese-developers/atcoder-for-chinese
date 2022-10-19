@@ -1,21 +1,23 @@
 {
 	"ABC271_Ex":[
-		"geometry","math"
+		"几何","数学"
 	],"ARC151_C":[
-		"games"
+		"博弈论"
 	],"AGC058_B":[
-		"dp","combinatorics"
+		"动态规划","组合数学"
 	],"ARC143_C":[
-		"games","greedy"
+		"博弈论","贪心"
 	],"ARC143_B":[
-		"combinatorics","math"
+		"组合数学","数学"
 	],"ARC143_A":[
-		"math","greedy"
+		"数学","贪心"
 	],"ARC143_D":[
-		"graphs","constructive algorithms","dfs and similar","greedy"
+		"图论","构造","搜索","贪心"
 	],"ARC143_E":[
-		"graphs","constructive algorithms","dfs and similar","trees","dp"
+		"图论","构造","搜索","树","动态规划"
 	],"ARC151_E":[
-		"shortest paths","graphs","string suffix structures","strings","greedy"
+		"最短路","图论","后缀数据结构","字符串","贪心"
+	],"ABC198_A":[
+		"数学"
 	]
 }

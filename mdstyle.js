@@ -214,7 +214,37 @@ function gettitle(){
 	return s;
 }
 
+function readTextFile(file,ext,callback){
+	let xhr=new XMLHttpRequest();
+	xhr.overrideMimeType("application/"+ext);
+	xhr.open("GET",file,false);
+	xhr.onreadystatechange=function(){
+		if(xhr.readyState===4)
+			callback(xhr.responseText,xhr.status);
+	}
+	xhr.send();
+}
+
+let tg=[];
+
+function tagtoggle(){
+	for(let i=0;i<tg.length;i++){
+		document.getElementById("tags-"+i.toString()).setAttribute("style",
+			document.getElementById("tags-"+i.toString()).getAttribute("style")=="display: none;"?"display: inline-block;":"display: none;"
+		);
+	}
+}
+
 !function(){
+	readTextFile("tags.json","json",function(text){
+		let tmp=JSON.parse(text),
+			str=escape(window.location.href);
+		str=str.substr(str.lastIndexOf("%3Fpage%3D")+10);
+		let p=7;
+		while(str[p]!='_')p++;
+		str=str.substr(0,p);
+		if(str in tmp)tg=tmp[str];
+	});
 	document.write("<div style=\"background: #333333; padding: 0px;\ top: 0px; position: sticky; z-index: 999;\">\
 		<button class=\"ui animated fade primary button\" onclick=\"jumplink1()\">\
 			<div class=\"visible content\">\
@@ -225,7 +255,10 @@ function gettitle(){
 			</div>\
 		</button>\
 		<font size=\"4em\" align=\"center\" style=\"color: #fff;\">&nbsp;&nbsp;"+gettitle()+"&nbsp;&nbsp;</font>\
-		<button class=\"ui animated button\" onclick=\"jumplink2()\">\
+		<button class=\"ui grey label\" onclick=\"tagtoggle()\">切换标签显示</button>");
+	for(let i=0;i<tg.length;i++)
+		document.write("<p class=\"ui tag label\" id=\"tags-"+i.toString()+"\" style=\"display: none;\">"+tg[i]+"</p>")
+	document.write("<button class=\"ui animated right button\" onclick=\"jumplink2()\" style=\"right: 0; position: absolute;\">\
 			<div class=\"visible content\">\
 				原题链接\
 			</div>\
