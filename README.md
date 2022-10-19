@@ -84,7 +84,7 @@ md 文件内写入题解/题面内容，格式为：（请按照这个格式上�
 特别的，F2 编号为 6。
 
 ## 上传标签方法：
-在根目录下 `tags.json` 中添加一项，在末尾添加一项名为 $\text{contestId}\_\text{problemId}$ 的数组数据，其中的值参考 [tag list](https://www.luogu.com.cn/paste/2o35avos)，值之间以 `,` 分隔，具体格式可参考已有的内容。
+在根目录下 `tags.json` 中添加一项，在末尾添加一项名为 $\text{contestId} \_ \text{problemId}$ 的数组数据，其中的值参考 [tag list](https://www.luogu.com.cn/paste/2o35avos)，值之间以 `,` 分隔，具体格式可参考已有的内容。
 
 ## 还没有实现的功能：
 
