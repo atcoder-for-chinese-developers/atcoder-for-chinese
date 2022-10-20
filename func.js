@@ -67,7 +67,6 @@ function closealltables(){
 	document.getElementById("abc-table").setAttribute("style","display: none;");
 	document.getElementById("arc-table").setAttribute("style","display: none;");
 	document.getElementById("agc-table").setAttribute("style","display: none;");
-	// document.getElementById("friend-links").setAttribute("style","display: none;");
 	document.getElementById("prob-list").setAttribute("style","display: none;");
 }
 function abctabletoggle(){
@@ -86,10 +85,6 @@ function listtoggle(){
 	closealltables();
 	document.getElementById("prob-list").setAttribute("style","display: block;");
 }
-// function linkstoggle(){
-	// closealltables();
-	// document.getElementById("friend-links").setAttribute("style","display: block;");
-// }
 function abctagtoggle(i,j){
 	document.getElementById("tag-"+getabcname(i,j)).setAttribute("style",
 		document.getElementById("tag-"+getabcname(i,j)).getAttribute("style")=="display: block;"?"display: none;":"display: block;"
@@ -624,26 +619,6 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	console.log(cnt,cnte,cnts,cntt);
 }
 
-// function writelinks(){
-	// document.write("<div id=\"friend-links\"><div class=\"ui fluid vertical menu\">\
-		// <p class=\"item\">\
-			// 友情链接\
-		// </p>\
-		// <p class=\"item\">\
-			// <a href=\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\"><img src=\"images/logo1.png\" alt=\"Github Repo\" width=\"64\" height=\"64\"></a>\
-		// </p>\
-		// <p class=\"item\">\
-			// <a href=\"https://atcoder.jp\"><img src=\"images/atcoder.png\" alt=\"AtCoder\" width=\"64\" height=\"64\"></a>\
-		// </p>\
-		// <p class=\"item\">\
-			// <a href=\"https://kenkoooo.com/atcoder/#/\"><img src=\"images/kenkoooo.png\" alt=\"Kenkoooo AtCoder Problems\" width=\"64\" height=\"64\"></a>\
-		// </p>\
-		// <p class=\"item\">\
-			// <a href=\"https://semantic-ui.com/\"><img src=\"images/semantic.png\" alt=\"Semantic UI\" width=\"64\" height=\"64\"></a>\
-		// </p>\
-	// </div></div>");
-// }
-
 function listtoggleabc(){
 	let flg=document.getElementById("list-abc-btn").getAttribute("class")=="ui toggle button";
 	document.getElementById("list-abc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
@@ -672,16 +647,43 @@ function listtoggleagc(){
 	}
 }
 
+function isinarray(x,a){
+	if(a==undefined)
+		return 0;
+	let flg=0;
+	for(let i in a)
+		flg|=x==a[i];
+	return flg;
+}
+
+function setfilter(){
+	let dl=document.getElementById("diflb").value,dr=document.getElementById("difrb").value,utg=document.getElementById("intag").value;
+	dl=dl==""||isNaN(Number(dl))?-10000:Number(dl);
+	dr=dr==""||isNaN(Number(dr))?10000:Number(dr);
+	utg=utg==""?[]:utg.split(" ");
+	console.log(dl,dr,utg);
+	for(let i in problist){
+		let flg=(dl==-10000&&dr==10000)||(dl<=problist[i]["diff"]&&problist[i]["diff"]<=dr);
+		for(let j in utg)
+			flg&=isinarray(utg[j],problist[i]["tag"]);
+		document.getElementById(i+"-col").setAttribute("style",flg?"":"display: none;");
+	}
+}
+
 function writelist(){
 	document.write("<div id=\"prob-list\">");
 	document.write("<p align=\"center\" style=\"font-style: italic\">注意：这部分仍在施工中</p>");
 	document.write("<button class=\"ui toggle button active\" id=\"list-abc-btn\" onclick=\"listtoggleabc()\">Show ABC</button>");
 	document.write("<button class=\"ui toggle button active\" id=\"list-arc-btn\" onclick=\"listtogglearc()\">Show ARC</button>");
 	document.write("<button class=\"ui toggle button active\" id=\"list-agc-btn\" onclick=\"listtoggleagc()\">Show AGC</button>");
+	document.write("<div class=\"ui input\"><input id=\"diflb\" style=\"width: 233;\" placeholder=\"筛选难度下界，默认 -10000\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"difrb\" style=\"width: 233;\" placeholder=\"筛选难度上界，默认 10000\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"intag\" style=\"width: 233;\" placeholder=\"筛选标签，用半角空格分开\"></input></div>");
+	document.write("<button class=\"ui violet basic button\" onclick=\"setfilter()\">筛选</button>");
 	document.write("<table class=\"ui fixed sortable celled table segment\">");
 	document.write("<thead><tr><th>ID</th><th>难度</th><th>标签</th></thead><tbody>");
 	for(let i in problist){
-		document.write("<tr id=\""+i+"-btn\">");
+		document.write("<tr id=\""+i+"-col\">");
 		document.write("<td>"+i+"</td>");
 		document.write("<td>"+(problist[i]["diff"]==100000?"unavailable":problist[i]["diff"].toString())+"</td>");
 		document.write("<td>");
@@ -715,7 +717,6 @@ function buildw(){
 	writeagc(rawd,tags,list["agc_list_tre"],list["agc_list_sol"]);
 	// writelinks();
 	writelist(problist);
-	console.log(problist);
 	abctabletoggle();
 	
 	document.write("<div class=\"ui vertical footer segment\">\
@@ -747,86 +748,4 @@ function buildw(){
 		</div>\
 	</div>");
 }
-
-function insert(newelement, tge) {
-    var parent = tge.parentNode;
-    parent.insertBefore(newelement, tge);
-}
-
-var fpos = document.getElementsByClassName('ui fixed sortable celled table segment')[0]
-
-var inpl = document.createElement('div')
-inpl.setAttribute('class', 'ui input')
-var insl = document.createElement('input')
-insl.setAttribute('id', 'diflb')
-insl.setAttribute('placeholder', '筛选难度下界')
-inpl.appendChild(insl)
-insert(inpl, fpos)
-
-var inpr = document.createElement('div')
-inpr.setAttribute('class', 'ui input')
-var insr= document.createElement('input')
-insr.setAttribute('id', 'difrb')
-insr.setAttribute('placeholder', '筛选难度上界')
-inpr.appendChild(insr)
-insert(inpr, fpos)
-
-var sebot = document.createElement('botton')
-sebot.setAttribute('class', 'ui violet basic button')
-sebot.setAttribute('onclick', 'sedif()')
-sebot.innerText = '筛选难度'
-insert(sebot, fpos)
-
-
-var intag = document.createElement('div')
-intag.setAttribute('class', 'ui input')
-var insta= document.createElement('input')
-insta.setAttribute('id', 'intag')
-insta.setAttribute('placeholder', '筛选标签')
-intag.appendChild(insta)
-insert(intag, fpos)
-
-var sebot = document.createElement('botton')
-sebot.setAttribute('class', 'ui violet basic button')
-sebot.setAttribute('onclick', 'setag()')
-sebot.innerText = '筛选标签'
-insert(sebot, fpos)
-
-var script = document.createElement('script');
-script.setAttribute('type','text/javascript');
-
-script.innerText = "\
-var rev1 = new Array();\n\
-var rev2 = new Array();\n\
-function sedif(flag = 0) {\n\
-    var l = Number(document.getElementById('diflb').value);\n\
-    var r = Number(document.getElementById('difrb').value);\n\
-    var list = document.getElementsByTagName('tbody')[3].childNodes;\n\
-    for (var i = 0; i < rev1.length; i++) rev1[i].style = '';\n\
-    rev1 = new Array();\
-    for (var i = 0; i < list.length; i++)\n\
-        if (list[i].childNodes[1].innerHTML == 'unavailable' || Number(list[i].childNodes[1].innerHTML) < l || Number(list[i].childNodes[1].innerHTML) > r)\n\
-            list[i].style = 'display:none', rev1.push(list[i]);\n\
-    if (!flag) setag(1);\
-}\n\
-function setag(flag = 0) {\
-    var tags = document.getElementById('intag').value.split(',');\
-    var list = document.getElementsByTagName('tbody')[3].childNodes;\
-    for (var i = 0; i < rev2.length; i++) rev2[i].style = '';\
-    rev2 = new Array();\
-    for (var i = 0; i < list.length; i++) {\
-        var finded = false;\
-        for (var j = 0; j < tags.length; j++)\
-            if (list[i].childNodes[2].innerHTML.match(tags[j]) != null)\
-                finded = true;\
-        if (!finded) list[i].style = 'display:none', rev2.push(list[i]);\
-    }\
-    if (!flag) sedif();\
-}\
-"
-document.getElementsByTagName('head')[0].appendChild(script);
-
-
-
-
 
