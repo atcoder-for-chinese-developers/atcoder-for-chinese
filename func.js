@@ -624,7 +624,7 @@ function listtoggleabc(){
 	document.getElementById("list-abc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="ABC"){
-			document.getElementById(i+"-btn").setAttribute("style",flg?"":"display: none;");
+			document.getElementById(i+"-col").setAttribute("style",flg?"":"display: none;");
 		}
 	}
 }
@@ -633,7 +633,7 @@ function listtogglearc(){
 	document.getElementById("list-arc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="ARC"){
-			document.getElementById(i+"-btn").setAttribute("style",flg?"":"display: none;");
+			document.getElementById(i+"-col").setAttribute("style",flg?"":"display: none;");
 		}
 	}
 }
@@ -642,7 +642,7 @@ function listtoggleagc(){
 	document.getElementById("list-agc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="AGC"){
-			document.getElementById(i+"-btn").setAttribute("style",flg?"":"display: none;");
+			document.getElementById(i+"-col").setAttribute("style",flg?"":"display: none;");
 		}
 	}
 }
