@@ -106,7 +106,7 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	let y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
 		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx),tg=new Array(mx);
 
-	let cnt=0,cnte=list_tre.length,cnts=list_sol.length;
+	let cnt=0,cnte=list_tre.length,cnts=list_sol.length,cntt=0;
 	
 	for(let i=1;i<=abccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=abccnt;i++) for(let j=1;j<=10;j++)
@@ -240,6 +240,7 @@ function writeabc(rawd,tags,list_tre,list_sol){
 				document.write("<div onclick=\"abctagtoggle("+i.toString()+","+j.toString()+")\" style=\"position: relative;\"><a class=\"floating ui teal right label\">"+tg[i][j].length.toString()+"</a></div>");
 			document.write("<div id=\"tag-"+getabcname(i,j)+"\" style=\"display: none;\">");
 			if(tg[i][j]!=undefined){
+				cntt++;
 				for(let t=0;t<tg[i][j].length;t++){
 					document.write("<p class=\"ui tag label\">"+tg[i][j][t]+"</p>");
 				}
@@ -251,16 +252,20 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	}
 	document.write("</tbody></table>");
 	
-	let eper=(cnte/cnt*100).toFixed(3).toString(),sper=(cnts/cnt*100).toFixed(3).toString();
+	let eper=(cnte/cnt*100).toFixed(3).toString(),sper=(cnts/cnt*100).toFixed(3).toString(),tper=(cntt/cnt*100).toFixed(3);
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+eper+"\" id=\"progress-tre-abc\"><div class=\"bar\"></div><div class=\"label\">"+eper+"% 题面已完成</div></div></p>");
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+sper+"\" id=\"progress-sol-abc\"><div class=\"bar\"></div><div class=\"label\">"+sper+"% 题解已完成</div></div></p></div>");
+	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+sper+"\" id=\"progress-sol-abc\"><div class=\"bar\"></div><div class=\"label\">"+sper+"% 题解已完成</div></div></p>");
+	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+tper+"\" id=\"progress-tag-abc\"><div class=\"bar\"></div><div class=\"label\">"+tper+"% 标签已完成</div></div></p></div>");
 	$('#progress-tre-abc').progress({
 		percent:cnte/cnt*100
 	});
 	$('#progress-sol-abc').progress({
 		percent:cnts/cnt*100
 	});
-	console.log(cnt,cnte,cnts);
+	$('#progress-tag-abc').progress({
+		percent:cntt/cnt*100
+	});
+	console.log(cnt,cnte,cnts,cntt);
 }
 
 function writearc(rawd,tags,list_tre,list_sol){
@@ -272,7 +277,7 @@ function writearc(rawd,tags,list_tre,list_sol){
 	let y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
 		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx),tg=new Array(mx);
 
-	let cnt=0,cnte=list_tre.length,cnts=list_sol.length;
+	let cnt=0,cnte=list_tre.length,cnts=list_sol.length,cntt=0;
 	
 	for(let i=1;i<=arccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=arccnt;i++) for(let j=1;j<=10;j++)
@@ -400,6 +405,7 @@ function writearc(rawd,tags,list_tre,list_sol){
 				document.write("<div onclick=\"arctagtoggle("+i.toString()+","+j.toString()+")\" style=\"position: relative;\"><a class=\"floating ui teal right label\" style=\"z-index: 999;\">"+tg[i][j].length.toString()+"</a></div>");
 			document.write("<div id=\"tag-"+getarcname(i,j)+"\" style=\"display: none;\">");
 			if(tg[i][j]!=undefined){
+				cntt++;
 				for(let t=0;t<tg[i][j].length;t++){
 					document.write("<p class=\"ui tag label\">"+tg[i][j][t]+"</p>");
 				}
@@ -412,16 +418,20 @@ function writearc(rawd,tags,list_tre,list_sol){
 	}
 	document.write("</tbody></table>");
 	
-	let eper=(cnte/cnt*100).toFixed(3).toString(),sper=(cnts/cnt*100).toFixed(3).toString();
+	let eper=(cnte/cnt*100).toFixed(3).toString(),sper=(cnts/cnt*100).toFixed(3).toString(),tper=(cnts/cnt*100).toFixed(3);
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+eper+"\" id=\"progress-tre-arc\"><div class=\"bar\"></div><div class=\"label\">"+eper+"% 题面已完成</div></div></p>");
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+sper+"\" id=\"progress-sol-arc\"><div class=\"bar\"></div><div class=\"label\">"+sper+"% 题解已完成</div></div></p></div>");
+	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+sper+"\" id=\"progress-sol-arc\"><div class=\"bar\"></div><div class=\"label\">"+sper+"% 题解已完成</div></div></p>");
+	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+tper+"\" id=\"progress-tag-arc\"><div class=\"bar\"></div><div class=\"label\">"+tper+"% 标签已完成</div></div></p></div>");
 	$('#progress-tre-arc').progress({
 		percent:cnte/cnt*100
 	});
 	$('#progress-sol-arc').progress({
 		percent:cnts/cnt*100
 	});
-	console.log(cnt,cnte,cnts);
+	$('#progress-tag-arc').progress({
+		percent:cntt/cnt*100
+	});
+	console.log(cnt,cnte,cnts,cntt);
 }
 
 function writeagc(rawd,tags,list_tre,list_sol){
@@ -433,7 +443,7 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	let y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
 		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx),tg=new Array(mx);
 
-	let cnt=0,cnte=list_tre.length,cnts=list_sol.length;
+	let cnt=0,cnte=list_tre.length,cnts=list_sol.length,cntt=0;
 	
 	for(let i=1;i<=agccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=agccnt;i++) for(let j=1;j<=10;j++)
@@ -561,6 +571,7 @@ function writeagc(rawd,tags,list_tre,list_sol){
 				document.write("<div onclick=\"agctagtoggle("+i.toString()+","+j.toString()+")\" style=\"position: relative;\"><a class=\"floating ui teal right label\" style=\"z-index: 999;\">"+tg[i][j].length.toString()+"</a></div>");
 			document.write("<div id=\"tag-"+getagcname(i,j)+"\" style=\"display: none;\">");
 			if(tg[i][j]!=undefined){
+				cntt++;
 				for(let t=0;t<tg[i][j].length;t++){
 					document.write("<p class=\"ui tag label\">"+tg[i][j][t]+"</p>");
 				}
@@ -573,16 +584,20 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	}
 	document.write("</tbody></table>");
 	
-	let eper=(cnte/cnt*100).toFixed(3).toString(),sper=(cnts/cnt*100).toFixed(3).toString();
+	let eper=(cnte/cnt*100).toFixed(3).toString(),sper=(cnts/cnt*100).toFixed(3).toString(),tper=(cntt/cnt*100).toFixed(3);
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+eper+"\" id=\"progress-tre-agc\"><div class=\"bar\"></div><div class=\"label\">"+eper+"% 题面已完成</div></div></p>");
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+sper+"\" id=\"progress-sol-agc\"><div class=\"bar\"></div><div class=\"label\">"+sper+"% 题解已完成</div></div></p></div>");
+	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+sper+"\" id=\"progress-sol-agc\"><div class=\"bar\"></div><div class=\"label\">"+sper+"% 题解已完成</div></div></p>");
+	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\""+tper+"\" id=\"progress-tag-agc\"><div class=\"bar\"></div><div class=\"label\">"+tper+"% 标签已完成</div></div></p></div>");
 	$('#progress-tre-agc').progress({
 		percent:cnte/cnt*100
 	});
 	$('#progress-sol-agc').progress({
 		percent:cnts/cnt*100
 	});
-	console.log(cnt,cnte,cnts);
+	$('#progress-tag-agc').progress({
+		percent:cntt/cnt*100
+	});
+	console.log(cnt,cnte,cnts,cntt);
 }
 
 
