@@ -28,6 +28,9 @@ function getagccnt(id){
 function ext3(con){
 	return (Math.floor(con/100)).toString()+(Math.floor(con%100/10)).toString()+(con%10).toString();
 }
+function transdiff(d){
+	return Math.round(d>=400?d:400/Math.exp(1.0-d/400));
+}
 var abctoarc=new Array(233);
 function getabcname(con,id){
 	if(abctoarc[con]!=undefined&&id>1)
@@ -65,6 +68,7 @@ function closealltables(){
 	document.getElementById("arc-table").setAttribute("style","display: none;");
 	document.getElementById("agc-table").setAttribute("style","display: none;");
 	// document.getElementById("friend-links").setAttribute("style","display: none;");
+	document.getElementById("prob-list").setAttribute("style","display: none;");
 }
 function abctabletoggle(){
 	closealltables();
@@ -77,6 +81,10 @@ function arctabletoggle(){
 function agctabletoggle(){
 	closealltables();
 	document.getElementById("agc-table").setAttribute("style","display: block;");
+}
+function listtoggle(){
+	closealltables();
+	document.getElementById("prob-list").setAttribute("style","display: block;");
 }
 // function linkstoggle(){
 	// closealltables();
@@ -97,6 +105,7 @@ function agctagtoggle(i,j){
 		document.getElementById("tag-"+getagcname(i,j)).getAttribute("style")=="display: block;"?"display: none;":"display: block;"
 	);
 }
+let problist=[];
 function writeabc(rawd,tags,list_tre,list_sol){
 	let Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 	let Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
@@ -137,15 +146,20 @@ function writeabc(rawd,tags,list_tre,list_sol){
 		let flg=0;
 		for(let j=0;j<getabccnt(i);j++){
 			if(i<42||i>125||j<2||getabcname(i,j) in rawd)
-				x[i][j]=!(getabcname(i,j) in rawd)||!("difficulty" in rawd[getabcname(i,j)])?100000:Math.max(rawd[getabcname(i,j)]["difficulty"],0);
+				x[i][j]=!(getabcname(i,j) in rawd)||!("difficulty" in rawd[getabcname(i,j)])?100000:transdiff(rawd[getabcname(i,j)]["difficulty"],0);
 			else
-				x[i][j]=!("difficulty" in rawd[getarcname(ri,j-2)])?100000:Math.max(rawd[getarcname(ri,j-2)]["difficulty"],0),flg=1,abctoarc[i]=ri;
+				x[i][j]=!("difficulty" in rawd[getarcname(ri,j-2)])?100000:transdiff(rawd[getarcname(ri,j-2)]["difficulty"],0),flg=1,abctoarc[i]=ri;
 		}
 		ri+=flg;
 	}
 	for(let i=1;i<=abccnt;i++)
-		for(let j=0;j<getabccnt(i);j++)
+		for(let j=0;j<getabccnt(i);j++){
 			tg[i][j]=tags[getabcname_u(i,j)];
+			problist[getabcname_u(i,j)]={
+				"tag":tg[i][j],
+				"diff":x[i][j]
+			};
+		}
 	for(let i=abccnt;i>=1;i--){
 		siz[i]=getabccnt(i);
 		y[i]=new Array(siz[i]);
@@ -161,7 +175,7 @@ function writeabc(rawd,tags,list_tre,list_sol){
 			}
 			else if(x[i][j]<400){
 				RG[i][j]="rgb(128,128,128)";
-				Val[i][j]="0";
+				Val[i][j]=(x[i][j]/4).toString();
 				y[i][j]="class=\"diff-grey\"";
 			}
 			else if(x[i][j]<800){
@@ -305,11 +319,16 @@ function writearc(rawd,tags,list_tre,list_sol){
 		tg[i]=new Array(getarccnt(i));
 		cnt+=x[i].length;
 		for(let j=0;j<getarccnt(i);j++)
-			x[i][j]=!(getarcname(i,j) in rawd)||!("difficulty" in rawd[getarcname(i,j)])?100000:Math.max(rawd[getarcname(i,j)]["difficulty"],0);
+			x[i][j]=!(getarcname(i,j) in rawd)||!("difficulty" in rawd[getarcname(i,j)])?100000:transdiff(rawd[getarcname(i,j)]["difficulty"],0);
 	}
 	for(let i=1;i<=arccnt;i++)
-		for(let j=57<i&&i<104?2:0;j<getarccnt(i);j++)
+		for(let j=57<i&&i<104?2:0;j<getarccnt(i);j++){
 			tg[i][j]=tags[getarcname_u(i,j)];
+			problist[getarcname_u(i,j)]={
+				"tag":tg[i][j],
+				"diff":x[i][j]
+			};
+		}
 	for(let i=arccnt;i>=1;i--){
 		siz[i]=getabccnt(i);
 		y[i]=new Array(siz[i]);
@@ -471,11 +490,16 @@ function writeagc(rawd,tags,list_tre,list_sol){
 		tg[i]=new Array(getagccnt(i));
 		cnt+=x[i].length;
 		for(let j=0;j<getagccnt(i);j++)
-			x[i][j]=!(getagcname(i,j) in rawd)||!("difficulty" in rawd[getagcname(i,j)])?100000:Math.max(rawd[getagcname(i,j)]["difficulty"],0);
+			x[i][j]=!(getagcname(i,j) in rawd)||!("difficulty" in rawd[getagcname(i,j)])?100000:transdiff(rawd[getagcname(i,j)]["difficulty"],0);
 	}
 	for(let i=1;i<=agccnt;i++)
-	    for(let j=0;j<getagccnt(i);j++)
-	        tg[i][j]=tags[getagcname_u(i,j)];
+		for(let j=0;j<getagccnt(i);j++){
+			tg[i][j]=tags[getagcname_u(i,j)];
+			problist[getagcname_u(i,j)]={
+				"tag":tg[i][j],
+				"diff":x[i][j]
+			};
+		}
 	for(let i=agccnt;i>=1;i--){
 		siz[i]=getagccnt(i);
 		y[i]=new Array(siz[i]);
@@ -600,7 +624,6 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	console.log(cnt,cnte,cnts,cntt);
 }
 
-
 // function writelinks(){
 	// document.write("<div id=\"friend-links\"><div class=\"ui fluid vertical menu\">\
 		// <p class=\"item\">\
@@ -620,6 +643,59 @@ function writeagc(rawd,tags,list_tre,list_sol){
 		// </p>\
 	// </div></div>");
 // }
+
+function listtoggleabc(){
+	let flg=document.getElementById("list-abc-btn").getAttribute("class")=="ui toggle button";
+	document.getElementById("list-abc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
+	for(let i in problist){
+		if(i.substr(0,3)=="ABC"){
+			document.getElementById(i+"-btn").setAttribute("style",flg?"":"display: none;");
+		}
+	}
+}
+function listtogglearc(){
+	let flg=document.getElementById("list-arc-btn").getAttribute("class")=="ui toggle button";
+	document.getElementById("list-arc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
+	for(let i in problist){
+		if(i.substr(0,3)=="ARC"){
+			document.getElementById(i+"-btn").setAttribute("style",flg?"":"display: none;");
+		}
+	}
+}
+function listtoggleagc(){
+	let flg=document.getElementById("list-agc-btn").getAttribute("class")=="ui toggle button";
+	document.getElementById("list-agc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
+	for(let i in problist){
+		if(i.substr(0,3)=="AGC"){
+			document.getElementById(i+"-btn").setAttribute("style",flg?"":"display: none;");
+		}
+	}
+}
+
+function writelist(){
+	document.write("<div id=\"prob-list\">");
+	document.write("<p align=\"center\" style=\"font-style: italic\">注意：这部分仍在施工中</p>");
+	document.write("<button class=\"ui toggle button active\" id=\"list-abc-btn\" onclick=\"listtoggleabc()\">Show ABC</button>");
+	document.write("<button class=\"ui toggle button active\" id=\"list-arc-btn\" onclick=\"listtogglearc()\">Show ARC</button>");
+	document.write("<button class=\"ui toggle button active\" id=\"list-agc-btn\" onclick=\"listtoggleagc()\">Show AGC</button>");
+	document.write("<table class=\"ui fixed sortable celled table segment\">");
+	document.write("<thead><tr><th>ID</th><th>难度</th><th>标签</th></thead><tbody>");
+	for(let i in problist){
+		document.write("<tr id=\""+i+"-btn\">");
+		document.write("<td>"+i+"</td>");
+		document.write("<td>"+(problist[i]["diff"]==100000?"unavailable":problist[i]["diff"].toString())+"</td>");
+		document.write("<td>");
+		if(problist[i]["tag"]!=undefined){
+			let t=problist[i]["tag"];
+			for(let j=0;j<t.length;j++){
+				document.write("<div class=\"ui tag label\">"+t[j]+"</div>");
+			}
+		}
+		document.write("</td></tr>");
+	}
+	document.write("</tbody></table></div>");
+}
+
 function buildw(){
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	let rawd,list,tags;
@@ -632,14 +708,14 @@ function buildw(){
 	readTextFile("tags.json","json",function(text){
 		tags=JSON.parse(text);
 	});
-	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a></div>");
-	
-	document.write("<p align=\"center\"><font style=\"font-size:10px;\">单击题目旁的小方格展开题目标签列表，按钮上的数字表示标签个数。</font></p>");
+	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"listtoggle()\">筛选</a></div>");
 	
 	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"]);
 	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"]);
 	writeagc(rawd,tags,list["agc_list_tre"],list["agc_list_sol"]);
 	// writelinks();
+	writelist(problist);
+	console.log(problist);
 	abctabletoggle();
 	
 	document.write("<div class=\"ui vertical footer segment\">\
