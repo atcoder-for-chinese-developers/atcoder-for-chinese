@@ -747,3 +747,49 @@ function buildw(){
 		</div>\
 	</div>");
 }
+
+function insert(newelement, targetelement) {
+    var parent = targetelement.parentNode;
+    parent.insertBefore(newelement, targetelement);
+}
+
+var fpos = document.getElementsByClassName('ui fixed sortable celled table segment')[0]
+
+var inpl = document.createElement('div')
+inpl.setAttribute('class', 'ui input')
+var insl = document.createElement('input')
+insl.setAttribute('id', 'diflb')
+insl.setAttribute('placeholder', '筛选难度下界')
+inpl.appendChild(insl)
+insert(inpl, fpos)
+
+var inpr = document.createElement('div')
+inpr.setAttribute('class', 'ui input')
+var insr= document.createElement('input')
+insr.setAttribute('id', 'difrb')
+insr.setAttribute('placeholder', '筛选难度上界')
+inpr.appendChild(insr)
+insert(inpr, fpos)
+
+var sebot = document.createElement('botton')
+sebot.setAttribute('class', 'ui violet basic button')
+sebot.setAttribute('onclick', 'sedif()')
+sebot.innerText = '筛选难度'
+insert(sebot, fpos)
+
+var script = document.createElement('script');
+script.setAttribute('type','text/javascript');
+
+script.innerText = "\
+var rev = new Array();\n\
+function sedif() {\n\
+    var l = Number(document.getElementById('diflb').value);\n\
+    var r = Number(document.getElementById('difrb').value);\n\
+    var list = document.getElementsByTagName('tbody')[3].childNodes;\n\
+    for (var i = 0; i < rev.length; i++) rev[i].style = '';\n\
+    for (var i = 0; i < list.length; i++)\n\
+        if (list[i].childNodes[1].innerHTML == 'unavailable' || Number(list[i].childNodes[1].innerHTML) < l || Number(list[i].childNodes[1].innerHTML) > r)\n\
+            list[i].style = 'display:none', rev.push(list[i]);\n\
+}\n\
+"
+document.getElementsByTagName('head')[0].appendChild(script);
