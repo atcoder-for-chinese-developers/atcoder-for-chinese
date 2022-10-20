@@ -810,7 +810,7 @@ function sedif(flag = 0) {\n\
     if (!flag) setag(1);\
 }\n\
 function setag(flag = 0) {\
-    var tags = JSON.parse('[' + document.getElementById('intag').value + ']');\
+    var tags = document.getElementById('intag').value.split(',');\
     var list = document.getElementsByTagName('tbody')[3].childNodes;\
     for (var i = 0; i < rev2.length; i++) rev2[i].style = '';\
     rev2 = new Array();\
