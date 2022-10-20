@@ -64,7 +64,7 @@ function closealltables(){
 	document.getElementById("abc-table").setAttribute("style","display: none;");
 	document.getElementById("arc-table").setAttribute("style","display: none;");
 	document.getElementById("agc-table").setAttribute("style","display: none;");
-	document.getElementById("friend-links").setAttribute("style","display: none;");
+	// document.getElementById("friend-links").setAttribute("style","display: none;");
 }
 function abctabletoggle(){
 	closealltables();
@@ -78,10 +78,10 @@ function agctabletoggle(){
 	closealltables();
 	document.getElementById("agc-table").setAttribute("style","display: block;");
 }
-function linkstoggle(){
-	closealltables();
-	document.getElementById("friend-links").setAttribute("style","display: block;");
-}
+// function linkstoggle(){
+	// closealltables();
+	// document.getElementById("friend-links").setAttribute("style","display: block;");
+// }
 function abctagtoggle(i,j){
 	document.getElementById("tag-"+getabcname(i,j)).setAttribute("style",
 		document.getElementById("tag-"+getabcname(i,j)).getAttribute("style")=="display: block;"?"display: none;":"display: block;"
@@ -586,25 +586,25 @@ function writeagc(rawd,tags,list_tre,list_sol){
 }
 
 
-function writelinks(){
-	document.write("<div id=\"friend-links\"><div class=\"ui fluid vertical menu\">\
-		<p class=\"item\">\
-			友情链接\
-		</p>\
-		<p class=\"item\">\
-			<a href=\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\"><img src=\"images/logo1.png\" alt=\"Github Repo\" width=\"64\" height=\"64\"></a>\
-		</p>\
-		<p class=\"item\">\
-			<a href=\"https://atcoder.jp\"><img src=\"images/atcoder.png\" alt=\"AtCoder\" width=\"64\" height=\"64\"></a>\
-		</p>\
-		<p class=\"item\">\
-			<a href=\"https://kenkoooo.com/atcoder/#/\"><img src=\"images/kenkoooo.png\" alt=\"Kenkoooo AtCoder Problems\" width=\"64\" height=\"64\"></a>\
-		</p>\
-		<p class=\"item\">\
-			<a href=\"https://semantic-ui.com/\"><img src=\"images/semantic.png\" alt=\"Semantic UI\" width=\"64\" height=\"64\"></a>\
-		</p>\
-	</div></div>");
-}
+// function writelinks(){
+	// document.write("<div id=\"friend-links\"><div class=\"ui fluid vertical menu\">\
+		// <p class=\"item\">\
+			// 友情链接\
+		// </p>\
+		// <p class=\"item\">\
+			// <a href=\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\"><img src=\"images/logo1.png\" alt=\"Github Repo\" width=\"64\" height=\"64\"></a>\
+		// </p>\
+		// <p class=\"item\">\
+			// <a href=\"https://atcoder.jp\"><img src=\"images/atcoder.png\" alt=\"AtCoder\" width=\"64\" height=\"64\"></a>\
+		// </p>\
+		// <p class=\"item\">\
+			// <a href=\"https://kenkoooo.com/atcoder/#/\"><img src=\"images/kenkoooo.png\" alt=\"Kenkoooo AtCoder Problems\" width=\"64\" height=\"64\"></a>\
+		// </p>\
+		// <p class=\"item\">\
+			// <a href=\"https://semantic-ui.com/\"><img src=\"images/semantic.png\" alt=\"Semantic UI\" width=\"64\" height=\"64\"></a>\
+		// </p>\
+	// </div></div>");
+// }
 function buildw(){
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	let rawd,list,tags;
@@ -617,13 +617,13 @@ function buildw(){
 	readTextFile("tags.json","json",function(text){
 		tags=JSON.parse(text);
 	});
-	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"linkstoggle()\">友链</a></div>");
+	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a></div>");
 	
 	document.write("<p align=\"center\"><font style=\"font-size:10px;\">单击题目旁的小方格展开题目标签列表，按钮上的数字表示标签个数。</font></p>");
 	
 	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"]);
 	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"]);
 	writeagc(rawd,tags,list["agc_list_tre"],list["agc_list_sol"]);
-	writelinks();
+	// writelinks();
 	abctabletoggle();
 }
