@@ -748,9 +748,9 @@ function buildw(){
 	</div>");
 }
 
-function insert(newelement, targetelement) {
-    var parent = targetelement.parentNode;
-    parent.insertBefore(newelement, targetelement);
+function insert(newelement, tge) {
+    var parent = tge.parentNode;
+    parent.insertBefore(newelement, tge);
 }
 
 var fpos = document.getElementsByClassName('ui fixed sortable celled table segment')[0]
@@ -777,19 +777,56 @@ sebot.setAttribute('onclick', 'sedif()')
 sebot.innerText = '筛选难度'
 insert(sebot, fpos)
 
+
+var intag = document.createElement('div')
+intag.setAttribute('class', 'ui input')
+var insta= document.createElement('input')
+insta.setAttribute('id', 'intag')
+insta.setAttribute('placeholder', '筛选标签')
+intag.appendChild(insta)
+insert(intag, fpos)
+
+var sebot = document.createElement('botton')
+sebot.setAttribute('class', 'ui violet basic button')
+sebot.setAttribute('onclick', 'setag()')
+sebot.innerText = '筛选标签'
+insert(sebot, fpos)
+
 var script = document.createElement('script');
 script.setAttribute('type','text/javascript');
 
 script.innerText = "\
-var rev = new Array();\n\
-function sedif() {\n\
+var rev1 = new Array();\n\
+var rev2 = new Array();\n\
+function sedif(flag = 0) {\n\
     var l = Number(document.getElementById('diflb').value);\n\
     var r = Number(document.getElementById('difrb').value);\n\
     var list = document.getElementsByTagName('tbody')[3].childNodes;\n\
-    for (var i = 0; i < rev.length; i++) rev[i].style = '';\n\
+    for (var i = 0; i < rev1.length; i++) rev1[i].style = '';\n\
+    rev1 = new Array();\
     for (var i = 0; i < list.length; i++)\n\
         if (list[i].childNodes[1].innerHTML == 'unavailable' || Number(list[i].childNodes[1].innerHTML) < l || Number(list[i].childNodes[1].innerHTML) > r)\n\
-            list[i].style = 'display:none', rev.push(list[i]);\n\
+            list[i].style = 'display:none', rev1.push(list[i]);\n\
+    if (!flag) setag(1);\
 }\n\
+function setag(flag = 0) {\
+    var tags = document.getElementById('intag').value.split(',');\
+    var list = document.getElementsByTagName('tbody')[3].childNodes;\
+    for (var i = 0; i < rev2.length; i++) rev2[i].style = '';\
+    rev2 = new Array();\
+    for (var i = 0; i < list.length; i++) {\
+        var finded = false;\
+        for (var j = 0; j < tags.length; j++)\
+            if (list[i].childNodes[2].innerHTML.match(tags[j]) != null)\
+                finded = true;\
+        if (!finded) list[i].style = 'display:none', rev2.push(list[i]);\
+    }\
+    if (!flag) sedif();\
+}\
 "
 document.getElementsByTagName('head')[0].appendChild(script);
+
+
+
+
+
