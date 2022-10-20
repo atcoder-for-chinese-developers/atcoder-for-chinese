@@ -626,4 +626,33 @@ function buildw(){
 	writeagc(rawd,tags,list["agc_list_tre"],list["agc_list_sol"]);
 	// writelinks();
 	abctabletoggle();
+	
+	document.write("<div class=\"ui vertical footer segment\">\
+		<div class=\"ui center aligned container\">\
+			<div class=\"ui section divider\"></div>\
+			<div class=\"ui buttons\">\
+				<script>\
+					function jumplink1(){\
+						window.location.href=\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\";\
+					}\
+					function jumplink2(){\
+						window.location.href=\"https://atcoder.jp/\";\
+					}\
+					function jumplink3(){\
+						window.location.href=\"https://kenkoooo.com/atcoder/#/table/\";\
+					}\
+					function jumplink4(){\
+						window.location.href=\"https://semantic-ui.com/\";\
+					}\
+				</script>\
+				<button class=\"ui basic button\" onclick=\"jumplink1()\"><img src=\"images/logo1.png\"    class=\"ui centered mini image\"/></button>\
+				<button class=\"ui basic button\" onclick=\"jumplink2()\"><img src=\"images/atcoder.png\"  class=\"ui centered mini image\"/></button>\
+				<button class=\"ui basic button\" onclick=\"jumplink3()\"><img src=\"images/kenkoooo.png\" class=\"ui centered mini image\"/></button>\
+				<button class=\"ui basic button\" onclick=\"jumplink4()\"><img src=\"images/semantic.png\" class=\"ui centered mini image\"/></button>\
+			</div>\
+			<p align=\"center\">\
+				Powered by <a href=\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\">AtCoder for Chinese Develop Team</a>.\
+			</p>\
+		</div>\
+	</div>");
 }
