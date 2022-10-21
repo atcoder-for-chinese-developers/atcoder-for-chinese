@@ -27,7 +27,7 @@
 
 最好不要写一篇就传一篇，建议一批一批来。
 
-如果发现自己的文件没有更新，首先等待 github pages 进行部署，然后刷新，再不行就 Ctrl+F5 清除缓存。
+如果发现自己的文件没有更新，首先等待 github pages 进行部署（[在自己库中部署的前置操作](https://www.luogu.com.cn/paste/r39mg2gg)），然后刷新，再不行就 Ctrl+F5 清除缓存。
 
 # atcoder-for-chinese
 
