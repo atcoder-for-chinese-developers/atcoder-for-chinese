@@ -225,7 +225,7 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	for(let i=abccnt;i;i--){
 		document.write("<tr>");
 		let t=ext3(i);
-		document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
+		document.write("<td" + ' id="gABC' + t + '"' + "><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
 		for(let j=0;j<siz[i];j++){
 			let uC=Charu[j],lC="_"+Charl[j]+"\" ";
 			if(j==7&&i>232)uC="Ex";
