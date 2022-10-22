@@ -444,7 +444,6 @@ function writearc(rawd,tags,list_tre,list_sol,prbs){
 				for(let t=0;t<tg[i][j].length;t++){
 					document.write("<p class=\"ui tag label\">"+tg[i][j][t]+"</p>");
 				}
-				// document.write("</div>&nbsp;tag("+tg[i][j].length+")");
 			}
 			document.write("</td>");
 		}
@@ -626,7 +625,6 @@ function writeagc(rawd,tags,list_tre,list_sol,prbs){
 				for(let t=0;t<tg[i][j].length;t++){
 					document.write("<p class=\"ui tag label\">"+tg[i][j][t]+"</p>");
 				}
-				// document.write("</div>&nbsp;tag("+tg[i][j].length+")");
 			}
 			document.write("</td>");
 		}
@@ -734,8 +732,8 @@ function writelist(){
 	document.write("<div class=\"ui input\"><input id=\"difrb\" style=\"width: 150;\" placeholder=\"筛选难度上界\"></input></div>");
 	document.write("<div class=\"ui input\"><input id=\"intag\" style=\"width: 210;\" placeholder=\"筛选标签，用半角空格分开\"></input></div>");
 	document.write("<button class=\"ui violet basic button\" onclick=\"setfilter()\">筛选</button>");
-	document.write("<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">随机跳题</button>\
-		<p></p><table class=\"ui fixed celled table segment\"><tbody><tr id=\"rndprob\"></tr></tbody></table>");
+	document.write("<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">随机跳题</button>");
+	document.write("<p></p><table class=\"ui fixed celled table segment\"><tbody><tr id=\"rndprob\"></tr></tbody></table>");
 	document.write("<table class=\"ui fixed sortable celled table segment\">");
 	document.write("<thead><tr><th>编号</th><th>标题</th><th>链接</th><th>难度</th><th>标签</th></thead><tbody>");
 	for(let i in problist){
@@ -766,8 +764,8 @@ function jumptobottom(){
 
 function buildw(){
 	document.write("<div id=\"page-top\"></div>");
-	document.write("<i onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; left: 30; top: 50; font-size: 1.2em;\" class=\"arrow up icon\">到界面顶部</i>");
-	document.write("<i onclick=\"jumptobottom()\" style=\"z-index: 999;position: fixed; left: 30; bottom: 150; font-size: 1.2em;\" class=\"arrow down icon\">到界面底部 </i>");
+	document.write("<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; left: 30; top: 50;\"><i style=\"font-size: 2em;\" class=\"arrow up icon\"></i><p></p>到界面<p></p>顶部</button>");
+	document.write("<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; left: 30; bottom: 80;\"><i style=\"font-size: 2em;\" class=\"arrow down icon\"></i><p></p>到界面<p></p>底部</button>");
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	let rawd,list,tags,prbs;
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json","json",function(text){
@@ -804,7 +802,6 @@ function buildw(){
 	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"],prbs);
 	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"],prbs);
 	writeagc(rawd,tags,list["agc_list_tre"],list["agc_list_sol"],prbs);
-	// writelinks();
 	writelist(problist);
 	abctabletoggle();
 	
