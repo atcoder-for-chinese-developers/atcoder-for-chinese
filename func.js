@@ -118,7 +118,6 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	for(let i=0;i<list_tre.length;i++){
 		let x=list_tre[i][0],y=list_tre[i][1];
 		if(x>abccnt||x<0||y>getabccnt(x)||y<0)
-			console.log(i,x,y),
 			alert("problem "+getabcname_u(x,y)+" does not exist");
 		else
 			Ava_tre[x][y]=1;
@@ -635,7 +634,8 @@ function listtoggleabc(){
 	document.getElementById("list-abc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="ABC"){
-			document.getElementById(i+"-col").setAttribute("style",flg&&isd[i]?"":"display: none;");
+			isd[i]&=flg;
+			document.getElementById(i+"-col").setAttribute("style",isd[i]?"":"display: none;");
 		}
 	}
 }
@@ -644,7 +644,8 @@ function listtogglearc(){
 	document.getElementById("list-arc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="ARC"){
-			document.getElementById(i+"-col").setAttribute("style",flg&&isd[i]?"":"display: none;");
+			isd[i]&=flg;
+			document.getElementById(i+"-col").setAttribute("style",isd[i]?"":"display: none;");
 		}
 	}
 }
@@ -653,7 +654,8 @@ function listtoggleagc(){
 	document.getElementById("list-agc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="AGC"){
-			document.getElementById(i+"-col").setAttribute("style",flg&&isd[i]?"":"display: none;");
+			isd[i]&=flg;
+			document.getElementById(i+"-col").setAttribute("style",isd[i]?"":"display: none;");
 		}
 	}
 }
@@ -682,7 +684,6 @@ function setfilter(){
 }
 
 function getrandprob(){
-	console.log("test");
 	let cnt=0,p;
 	for(let i in problist){
 		if(document.getElementById(i+"-col").getAttribute("style")=="")
@@ -737,10 +738,27 @@ function buildw(){
 		rawd=JSON.parse(text);
 	});
 	readTextFile("list.json","json",function(text){
-		list=JSON.parse(text);
+		try{
+			list=JSON.parse(text);
+		}catch{
+			list={
+				"abc_list_tre":[],
+				"abc_list_sol":[],
+				"arc_list_tre":[],
+				"arc_list_sol":[],
+				"agc_list_tre":[],
+				"agc_list_sol":[]
+			};
+			alert("list is not valid");
+		}
 	});
 	readTextFile("tags.json","json",function(text){
-		tags=JSON.parse(text);
+		try{
+			tags=JSON.parse(text);
+		}catch{
+			tags={};
+			alert("tags.json is not valid");
+		}
 	});
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"listtoggle()\">筛选</a></div>");
 	
