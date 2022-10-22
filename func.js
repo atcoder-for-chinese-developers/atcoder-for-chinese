@@ -708,6 +708,7 @@ function setfilter(){
 }
 
 function getrandprob(){
+	document.getElementById("rndprob").innerHTML="";
 	let cnt=0,p;
 	for(let i in problist){
 		if(document.getElementById(i+"-col").getAttribute("style")=="")
@@ -756,7 +757,17 @@ function writelist(){
 	document.write("</tbody></table></div>");
 }
 
+function jumptotop(){
+	window.location.href="#page-top";
+}
+function jumptobottom(){
+	window.location.href="#page-end";
+}
+
 function buildw(){
+	document.write("<div id=\"page-top\"></div>");
+	document.write("<i onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; left: 30; top: 50; font-size: 1.2em;\" class=\"arrow up icon\">到界面顶部</i>");
+	document.write("<i onclick=\"jumptobottom()\" style=\"z-index: 999;position: fixed; left: 30; bottom: 150; font-size: 1.2em;\" class=\"arrow down icon\">到界面底部 </i>");
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	let rawd,list,tags,prbs;
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json","json",function(text){
@@ -825,5 +836,6 @@ function buildw(){
 			</p>\
 		</div>\
 	</div>");
+	document.write("<div id=\"page-end\"></div>")
 }
 
