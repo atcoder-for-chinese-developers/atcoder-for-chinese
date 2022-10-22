@@ -152,7 +152,10 @@ function writeabc(rawd,tags,list_tre,list_sol){
 			tg[i][j]=tags[getabcname_u(i,j)];
 			problist[getabcname_u(i,j)]={
 				"tag":tg[i][j],
-				"diff":x[i][j]
+				"diff":x[i][j],
+				"org_a":"<a href=\"https://atcoder.jp/contests/abc"+ext3(i)+"/tasks/"+getabcname(i,j)+"\">"+getabcname_u(i,j)+"</a>",
+				"prob_a":Ava_tre[i][j]?"<a href=\"?page="+getabcname_u(i,j)+"_translation\">翻译</a>&nbsp;&nbsp;&nbsp;":"",
+				"solu_a":Ava_sol[i][j]?"<a href=\"?page="+getabcname_u(i,j)+"_solution\">题解</a>&nbsp;&nbsp;&nbsp;":""
 			};
 		}
 	for(let i=abccnt;i>=1;i--){
@@ -225,7 +228,7 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	for(let i=abccnt;i;i--){
 		document.write("<tr>");
 		let t=ext3(i);
-		document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
+		document.write("<td" + ' id="gABC' + t + '"' + "><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
 		for(let j=0;j<siz[i];j++){
 			let uC=Charu[j],lC="_"+Charl[j]+"\" ";
 			if(j==7&&i>232)uC="Ex";
@@ -321,7 +324,10 @@ function writearc(rawd,tags,list_tre,list_sol){
 			tg[i][j]=tags[getarcname_u(i,j)];
 			problist[getarcname_u(i,j)]={
 				"tag":tg[i][j],
-				"diff":x[i][j]
+				"diff":x[i][j],
+				"org_a":"<a href=\"https://atcoder.jp/contests/arc"+ext3(i)+"/tasks/"+getarcname(i,j)+"\">"+getarcname_u(i,j)+"</a>",
+				"prob_a":Ava_tre[i][j]?"<a href=\"?page="+getarcname_u(i,j)+"_translation\">翻译</a>&nbsp;&nbsp;&nbsp;":"",
+				"solu_a":Ava_sol[i][j]?"<a href=\"?page="+getarcname_u(i,j)+"_solution\">题解</a>&nbsp;&nbsp;&nbsp;":""
 			};
 		}
 	for(let i=arccnt;i>=1;i--){
@@ -492,7 +498,10 @@ function writeagc(rawd,tags,list_tre,list_sol){
 			tg[i][j]=tags[getagcname_u(i,j)];
 			problist[getagcname_u(i,j)]={
 				"tag":tg[i][j],
-				"diff":x[i][j]
+				"diff":x[i][j],
+				"org_a":"<a href=\"https://atcoder.jp/contests/agc"+ext3(i)+"/tasks/"+getagcname(i,j)+"\">"+getagcname_u(i,j)+"</a>",
+				"prob_a":Ava_tre[i][j]?"<a href=\"?page="+getagcname_u(i,j)+"_translation\">翻译</a>&nbsp;&nbsp;&nbsp;":"",
+				"solu_a":Ava_sol[i][j]?"<a href=\"?page="+getagcname_u(i,j)+"_solution\">题解</a>&nbsp;&nbsp;&nbsp;":""
 			};
 		}
 	for(let i=agccnt;i>=1;i--){
@@ -619,12 +628,14 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	console.log(cnt,cnte,cnts,cntt);
 }
 
+let isd=[];
+
 function listtoggleabc(){
 	let flg=document.getElementById("list-abc-btn").getAttribute("class")=="ui toggle button";
 	document.getElementById("list-abc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="ABC"){
-			document.getElementById(i+"-col").setAttribute("style",flg?"":"display: none;");
+			document.getElementById(i+"-col").setAttribute("style",flg&&isd[i]?"":"display: none;");
 		}
 	}
 }
@@ -633,7 +644,7 @@ function listtogglearc(){
 	document.getElementById("list-arc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="ARC"){
-			document.getElementById(i+"-col").setAttribute("style",flg?"":"display: none;");
+			document.getElementById(i+"-col").setAttribute("style",flg&&isd[i]?"":"display: none;");
 		}
 	}
 }
@@ -642,7 +653,7 @@ function listtoggleagc(){
 	document.getElementById("list-agc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="AGC"){
-			document.getElementById(i+"-col").setAttribute("style",flg?"":"display: none;");
+			document.getElementById(i+"-col").setAttribute("style",flg&&isd[i]?"":"display: none;");
 		}
 	}
 }
@@ -661,30 +672,51 @@ function setfilter(){
 	dl=dl==""||isNaN(Number(dl))?-10000:Number(dl);
 	dr=dr==""||isNaN(Number(dr))?10000:Number(dr);
 	utg=utg==""?[]:utg.split(" ");
-	console.log(dl,dr,utg);
 	for(let i in problist){
 		let flg=(dl==-10000&&dr==10000)||(dl<=problist[i]["diff"]&&problist[i]["diff"]<=dr);
 		for(let j in utg)
 			flg&=isinarray(utg[j],problist[i]["tag"]);
+		isd[i]=flg;
 		document.getElementById(i+"-col").setAttribute("style",flg?"":"display: none;");
+	}
+}
+
+function getrandprob(){
+	console.log("test");
+	let cnt=0,p;
+	for(let i in problist){
+		if(document.getElementById(i+"-col").getAttribute("style")=="")
+			cnt++;
+	}
+	if(!cnt)return;
+	p=Math.floor(Math.random()*cnt);
+	for(let i in problist){
+		if(document.getElementById(i+"-col").getAttribute("style")==""){
+			if(!p--)
+				document.getElementById("rndprob").innerHTML=document.getElementById(i+"-col").innerHTML;
+		}
 	}
 }
 
 function writelist(){
 	document.write("<div id=\"prob-list\">");
 	document.write("<p align=\"center\" style=\"font-style: italic\">注意：这部分仍在施工中</p>");
-	document.write("<button class=\"ui toggle button active\" id=\"list-abc-btn\" onclick=\"listtoggleabc()\">Show ABC</button>");
-	document.write("<button class=\"ui toggle button active\" id=\"list-arc-btn\" onclick=\"listtogglearc()\">Show ARC</button>");
-	document.write("<button class=\"ui toggle button active\" id=\"list-agc-btn\" onclick=\"listtoggleagc()\">Show AGC</button>");
-	document.write("<div class=\"ui input\"><input id=\"diflb\" style=\"width: 233;\" placeholder=\"筛选难度下界，默认 -10000\"></input></div>");
-	document.write("<div class=\"ui input\"><input id=\"difrb\" style=\"width: 233;\" placeholder=\"筛选难度上界，默认 10000\"></input></div>");
-	document.write("<div class=\"ui input\"><input id=\"intag\" style=\"width: 233;\" placeholder=\"筛选标签，用半角空格分开\"></input></div>");
+	document.write("<button class=\"ui toggle button active\" id=\"list-abc-btn\" onclick=\"listtoggleabc()\">显示 ABC</button>");
+	document.write("<button class=\"ui toggle button active\" id=\"list-arc-btn\" onclick=\"listtogglearc()\">显示 ARC</button>");
+	document.write("<button class=\"ui toggle button active\" id=\"list-agc-btn\" onclick=\"listtoggleagc()\">显示 AGC</button>");
+	document.write("<div class=\"ui input\"><input id=\"diflb\" style=\"width: 150;\" placeholder=\"筛选难度下界\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"difrb\" style=\"width: 150;\" placeholder=\"筛选难度上界\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"intag\" style=\"width: 210;\" placeholder=\"筛选标签，用半角空格分开\"></input></div>");
 	document.write("<button class=\"ui violet basic button\" onclick=\"setfilter()\">筛选</button>");
+	document.write("<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">随机跳题</button>\
+		<p></p><table class=\"ui fixed celled table segment\"><tbody><tr id=\"rndprob\"></tr></tbody></table>");
 	document.write("<table class=\"ui fixed sortable celled table segment\">");
-	document.write("<thead><tr><th>ID</th><th>难度</th><th>标签</th></thead><tbody>");
+	document.write("<thead><tr><th>ID</th><th>链接</th><th>难度</th><th>标签</th></thead><tbody>");
 	for(let i in problist){
-		document.write("<tr id=\""+i+"-col\">");
-		document.write("<td>"+i+"</td>");
+		isd[i]=1;
+		document.write("<tr id=\""+i+"-col\" style=\"\">");
+		document.write("<td>"+problist[i]["org_a"]+"</td>");
+		document.write("<td>"+problist[i]["prob_a"]+problist[i]["solu_a"]+"</td>");
 		document.write("<td>"+(problist[i]["diff"]==100000?"unavailable":problist[i]["diff"].toString())+"</td>");
 		document.write("<td>");
 		if(problist[i]["tag"]!=undefined){
