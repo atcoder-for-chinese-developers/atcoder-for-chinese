@@ -764,8 +764,8 @@ function jumptobottom(){
 
 function buildw(){
 	document.write("<div id=\"page-top\"></div>");
-	document.write("<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; left: 30; top: 50;\"><i style=\"font-size: 2em;\" class=\"arrow up icon\"></i><p></p>到界面<p></p>顶部</button>");
-	document.write("<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; left: 30; bottom: 80;\"><i style=\"font-size: 2em;\" class=\"arrow down icon\"></i><p></p>到界面<p></p>底部</button>");
+	document.write("<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; left: 30; top: 50;\"><i style=\"font-size: 2em;\" class=\"arrow up icon\"></i><p></p>到顶部</button>");
+	document.write("<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; left: 30; bottom: 80;\"><i style=\"font-size: 2em;\" class=\"arrow down icon\"></i><p></p>到底部</button>");
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	let rawd,list,tags,prbs;
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json","json",function(text){
