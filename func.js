@@ -225,14 +225,14 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	for(let i=abccnt;i;i--){
 		document.write("<tr>");
 		let t=ext3(i);
-		document.write("<td" + ' id="gABC' + t + '"' + "><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
+		document.write("<td><a href=\"https://atcoder.jp/contests/abc"+t+"\">ABC"+t+"</a></td>");
 		for(let j=0;j<siz[i];j++){
 			let uC=Charu[j],lC="_"+Charl[j]+"\" ";
 			if(j==7&&i>232)uC="Ex";
 			if(i<20)lC="_"+(j+1).toString()+"\" ";
 			let tre_cur=treA; if(Ava_tre[i][j]) tre_cur = treA_Av;
 			let sol_cur=solA; if(Ava_sol[i][j]) sol_cur = solA_Av;
-			document.write("<td>"+webA+t+"/tasks/"+getabcname(i,j)+"\" "+y[i][j]+">");
+			document.write("<td" + ' id="gABC' +getabcname(i,j)+"\" "+y[i][j]+ ">"+webA+t+"/tasks/"+getabcname(i,j)+"\" "+y[i][j]+">");
 			if(x[i][j]<3200){
 				document.write("<ta href=\"\" title=\""+CCC[i][j]+"\"> <span class=\"difficulty-circle\" style=\"border-color: "+RG[i][j]+"; background: linear-gradient(to top, "+RG[i][j]+" "+Val[i][j]+"%, rgba(0, 0, 0, 0) "+Val[i][j]+"%) border-box;\"></span></ta>");
 			}else if(x[i][j]<3600){
