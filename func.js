@@ -101,7 +101,7 @@ function agctagtoggle(i,j){
 	);
 }
 let problist=[];
-function writeabc(rawd,tags,list_tre,list_sol){
+function writeabc(rawd,tags,list_tre,list_sol,prbs){
 	let Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 	let Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 	let Lim=8,abccnt=0,mx=1005;
@@ -110,7 +110,7 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	let y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
 		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx),tg=new Array(mx);
 
-	let cnt=0,cnte=list_tre.length,cnts=list_sol.length,cntt=0;
+	let cnt=0,cnte=list_tre.length,cnts=list_sol.length,cntt=0,nametoid=[],abctitle=new Array(mx);
 	
 	for(let i=1;i<=abccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=abccnt;i++) for(let j=1;j<=10;j++)
@@ -136,6 +136,7 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	for(let i=1,ri=58;i<=abccnt;i++){
 		x[i]=new Array(getabccnt(i));
 		tg[i]=new Array(getabccnt(i));
+		abctitle[i]=new Array(getabccnt(i));
 		cnt+=x[i].length;
 		let flg=0;
 		for(let j=0;j<getabccnt(i);j++){
@@ -147,11 +148,18 @@ function writeabc(rawd,tags,list_tre,list_sol){
 		ri+=flg;
 	}
 	for(let i=1;i<=abccnt;i++)
+		for(let j=0;j<getabccnt(i);j++)
+			nametoid[getabcname(i,j)]=[i,j];
+	for(let i in prbs)
+		if(prbs[i]["id"] in nametoid)
+			abctitle[nametoid[prbs[i]["id"]][0]][nametoid[prbs[i]["id"]][1]]=prbs[i]["title"];
+	for(let i=1;i<=abccnt;i++)
 		for(let j=0;j<getabccnt(i);j++){
 			tg[i][j]=tags[getabcname_u(i,j)];
 			problist[getabcname_u(i,j)]={
 				"tag":tg[i][j],
 				"diff":x[i][j],
+				"title":abctitle[i][j],
 				"org_a":"<a href=\"https://atcoder.jp/contests/abc"+ext3(i)+"/tasks/"+getabcname(i,j)+"\">"+getabcname_u(i,j)+"</a>",
 				"prob_a":Ava_tre[i][j]?"<a href=\"?page="+getabcname_u(i,j)+"_translation\">翻译</a>&nbsp;&nbsp;&nbsp;":"",
 				"solu_a":Ava_sol[i][j]?"<a href=\"?page="+getabcname_u(i,j)+"_solution\">题解</a>&nbsp;&nbsp;&nbsp;":""
@@ -279,7 +287,7 @@ function writeabc(rawd,tags,list_tre,list_sol){
 	console.log(cnt,cnte,cnts,cntt);
 }
 
-function writearc(rawd,tags,list_tre,list_sol){
+function writearc(rawd,tags,list_tre,list_sol,prbs){
 	let Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 	let Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 	let Lim=7,arccnt=0,mx=1005;
@@ -288,7 +296,7 @@ function writearc(rawd,tags,list_tre,list_sol){
 	let y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
 		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx),tg=new Array(mx);
 
-	let cnt=0,cnte=list_tre.length,cnts=list_sol.length,cntt=0;
+	let cnt=0,cnte=list_tre.length,cnts=list_sol.length,cntt=0,nametoid=[],arctitle=new Array(mx);
 	
 	for(let i=1;i<=arccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=arccnt;i++) for(let j=1;j<=10;j++)
@@ -314,16 +322,24 @@ function writearc(rawd,tags,list_tre,list_sol){
 	for(let i=1;i<=arccnt;i++){
 		x[i]=new Array(getarccnt(i));
 		tg[i]=new Array(getarccnt(i));
+		arctitle[i]=new Array(getarccnt(i));
 		cnt+=x[i].length;
 		for(let j=0;j<getarccnt(i);j++)
 			x[i][j]=!(getarcname(i,j) in rawd)||!("difficulty" in rawd[getarcname(i,j)])?100000:transdiff(rawd[getarcname(i,j)]["difficulty"],0);
 	}
+	for(let i=1;i<=arccnt;i++)
+		for(let j=0;j<getarccnt(i);j++)
+			nametoid[getarcname(i,j)]=[i,j];
+	for(let i in prbs)
+		if(prbs[i]["id"] in nametoid)
+			arctitle[nametoid[prbs[i]["id"]][0]][nametoid[prbs[i]["id"]][1]]=prbs[i]["title"];
 	for(let i=1;i<=arccnt;i++)
 		for(let j=57<i&&i<104?2:0;j<getarccnt(i);j++){
 			tg[i][j]=tags[getarcname_u(i,j)];
 			problist[getarcname_u(i,j)]={
 				"tag":tg[i][j],
 				"diff":x[i][j],
+				"title":arctitle[i][j],
 				"org_a":"<a href=\"https://atcoder.jp/contests/arc"+ext3(i)+"/tasks/"+getarcname(i,j)+"\">"+getarcname_u(i,j)+"</a>",
 				"prob_a":Ava_tre[i][j]?"<a href=\"?page="+getarcname_u(i,j)+"_translation\">翻译</a>&nbsp;&nbsp;&nbsp;":"",
 				"solu_a":Ava_sol[i][j]?"<a href=\"?page="+getarcname_u(i,j)+"_solution\">题解</a>&nbsp;&nbsp;&nbsp;":""
@@ -453,7 +469,7 @@ function writearc(rawd,tags,list_tre,list_sol){
 	console.log(cnt,cnte,cnts,cntt);
 }
 
-function writeagc(rawd,tags,list_tre,list_sol){
+function writeagc(rawd,tags,list_tre,list_sol,prbs){
 	let Charl=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
 	let Charu=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 	let Lim=7,agccnt=0,mx=1005;
@@ -462,7 +478,7 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	let y=new Array(mx),siz=new Array(mx),CCC=new Array(mx),Val=new Array(mx),RG=new Array(mx),
 		Ava_tre=new Array(mx),Ava_sol=new Array(mx),x=new Array(mx),tg=new Array(mx);
 
-	let cnt=0,cnte=list_tre.length,cnts=list_sol.length,cntt=0;
+	let cnt=0,cnte=list_tre.length,cnts=list_sol.length,cntt=0,nametoid=[],agctitle=[];
 	
 	for(let i=1;i<=agccnt;i++) Ava_tre[i] = new Array(10);
 	for(let i=1;i<=agccnt;i++) for(let j=1;j<=10;j++)
@@ -488,16 +504,24 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	for(let i=1;i<=agccnt;i++){
 		x[i]=new Array(getagccnt(i));
 		tg[i]=new Array(getagccnt(i));
+		agctitle[i]=new Array(getagccnt(i));
 		cnt+=x[i].length;
 		for(let j=0;j<getagccnt(i);j++)
 			x[i][j]=!(getagcname(i,j) in rawd)||!("difficulty" in rawd[getagcname(i,j)])?100000:transdiff(rawd[getagcname(i,j)]["difficulty"],0);
 	}
+	for(let i=1;i<=agccnt;i++)
+		for(let j=0;j<getagccnt(i);j++)
+			nametoid[getagcname(i,j)]=[i,j];
+	for(let i in prbs)
+		if(prbs[i]["id"] in nametoid)
+			agctitle[nametoid[prbs[i]["id"]][0]][nametoid[prbs[i]["id"]][1]]=prbs[i]["title"];
 	for(let i=1;i<=agccnt;i++)
 		for(let j=0;j<getagccnt(i);j++){
 			tg[i][j]=tags[getagcname_u(i,j)];
 			problist[getagcname_u(i,j)]={
 				"tag":tg[i][j],
 				"diff":x[i][j],
+				"title":agctitle[i][j],
 				"org_a":"<a href=\"https://atcoder.jp/contests/agc"+ext3(i)+"/tasks/"+getagcname(i,j)+"\">"+getagcname_u(i,j)+"</a>",
 				"prob_a":Ava_tre[i][j]?"<a href=\"?page="+getagcname_u(i,j)+"_translation\">翻译</a>&nbsp;&nbsp;&nbsp;":"",
 				"solu_a":Ava_sol[i][j]?"<a href=\"?page="+getagcname_u(i,j)+"_solution\">题解</a>&nbsp;&nbsp;&nbsp;":""
@@ -627,15 +651,15 @@ function writeagc(rawd,tags,list_tre,list_sol){
 	console.log(cnt,cnte,cnts,cntt);
 }
 
-let isd=[];
+let isd1=[],isd2=[];
 
 function listtoggleabc(){
 	let flg=document.getElementById("list-abc-btn").getAttribute("class")=="ui toggle button";
 	document.getElementById("list-abc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="ABC"){
-			isd[i]&=flg;
-			document.getElementById(i+"-col").setAttribute("style",isd[i]?"":"display: none;");
+			isd1[i]=flg;
+			document.getElementById(i+"-col").setAttribute("style",isd1[i]&&isd2[i]?"":"display: none;");
 		}
 	}
 }
@@ -644,8 +668,8 @@ function listtogglearc(){
 	document.getElementById("list-arc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="ARC"){
-			isd[i]&=flg;
-			document.getElementById(i+"-col").setAttribute("style",isd[i]?"":"display: none;");
+			isd1[i]=flg;
+			document.getElementById(i+"-col").setAttribute("style",isd1[i]&&isd2[i]?"":"display: none;");
 		}
 	}
 }
@@ -654,8 +678,8 @@ function listtoggleagc(){
 	document.getElementById("list-agc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
 	for(let i in problist){
 		if(i.substr(0,3)=="AGC"){
-			isd[i]&=flg;
-			document.getElementById(i+"-col").setAttribute("style",isd[i]?"":"display: none;");
+			isd1[i]=flg;
+			document.getElementById(i+"-col").setAttribute("style",isd1[i]&&isd2[i]?"":"display: none;");
 		}
 	}
 }
@@ -678,8 +702,8 @@ function setfilter(){
 		let flg=(dl==-10000&&dr==10000)||(dl<=problist[i]["diff"]&&problist[i]["diff"]<=dr);
 		for(let j in utg)
 			flg&=isinarray(utg[j],problist[i]["tag"]);
-		isd[i]=flg;
-		document.getElementById(i+"-col").setAttribute("style",flg?"":"display: none;");
+		isd2[i]=flg;
+		document.getElementById(i+"-col").setAttribute("style",isd1[i]&&isd2[i]?"":"display: none;");
 	}
 }
 
@@ -712,11 +736,12 @@ function writelist(){
 	document.write("<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">随机跳题</button>\
 		<p></p><table class=\"ui fixed celled table segment\"><tbody><tr id=\"rndprob\"></tr></tbody></table>");
 	document.write("<table class=\"ui fixed sortable celled table segment\">");
-	document.write("<thead><tr><th>ID</th><th>链接</th><th>难度</th><th>标签</th></thead><tbody>");
+	document.write("<thead><tr><th>编号</th><th>标题</th><th>链接</th><th>难度</th><th>标签</th></thead><tbody>");
 	for(let i in problist){
-		isd[i]=1;
+		isd1[i]=isd2[i]=1;
 		document.write("<tr id=\""+i+"-col\" style=\"\">");
 		document.write("<td>"+problist[i]["org_a"]+"</td>");
+		document.write("<td>"+problist[i]["title"]+"</td>");
 		document.write("<td>"+problist[i]["prob_a"]+problist[i]["solu_a"]+"</td>");
 		document.write("<td>"+(problist[i]["diff"]==100000?"unavailable":problist[i]["diff"].toString())+"</td>");
 		document.write("<td>");
@@ -733,9 +758,12 @@ function writelist(){
 
 function buildw(){
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
-	let rawd,list,tags;
+	let rawd,list,tags,prbs;
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json","json",function(text){
 		rawd=JSON.parse(text);
+	});
+	readTextFile("https://kenkoooo.com/atcoder/resources/problems.json","json",function(text){
+		prbs=JSON.parse(text);
 	});
 	readTextFile("list.json","json",function(text){
 		try{
@@ -762,9 +790,9 @@ function buildw(){
 	});
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"listtoggle()\">筛选</a></div>");
 	
-	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"]);
-	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"]);
-	writeagc(rawd,tags,list["agc_list_tre"],list["agc_list_sol"]);
+	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"],prbs);
+	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"],prbs);
+	writeagc(rawd,tags,list["agc_list_tre"],list["agc_list_sol"],prbs);
 	// writelinks();
 	writelist(problist);
 	abctabletoggle();
