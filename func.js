@@ -649,7 +649,7 @@ function writeagc(rawd,tags,list_tre,list_sol,prbs){
 	console.log(cnt,cnte,cnts,cntt);
 }
 
-let isd1=[],isd2=[];
+let isd1=[],isd2=[],presel=-1;
 
 function refreshchart(){
 	let ctg=new Array(44),cnt=new Array(44);
@@ -665,8 +665,16 @@ function refreshchart(){
 			events:{
 				click:function(event){
 					let p=Math.round(event.xAxis[0].value);
-					document.getElementById("diflb").value=p*100;
-					document.getElementById("difrb").value=p*100+99;
+					console.log(p,presel);
+					if(presel!=p){
+						presel=p;
+						document.getElementById("diflb").value=p*100;
+						document.getElementById("difrb").value=p*100+99;
+					}else{
+						presel=-1;
+						document.getElementById("diflb").value="";
+						document.getElementById("difrb").value="";
+					}
 					setfilter();
 				}
 			}
@@ -732,6 +740,7 @@ function isinarray(x,a){
 }
 
 function setfilter(){
+	document.getElementById("rndprob").innerHTML="";
 	let dl=document.getElementById("diflb").value,dr=document.getElementById("difrb").value,utg=document.getElementById("intag").value;
 	dl=dl==""||isNaN(Number(dl))?-10000:Number(dl);
 	dr=dr==""||isNaN(Number(dr))?10000:Number(dr);
