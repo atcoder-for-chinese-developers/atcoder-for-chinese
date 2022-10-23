@@ -661,7 +661,7 @@ function refreshchart(){
 			cnt[Math.floor(problist[i]["diff"]/100)].y++;
 	Highcharts.chart('container',{
 		chart:{
-			type: "column",
+			type:"column",
 			events:{
 				click:function(event){
 					let p=Math.round(event.xAxis[0].value);
@@ -673,18 +673,18 @@ function refreshchart(){
 		},
 		title:{text:"题目难度统计"},
 		subtitle:{text:""},
-		xAxis:{categories: ctg, crosshair: true},
-		yAxis:{title:{useHTML: true,text: "数量"}},
+		xAxis:{categories:ctg,crosshair:true},
+		yAxis:{title:{useHTML:true,text:"数量"}},
 		tooltip:{
-			headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-			pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}:</td>' +
-				'<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
-			footerFormat: '</table>',
-			shared: true,
-			useHTML: true
+			headerFormat:"<span style=\"font-size:10px\">{point.key}</span><table>",
+			pointFormat:"<tr><td style=\"font-size:10px;color:{series.color};padding:0\">{}:</td>" +
+				"<td style=\"font-size:10px;padding:0\"><b>{point.y:.0f}</b></td></tr>",
+			footerFormat:"</table>",
+			shared:true,
+			useHTML:true
 		},
 		plotOptions:{column:{pointPadding: 0.2, borderWidth: 0}},
-		series:[{name:'题目数量', data:cnt}]
+		series:[{name:"题目数量", data:cnt}]
 	});
 }
 
