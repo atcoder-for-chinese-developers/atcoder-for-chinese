@@ -784,7 +784,7 @@ function writelist(){
 	document.write("<div class=\"ui input\"><input id=\"difrb\" style=\"width: 150;\" placeholder=\"筛选难度上界\"></input></div>");
 	document.write("<div class=\"ui input\"><input id=\"intag\" style=\"width: 210;\" placeholder=\"筛选标签，用半角空格分开\"></input></div>");
 	document.write("<button class=\"ui violet basic button\" onclick=\"setfilter()\">筛选</button>");
-	document.write("<button class=\"ui green basic button\" onclick=\"clrfilter()\" style=\"display: inline-block;\">清除</button>");
+	document.write("<button class=\"ui green basic button\" onclick=\"clrfilter()\" style=\"display: inline-block;\">重置</button>");
 	document.write("<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">随机跳题</button>");
 	document.write("<p></p><table class=\"ui fixed celled table segment\"><tbody><tr id=\"rndprob\"></tr></tbody></table>");
 	document.write("<table class=\"ui fixed sortable celled table segment\">");
