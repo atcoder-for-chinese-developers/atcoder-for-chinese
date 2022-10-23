@@ -651,6 +651,43 @@ function writeagc(rawd,tags,list_tre,list_sol,prbs){
 
 let isd1=[],isd2=[];
 
+function refreshchart(){
+	let ctg=new Array(44),cnt=new Array(44);
+	for(let i=0;i<44;i++)
+		ctg[i]="<"+(i*100+100).toString(),cnt[i]={y:0,color:i<4?"rgb(128,128,128)":i<8?"rgb(128,64,0)":i<12?"rgb(0,128,0)":
+			i<16?"rgb(0,192,192)":i<20?"rgb(0,0,255)":i<24?"rgb(192,192,0)":i<28?"rgb(255,128,0)":"rgb(255,0,0)"};
+	for(let i in problist)
+		if(isd1[i]&&isd2[i]&&problist[i]["diff"]<4400)
+			cnt[Math.floor(problist[i]["diff"]/100)].y++;
+	Highcharts.chart('container',{
+		chart:{
+			type: "column",
+			events:{
+				click:function(event){
+					let p=Math.round(event.xAxis[0].value);
+					document.getElementById("diflb").value=p*100;
+					document.getElementById("difrb").value=p*100+99;
+					setfilter();
+				}
+			}
+		},
+		title:{text:"题目难度统计"},
+		subtitle:{text:""},
+		xAxis:{categories: ctg, crosshair: true},
+		yAxis:{title:{useHTML: true,text: "数量"}},
+		tooltip:{
+			headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+			pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}:</td>' +
+				'<td style="padding:0"><b>{point.y:.0f}</b></td></tr>',
+			footerFormat: '</table>',
+			shared: true,
+			useHTML: true
+		},
+		plotOptions:{column:{pointPadding: 0.2, borderWidth: 0}},
+		series:[{name:'题目数量', data:cnt}]
+	});
+}
+
 function listtoggleabc(){
 	let flg=document.getElementById("list-abc-btn").getAttribute("class")=="ui toggle button";
 	document.getElementById("list-abc-btn").setAttribute("class",flg?"ui toggle button active":"ui toggle button");
@@ -660,6 +697,7 @@ function listtoggleabc(){
 			document.getElementById(i+"-col").setAttribute("style",isd1[i]&&isd2[i]?"":"display: none;");
 		}
 	}
+	refreshchart();
 }
 function listtogglearc(){
 	let flg=document.getElementById("list-arc-btn").getAttribute("class")=="ui toggle button";
@@ -670,6 +708,7 @@ function listtogglearc(){
 			document.getElementById(i+"-col").setAttribute("style",isd1[i]&&isd2[i]?"":"display: none;");
 		}
 	}
+	refreshchart();
 }
 function listtoggleagc(){
 	let flg=document.getElementById("list-agc-btn").getAttribute("class")=="ui toggle button";
@@ -680,6 +719,7 @@ function listtoggleagc(){
 			document.getElementById(i+"-col").setAttribute("style",isd1[i]&&isd2[i]?"":"display: none;");
 		}
 	}
+	refreshchart();
 }
 
 function isinarray(x,a){
@@ -703,6 +743,17 @@ function setfilter(){
 		isd2[i]=flg;
 		document.getElementById(i+"-col").setAttribute("style",isd1[i]&&isd2[i]?"":"display: none;");
 	}
+	refreshchart();
+}
+
+function clrfilter(){
+	if(document.getElementById("list-abc-btn").getAttribute("class")=="ui toggle button")listtoggleabc();
+	if(document.getElementById("list-arc-btn").getAttribute("class")=="ui toggle button")listtogglearc();
+	if(document.getElementById("list-agc-btn").getAttribute("class")=="ui toggle button")listtoggleagc();
+	document.getElementById("diflb").value="";
+	document.getElementById("difrb").value="";
+	document.getElementById("intag").value="";
+	setfilter();
 }
 
 function getrandprob(){
@@ -724,7 +775,8 @@ function getrandprob(){
 
 function writelist(){
 	document.write("<div id=\"prob-list\">");
-	document.write("<p align=\"center\" style=\"font-style: italic\">注意：这部分仍在施工中</p>");
+	// document.write("<p align=\"center\" style=\"font-style: italic\">注意：这部分仍在施工中</p>");
+	document.write("<figure class=\"highcharts-figure\"><div id=\"container\" style=\"height:300px\"></div><p class=\"highcharts-description\"></p></figure>");
 	document.write("<button class=\"ui toggle button active\" id=\"list-abc-btn\" onclick=\"listtoggleabc()\">显示 ABC</button>");
 	document.write("<button class=\"ui toggle button active\" id=\"list-arc-btn\" onclick=\"listtogglearc()\">显示 ARC</button>");
 	document.write("<button class=\"ui toggle button active\" id=\"list-agc-btn\" onclick=\"listtoggleagc()\">显示 AGC</button>");
@@ -732,6 +784,7 @@ function writelist(){
 	document.write("<div class=\"ui input\"><input id=\"difrb\" style=\"width: 150;\" placeholder=\"筛选难度上界\"></input></div>");
 	document.write("<div class=\"ui input\"><input id=\"intag\" style=\"width: 210;\" placeholder=\"筛选标签，用半角空格分开\"></input></div>");
 	document.write("<button class=\"ui violet basic button\" onclick=\"setfilter()\">筛选</button>");
+	document.write("<button class=\"ui green basic button\" onclick=\"clrfilter()\" style=\"display: inline-block;\">清除</button>");
 	document.write("<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">随机跳题</button>");
 	document.write("<p></p><table class=\"ui fixed celled table segment\"><tbody><tr id=\"rndprob\"></tr></tbody></table>");
 	document.write("<table class=\"ui fixed sortable celled table segment\">");
@@ -753,6 +806,7 @@ function writelist(){
 		document.write("</td></tr>");
 	}
 	document.write("</tbody></table></div>");
+	refreshchart();
 }
 
 function jumptotop(){
