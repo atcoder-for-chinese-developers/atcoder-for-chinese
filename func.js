@@ -822,11 +822,15 @@ function buildw(){
 					function jumplink4(){\
 						window.location.href=\"https://semantic-ui.com/\";\
 					}\
+					function jumplink5(){\
+						window.location.href=\"https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B\";\
+					}\
 				</script>\
-				<button class=\"ui basic button\" onclick=\"jumplink1()\"><img src=\"images/logo1.png\"    class=\"ui centered mini image\"/></button>\
-				<button class=\"ui basic button\" onclick=\"jumplink2()\"><img src=\"images/atcoder.png\"  class=\"ui centered mini image\"/></button>\
-				<button class=\"ui basic button\" onclick=\"jumplink3()\"><img src=\"images/kenkoooo.png\" class=\"ui centered mini image\"/></button>\
-				<button class=\"ui basic button\" onclick=\"jumplink4()\"><img src=\"images/semantic.png\" class=\"ui centered mini image\"/></button>\
+				<button class=\"ui basic button\" onclick=\"jumplink1()\"><img src=\"images/logo1.png\"      class=\"ui centered mini image\"/></button>\
+				<button class=\"ui basic button\" onclick=\"jumplink2()\"><img src=\"images/atcoder.png\"    class=\"ui centered mini image\"/></button>\
+				<button class=\"ui basic button\" onclick=\"jumplink3()\"><img src=\"images/kenkoooo.png\"   class=\"ui centered mini image\"/></button>\
+				<button class=\"ui basic button\" onclick=\"jumplink4()\"><img src=\"images/semantic.png\"   class=\"ui centered mini image\"/></button>\
+				<button class=\"ui basic button\" onclick=\"jumplink5()\"><img src=\"images/greasyfork.png\" class=\"ui centered mini image\"/></button>\
 			</div>\
 			<p align=\"center\">\
 				Powered by <a href=\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\">AtCoder for Chinese Develop Team</a>.\

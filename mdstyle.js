@@ -228,11 +228,9 @@ function readTextFile(file,ext,callback){
 let tg=[];
 
 function tagtoggle(){
-	for(let i=0;i<tg.length;i++){
-		document.getElementById("tags-"+i.toString()).setAttribute("style",
-			document.getElementById("tags-"+i.toString()).getAttribute("style")=="display: none;"?"display: inline-block;":"display: none;"
-		);
-	}
+	document.getElementById("tags").setAttribute("style",
+		document.getElementById("tags").getAttribute("style")=="display: none;"?"display: inline-block;":"display: none;"
+	);
 }
 
 !function(){
@@ -255,10 +253,14 @@ function tagtoggle(){
 			</div>\
 		</button>\
 		<font size=\"4em\" align=\"center\" style=\"color: #fff;\">&nbsp;&nbsp;"+gettitle()+"&nbsp;&nbsp;</font>\
-		<button class=\"ui grey label\" onclick=\"tagtoggle()\">切换标签显示</button>");
-	for(let i=0;i<tg.length;i++)
-		document.write("<p class=\"ui tag label\" id=\"tags-"+i.toString()+"\" style=\"display: none;\">"+tg[i]+"</p>")
-	document.write("<button class=\"ui animated right button\" onclick=\"jumplink2()\" style=\"right: 0; position: absolute;\">\
+		<button class=\"ui grey label\" onclick=\"tagtoggle()\">切换标签显示</button><div id=\"tags\" style=\"display: none\">");
+	if(tg.length>0){
+		for(let i=0;i<tg.length;i++)
+			document.write("<p class=\"ui tag label\">"+tg[i]+"</p>");
+	}else{
+		document.write("<p style=\"color: white; font-size: 0.8em\">&nbsp;暂无题目标签</p>");
+	}
+	document.write("</div><button class=\"ui animated right button\" onclick=\"jumplink2()\" style=\"right: 0; position: absolute;\">\
 			<div class=\"visible content\">\
 				原题链接\
 			</div>\
