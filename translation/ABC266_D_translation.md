@@ -18,13 +18,13 @@ $1\le ∣Si∣\le 16$
 
 $N−1+\sum{∣S_i∣}\le 16$
 
-$S_i\ne S_j if i\nej$
+$S_i\ne S_j\ \text{if}\ i\ne j$
 
 $S_i$ 由小写英文字母组成。
 
-$ 3\le ∣T_i∣\le 16$
+$3\le ∣T_i∣\le 16$
 
-$T_i\ne T_j if i\ne j$
+$T_i\ne T_j\ \text{if}\ i\ne j$
 
 $T_i$ 由小写英文字母和 `_` 组成。
 
