@@ -844,13 +844,13 @@ function writelist(taglist){
 async function jumptotop(){
 	const delay=ms=>new Promise((resolve,reject)=>setTimeout(resolve,ms));
 	let stp=Math.abs($(document).scrollTop()-$("#page-top").offset()["top"])/25;
-	for(let i=$(document).scrollTop();i>=$("#page-top").offset()["top"];i-=stp)
+	for(let i=$(document).scrollTop(),j=0;j<=25;i-=stp,j++)
 		window.scrollTo(0,i),console.log(i),await delay(0);
 }
 async function jumptobottom(){
 	const delay=ms=>new Promise((resolve,reject)=>setTimeout(resolve,ms));
 	let stp=Math.abs($(document).scrollTop()-$("#page-end").offset()["top"])/25;
-	for(let i=$(document).scrollTop();i<=$("#page-end").offset()["top"];i+=stp)
+	for(let i=$(document).scrollTop(),j=0;j<=25;i+=stp,j++)
 		window.scrollTo(0,i),console.log(i),await delay(0);
 }
 
