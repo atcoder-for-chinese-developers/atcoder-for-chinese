@@ -841,18 +841,32 @@ function writelist(taglist){
 	refreshchart();
 }
 
-function jumptotop(){
-	window.location.href="#page-top";
+async function jumptotop(){
+	const delay=ms=>new Promise((resolve,reject)=>setTimeout(resolve,ms));
+	let stp=Math.abs($(document).scrollTop()-$("#page-top").offset()["top"])/25;
+	for(let i=$(document).scrollTop();i>=$("#page-top").offset()["top"];i-=stp)
+		window.scrollTo(0,i),console.log(i),await delay(0);
 }
-function jumptobottom(){
-	window.location.href="#page-end";
+async function jumptobottom(){
+	const delay=ms=>new Promise((resolve,reject)=>setTimeout(resolve,ms));
+	let stp=Math.abs($(document).scrollTop()-$("#page-end").offset()["top"])/25;
+	for(let i=$(document).scrollTop();i<=$("#page-end").offset()["top"];i+=stp)
+		window.scrollTo(0,i),console.log(i),await delay(0);
 }
 
 function buildw(){
 	document.write("<div id=\"page-top\" class=\"display: none;\"></div>");
-	document.write("<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; right: 50; top: 50;\"><i style=\"font-size: 2em;\" class=\"arrow up icon\"></i><p></p>到顶部</button>");
-	document.write("<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; right: 50; bottom: 80;\"><i style=\"font-size: 2em;\" class=\"arrow down icon\"></i><p></p>到底部</button>");
+	document.write("<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; right: 50; top: 50;\" id=\"button-top\"><i style=\"font-size: 1em;\" class=\"arrow up icon\"></i><p style=\"font-size: 10px; display: inline-block;\">&nbsp;到顶部</p></button>");
+	document.write("<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; right: 50; bottom: 80;\" id=\"button-end\"><i style=\"font-size: 1em;\" class=\"arrow down icon\"></i><p style=\"font-size: 10px; display: inline-block;\">&nbsp;到底部</p></button>");
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
+	window.onscroll=function(){
+		let cur=$(document).scrollTop();
+		console.log(cur,Math.abs(cur-$("#page-top").offset()["top"]),Math.abs(cur-$("#page-end").offset()["top"]));
+		document.getElementById("button-top").setAttribute("style",Math.abs(cur-$("#page-top").offset()["top"])<600
+			?"display: none;":"z-index: 999; position: fixed; right: 50; top: 50;");
+		document.getElementById("button-end").setAttribute("style",Math.abs(cur-$("#page-end").offset()["top"])<1000
+			?"display: none;":"z-index: 999; position: fixed; right: 50; bottom: 80;");
+	};
 	let rawd,list,tags,prbs,taglist;
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json","json",function(text){
 		rawd=JSON.parse(text);
@@ -926,6 +940,7 @@ function buildw(){
 			</p>\
 		</div>\
 	</div>");
-	document.write("<div id=\"page-end\"></div>")
+	document.write("<div id=\"page-end\"></div>");
+	window.onscroll();
 }
 
