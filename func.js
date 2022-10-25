@@ -745,14 +745,14 @@ function setfilter(){
 		flgor=$(".ui.checkbox").checkbox("is checked");
 	dl=dl==""||isNaN(Number(dl))?-10000:Number(dl);
 	dr=dr==""||isNaN(Number(dr))?10000:Number(dr);
-	utg=utg==""?[]:utg.split(",");
+	utg=utg==''?0:utg.split(",");
 	for(let i in problist){
 		let flg=(dl==-10000&&dr==10000)||(dl<=problist[i]["diff"]&&problist[i]["diff"]<=dr);
 		if(!flgor){
 			for(let j in utg)
 				flg&=isinarray(utg[j],problist[i]["tag"]);
 		}else{
-			if(utg!=[]){
+			if(utg){
 				let flg1=0;
 				for(let j in utg)
 					flg1|=isinarray(utg[j],problist[i]["tag"]);
@@ -772,6 +772,7 @@ function clrfilter(){
 	document.getElementById("diflb").value="";
 	document.getElementById("difrb").value="";
 	$(".ui.dropdown").dropdown("clear");
+	$(".ui.checkbox").checkbox("uncheck");
 	setfilter();
 }
 
@@ -802,8 +803,7 @@ function writelist(taglist){
 	document.write("<div class=\"ui input\"><input id=\"difrb\" style=\"width: 150;\" placeholder=\"筛选难度上界\"></input></div>");
 	document.write("<div id=\"get-tag\" class=\"ui selection multiple search dropdown\">\
 		<input type=\"hidden\" name=\"intag\"/>\
-		<i class=\"dropdown icon\"></i>\
-		<div class=\"default text\">此处筛选题目标签</div>\
+		<div class=\"default text\">单击此处筛选题目标签</div>\
 		<div class=\"menu\">");
 	for(let i in taglist){
 		document.write("<div class=\"item\" data-value=\""+taglist[i]+"\">"+taglist[i]+"</div>")
