@@ -741,14 +741,24 @@ function isinarray(x,a){
 
 function setfilter(){
 	document.getElementById("rndprob").innerHTML="";
-	let dl=document.getElementById("diflb").value,dr=document.getElementById("difrb").value,utg=document.getElementById("intag").value;
+	let dl=document.getElementById("diflb").value,dr=document.getElementById("difrb").value,utg=$(".ui.dropdown").dropdown("get value"),
+		flgor=$(".ui.checkbox").checkbox("is checked");
 	dl=dl==""||isNaN(Number(dl))?-10000:Number(dl);
 	dr=dr==""||isNaN(Number(dr))?10000:Number(dr);
-	utg=utg==""?[]:utg.split(" ");
+	utg=utg==""?[]:utg.split(",");
 	for(let i in problist){
 		let flg=(dl==-10000&&dr==10000)||(dl<=problist[i]["diff"]&&problist[i]["diff"]<=dr);
-		for(let j in utg)
-			flg&=isinarray(utg[j],problist[i]["tag"]);
+		if(!flgor){
+			for(let j in utg)
+				flg&=isinarray(utg[j],problist[i]["tag"]);
+		}else{
+			if(utg!=[]){
+				let flg1=0;
+				for(let j in utg)
+					flg1|=isinarray(utg[j],problist[i]["tag"]);
+				flg&=flg1;
+			}
+		}
 		isd2[i]=flg;
 		document.getElementById(i+"-col").setAttribute("style",isd1[i]&&isd2[i]?"":"display: none;");
 	}
@@ -761,7 +771,7 @@ function clrfilter(){
 	if(document.getElementById("list-agc-btn").getAttribute("class")=="ui toggle button")listtoggleagc();
 	document.getElementById("diflb").value="";
 	document.getElementById("difrb").value="";
-	document.getElementById("intag").value="";
+	$(".ui.dropdown").dropdown("clear");
 	setfilter();
 }
 
@@ -782,16 +792,29 @@ function getrandprob(){
 	}
 }
 
-function writelist(){
+function writelist(taglist){
 	document.write("<div id=\"prob-list\">");
-	// document.write("<p align=\"center\" style=\"font-style: italic\">注意：这部分仍在施工中</p>");
 	document.write("<figure class=\"highcharts-figure\"><div id=\"container\" style=\"height:300px\"></div><p class=\"highcharts-description\"></p></figure>");
-	document.write("<button class=\"ui toggle button active\" id=\"list-abc-btn\" onclick=\"listtoggleabc()\">显示 ABC</button>");
+	document.write("<p><button class=\"ui toggle button active\" id=\"list-abc-btn\" onclick=\"listtoggleabc()\">显示 ABC</button>");
 	document.write("<button class=\"ui toggle button active\" id=\"list-arc-btn\" onclick=\"listtogglearc()\">显示 ARC</button>");
-	document.write("<button class=\"ui toggle button active\" id=\"list-agc-btn\" onclick=\"listtoggleagc()\">显示 AGC</button>");
+	document.write("<button class=\"ui toggle button active\" id=\"list-agc-btn\" onclick=\"listtoggleagc()\">显示 AGC</button></p>");
 	document.write("<div class=\"ui input\"><input id=\"diflb\" style=\"width: 150;\" placeholder=\"筛选难度下界\"></input></div>");
 	document.write("<div class=\"ui input\"><input id=\"difrb\" style=\"width: 150;\" placeholder=\"筛选难度上界\"></input></div>");
-	document.write("<div class=\"ui input\"><input id=\"intag\" style=\"width: 210;\" placeholder=\"筛选标签，用半角空格分开\"></input></div>");
+	document.write("<div id=\"get-tag\" class=\"ui selection multiple search dropdown\">\
+		<input type=\"hidden\" name=\"intag\"/>\
+		<i class=\"dropdown icon\"></i>\
+		<div class=\"default text\">此处筛选题目标签</div>\
+		<div class=\"menu\">");
+	for(let i in taglist){
+		document.write("<div class=\"item\" data-value=\""+taglist[i]+"\">"+taglist[i]+"</div>")
+	}
+	document.write("</div></div>");
+	$(".ui.dropdown").dropdown({
+		on:"hover",
+		transition:"drop",
+		allowAdditions:1
+	});
+	document.write("&nbsp;&nbsp;<div class=\"ui checkbox\"><input type=\"checkbox\" name=\"example\"><label>按或合并标签</label></div>&nbsp;&nbsp;");
 	document.write("<button class=\"ui violet basic button\" onclick=\"setfilter()\">筛选</button>");
 	document.write("<button class=\"ui green basic button\" onclick=\"clrfilter()\" style=\"display: inline-block;\">重置</button>");
 	document.write("<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">随机跳题</button>");
@@ -826,11 +849,11 @@ function jumptobottom(){
 }
 
 function buildw(){
-	document.write("<div id=\"page-top\"></div>");
+	document.write("<div id=\"page-top\" class=\"display: none;\"></div>");
 	document.write("<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; right: 50; top: 50;\"><i style=\"font-size: 2em;\" class=\"arrow up icon\"></i><p></p>到顶部</button>");
 	document.write("<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; right: 50; bottom: 80;\"><i style=\"font-size: 2em;\" class=\"arrow down icon\"></i><p></p>到底部</button>");
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
-	let rawd,list,tags,prbs;
+	let rawd,list,tags,prbs,taglist;
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json","json",function(text){
 		rawd=JSON.parse(text);
 	});
@@ -860,12 +883,15 @@ function buildw(){
 			alert("tags.json is not valid");
 		}
 	});
+	readTextFile("tag-list.json","json",function(text){
+		taglist=JSON.parse(text);
+	});
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"listtoggle()\">筛选</a></div>");
 	
 	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"],prbs);
 	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"],prbs);
 	writeagc(rawd,tags,list["agc_list_tre"],list["agc_list_sol"],prbs);
-	writelist(problist);
+	writelist(taglist);
 	abctabletoggle();
 	
 	document.write("<div class=\"ui vertical footer segment\">\
