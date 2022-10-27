@@ -1016,13 +1016,17 @@ function printinvitecode(){
 	time.setSeconds(se);
 	res+='"'+Number(time)+'","problems":[';
 	let prblist=document.getElementById("get-problems").value.split(' ');
-	for(let i in prblist)
-		res+='"'+prblist[i]+'",';
+	for(let i in prblist){
+		if(prblist[i]!="")
+			res+='"'+prblist[i]+'",';
+	}
 	res=res.substr(0,res.length-1);
 	res+='],"players":[';
 	let plylist=document.getElementById("get-players").value.split(' ');
-	for(let i in plylist)
-		res+='"'+plylist[i]+'",';
+	for(let i in plylist){
+		if(plylist[i]!="")
+			res+='"'+plylist[i]+'",';
+	}
 	res=res.substr(0,res.length-1);
 	res+=']}';
 	document.getElementById("print-code").value=trans.encode(res);

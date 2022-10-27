@@ -124,13 +124,18 @@ function closeall(){
 	document.getElementById("list").setAttribute("style","display: none;");
 	document.getElementById("table").setAttribute("style","display: none;");
 }
+let beg = 0, end = 0;
 function showlist(){
 	closeall();
-	document.getElementById("list").setAttribute("style","");
+	let cur = new Date();
+	if(Number(cur) >= Number(beg))
+		document.getElementById("list").setAttribute("style","");
 }
 function showtable(){
 	closeall();
-	document.getElementById("table").setAttribute("style","");
+	let cur = new Date();
+	if(Number(cur) >= Number(beg))
+		document.getElementById("table").setAttribute("style","");
 }
 function buildpage(){
 	var s = window.location.href;
@@ -147,7 +152,7 @@ function buildpage(){
 		s = s.split('?')[1];
 		s = trans.decode(s)
 		var data = JSON.parse(s)
-		var beg = Number(data.st), end = Number(data.ed);
+		beg = Number(data.st), end = Number(data.ed);
 		var start = new Date(beg), finish = new Date(end);
 		
 		var subs = {}
@@ -187,7 +192,6 @@ function buildpage(){
 						}
 					}
 			}
-			console.log(i);
 			let w = Date.now();
 			while(Date.now() < w + 500);
 		}
