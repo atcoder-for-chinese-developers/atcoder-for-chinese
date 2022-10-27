@@ -230,7 +230,7 @@ function buildpage(){
 			var star = ' ';
 			if (t == 0) star = ' <i class="icon star outline"></i>'
 			document.write('<tr><td>(' + (t + 1) + ') ' + data.players[i] + star + '</td>');
-			var dr = ple[i];
+			var dr = Math.floor(ple[i]);
 			var hours = Math.floor(dr / 3600), minu = Math.floor(dr % 3600 / 60), seco = dr % 60;
 			document.write('<td> ' + ext2(hours) + ':' + ext2(minu) + ':' + ext2(seco) + '</td>');
 			for (var j = 0; j < data.problems.length; j++) {
@@ -244,7 +244,7 @@ function buildpage(){
 				}
 				else document.write('<td>-');
 				if (subs[i].ac[data.problems[j]] == 1) { 
-					var dr = (Number(subs[i].tm[data.problems[j]]) * 1000 - beg) / 1000;
+					var dr = Math.floor((Number(subs[i].tm[data.problems[j]]) * 1000 - beg) / 1000);
 					var hours = Math.floor(dr / 3600), minu = Math.floor(dr % 3600 / 60), seco = dr % 60;
 					document.write(' ' + ext2(hours) + ':' + ext2(minu) + ':' + ext2(seco));
 				}

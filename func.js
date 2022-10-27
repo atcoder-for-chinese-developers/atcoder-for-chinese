@@ -163,6 +163,7 @@ function sidebartoggle(){
 	$('.ui.sidebar').sidebar('toggle');
 }
 function closealltables(){
+	window.onscroll();
 	document.getElementById("abc-table").setAttribute("style","display: none;");
 	document.getElementById("arc-table").setAttribute("style","display: none;");
 	document.getElementById("agc-table").setAttribute("style","display: none;");
@@ -1032,10 +1033,12 @@ function printinvitecode(){
 	document.getElementById("print-code").value=trans.encode(res);
 }
 function buildcontestpage(){
+	document.write("<div id=\"cont-page\">");
 	document.write("<p align=\"center\" style=\"font-style: italic;\">注意：该功能仍在施工，不保证没有锅</p>");
 	document.write("<p align=\"center\" style=\"font-style: italic;\">此处仍未开发完成，老版本的邀请码可能失效</p>");
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"showjoinpage()\">参加</a><a class=\"item\" onclick=\"showcreatepage()\">创建</a></div>");
-	document.write("<div id=\"cont-page\"><div id=\"join-page\">");
+
+	document.write("<div id=\"join-page\">");
 	document.write("<div class=\"ui input\"><input id=\"rev-code\" style=\"width: 150;\" placeholder=\"输入邀请码\"></input></div>");
 	var p = document.getElementById('rev-code')
 	if (window.localStorage.getItem('inv-code') != undefined) 
@@ -1063,7 +1066,7 @@ function buildcontestpage(){
 	document.write("<div class=\"ui fluid input\"><input id=\"get-problems\" placeholder=\"以半角空格分隔\"></input></div>");
 	document.write("<h4 class=\"ui header\">生成邀请码</h4>");
 	document.write("<div class=\"ui fluid input\"><input id=\"print-code\" placeholder=\"邀请码\"></input><button class=\"ui primary button\" onclick=\"printinvitecode()\">获取邀请码</button></div>");
-	document.write("</div>");
+	document.write("</div></div>");
 	showjoinpage();
 }
 
@@ -1073,10 +1076,10 @@ function buildw(){
 	document.write("<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; right: 50; bottom: 80;\" id=\"button-end\"><i style=\"font-size: 1em;\" class=\"arrow down icon\"></i><p style=\"font-size: 10px; display: inline-block;\">&nbsp;到底部</p></button>");
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	window.onscroll=function(){
-		let cur=$(document).scrollTop();
-		document.getElementById("button-top").setAttribute("style",Math.abs(cur-$("#page-top").offset()["top"])<600
+		let cur=$(document).scrollTop(),h=document.documentElement.clientHeight;
+		document.getElementById("button-top").setAttribute("style",cur-$("#page-top").offset()["top"]<500
 			?"display: none;":"z-index: 999; position: fixed; right: 50; top: 50;");
-		document.getElementById("button-end").setAttribute("style",Math.abs(cur-$("#page-end").offset()["top"])<1000
+		document.getElementById("button-end").setAttribute("style",$("#page-end").offset()["top"]-h-cur<500
 			?"display: none;":"z-index: 999; position: fixed; right: 50; bottom: 80;");
 	};
 	let rawd,list,tags,prbs,taglist;
@@ -1119,7 +1122,6 @@ function buildw(){
 	writeagc(rawd,tags,list["agc_list_tre"],list["agc_list_sol"],prbs);
 	writelist(taglist);
 	buildcontestpage();
-	abctabletoggle();
 	
 	document.write("<div class=\"ui vertical footer segment\">\
 		<div class=\"ui center aligned container\">\
@@ -1153,7 +1155,7 @@ function buildw(){
 			</p>\
 		</div>\
 	</div>");
-	document.write("<div id=\"page-end\"></div>");
-	window.onscroll();
+	document.write("<div id=\"page-end\" style=\"diaplay: none;\"></div>");
+	abctabletoggle();
 }
 
