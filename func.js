@@ -961,7 +961,7 @@ async function jumptobottom(){
 
 function redr(){
 	window.localStorage.setItem('inv-code', document.getElementById("rev-code").value);
-	window.location.href="contest.html?"+document.getElementById("rev-code").value;
+	window.location.href="contest.html?"+escape(document.getElementById("rev-code").value);
 }
 function closecontestpage(){
 	document.getElementById("join-page").setAttribute("style","display: none;");

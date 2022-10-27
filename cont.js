@@ -118,7 +118,7 @@ function ext2(con){
 function redr(){
 	if (window.localStorage.getItem('inv-code') == undefined) 
 		window.localStorage.setItem('inv-code', document.getElementById("inv-code").value);
-	window.location.href="?"+document.getElementById("inv-code").value;
+	window.location.href="?"+escape(document.getElementById("inv-code").value);
 }
 function closeall(){
 	document.getElementById("list").setAttribute("style","display: none;");
