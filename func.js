@@ -8,6 +8,105 @@ function readTextFile(file,ext,callback){
 	}
 	xhr.send();
 }
+function Base64(){
+	_keyStr = "Csa56TWEOMFkpGH2cmb4Xi8vzYJo3efghldnSwDjNx9PVrI1uKBtRAZQ0qL7yU/+=";
+	this.encode = function(input) {
+		var output = "";
+		var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+		var i = 0;
+		input = _utf8_encode(input);
+		while (i < input.length) {
+			chr1 = input.charCodeAt(i++);
+			chr2 = input.charCodeAt(i++);
+			chr3 = input.charCodeAt(i++);
+			enc1 = chr1 >> 2;
+			enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+			enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+			enc4 = chr3 & 63;
+			if (isNaN(chr2)) {
+				enc3 = enc4 = 64;
+			} else if (isNaN(chr3)) {
+				enc4 = 64;
+			}
+			output = output +
+				_keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+				_keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+		}
+		return output;
+	}
+
+	// public method for decoding  
+	this.decode = function(input) {
+		var output = "";
+		var chr1, chr2, chr3;
+		var enc1, enc2, enc3, enc4;
+		var i = 0;
+		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+		while (i < input.length) {
+			enc1 = _keyStr.indexOf(input.charAt(i++));
+			enc2 = _keyStr.indexOf(input.charAt(i++));
+			enc3 = _keyStr.indexOf(input.charAt(i++));
+			enc4 = _keyStr.indexOf(input.charAt(i++));
+			chr1 = (enc1 << 2) | (enc2 >> 4);
+			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+			chr3 = ((enc3 & 3) << 6) | enc4;
+			output = output + String.fromCharCode(chr1);
+			if (enc3 != 64) {
+				output = output + String.fromCharCode(chr2);
+			}
+			if (enc4 != 64) {
+				output = output + String.fromCharCode(chr3);
+			}
+		}
+		output = _utf8_decode(output);
+		return output;
+	}
+
+	// private method for UTF-8 encoding  
+	_utf8_encode = function(string) {
+		string = string.replace(/\r\n/g, "\n");
+		var utftext = "";
+		for (var n = 0; n < string.length; n++) {
+			var c = string.charCodeAt(n);
+			if (c < 128) {
+				utftext += String.fromCharCode(c);
+			} else if ((c > 127) && (c < 2048)) {
+				utftext += String.fromCharCode((c >> 6) | 192);
+				utftext += String.fromCharCode((c & 63) | 128);
+			} else {
+				utftext += String.fromCharCode((c >> 12) | 224);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+
+		}
+		return utftext;
+	}
+
+	// private method for UTF-8 decoding  
+	_utf8_decode = function(utftext) {
+		var string = "";
+		var i = 0;
+		var c = c1 = c2 = 0;
+		while (i < utftext.length) {
+			c = utftext.charCodeAt(i);
+			if (c < 128) {
+				string += String.fromCharCode(c);
+				i++;
+			} else if ((c > 191) && (c < 224)) {
+				c2 = utftext.charCodeAt(i + 1);
+				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+				i += 2;
+			} else {
+				c2 = utftext.charCodeAt(i + 1);
+				c3 = utftext.charCodeAt(i + 2);
+				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+				i += 3;
+			}
+		}
+		return string;
+	}
+}
 function getabccnt(id){
 	if(id<126)
 		return 4;
@@ -68,6 +167,7 @@ function closealltables(){
 	document.getElementById("arc-table").setAttribute("style","display: none;");
 	document.getElementById("agc-table").setAttribute("style","display: none;");
 	document.getElementById("prob-list").setAttribute("style","display: none;");
+	document.getElementById("cont-page").setAttribute("style","display: none;");
 }
 function abctabletoggle(){
 	closealltables();
@@ -84,6 +184,10 @@ function agctabletoggle(){
 function listtoggle(){
 	closealltables();
 	document.getElementById("prob-list").setAttribute("style","display: block;");
+}
+function contesttoggle(){
+	closealltables();
+	document.getElementById("cont-page").setAttribute("style","display: block;");
 }
 function abctagtoggle(i,j){
 	document.getElementById("tag-"+getabcname(i,j)).setAttribute("style",
@@ -665,7 +769,6 @@ function refreshchart(){
 			events:{
 				click:function(event){
 					let p=Math.round(event.xAxis[0].value);
-					console.log(p,presel);
 					if(presel!=p){
 						presel=p;
 						document.getElementById("diflb").value=p*100;
@@ -845,15 +948,119 @@ async function jumptotop(){
 	const delay=ms=>new Promise((resolve,reject)=>setTimeout(resolve,ms));
 	let stp=Math.abs($(document).scrollTop()-$("#page-top").offset()["top"])/25;
 	for(let i=$(document).scrollTop(),j=0;j<=25;i-=stp,j++)
-		window.scrollTo(0,i),console.log(i),await delay(0);
+		window.scrollTo(0,i),await delay(0);
 	window.location="#page-top";
 }
 async function jumptobottom(){
 	const delay=ms=>new Promise((resolve,reject)=>setTimeout(resolve,ms));
 	let stp=Math.abs($(document).scrollTop()-$("#page-end").offset()["top"])/25;
 	for(let i=$(document).scrollTop(),j=0;j<=25;i+=stp,j++)
-		window.scrollTo(0,i),console.log(i),await delay(0);
+		window.scrollTo(0,i),await delay(0);
 	window.location="#page-end";
+}
+
+function redr(){
+	window.localStorage.setItem('inv-code', document.getElementById("rev-code").value);
+	window.location.href="contest.html?"+document.getElementById("rev-code").value;
+}
+function closecontestpage(){
+	document.getElementById("join-page").setAttribute("style","display: none;");
+	document.getElementById("create-page").setAttribute("style","display: none;");
+}
+function showjoinpage(){
+	closecontestpage();
+	document.getElementById("join-page").setAttribute("style","display: block;");
+}
+function showcreatepage(){
+	closecontestpage();
+	document.getElementById("create-page").setAttribute("style","display: block;");
+}
+function checknum(i){
+	return i==""||isNaN(Number(i));
+}
+function printinvitecode(){
+	let res="",trans=new Base64();
+	res+='{"title":"'+document.getElementById("get-title").value+'","st":';
+	let ye=document.getElementById("get-start-ye").value,
+		mo=document.getElementById("get-start-mo").value,
+		da=document.getElementById("get-start-da").value,
+		ho=document.getElementById("get-start-ho").value,
+		mi=document.getElementById("get-start-mi").value,
+		se=document.getElementById("get-start-se").value,time=new Date();
+	if(checknum(ye)||checknum(mo)||checknum(da)||checknum(ho)||checknum(mi)||checknum(se)){
+		alert("开始时间不合法");
+		return;
+	}
+	time.setYear(ye);
+	time.setMonth(mo-1);
+	time.setDate(da);
+	time.setHours(ho);
+	time.setMinutes(mi);
+	time.setSeconds(se);
+	res+='"'+Number(time)+'","ed":';
+	ye=document.getElementById("get-finish-ye").value,
+	mo=document.getElementById("get-finish-mo").value,
+	da=document.getElementById("get-finish-da").value,
+	ho=document.getElementById("get-finish-ho").value,
+	mi=document.getElementById("get-finish-mi").value,
+	se=document.getElementById("get-finish-se").value,time=new Date();
+	if(checknum(ye)||checknum(mo)||checknum(da)||checknum(ho)||checknum(mi)||checknum(se)){
+		alert("结束时间不合法");
+		return;
+	}
+	time.setYear(ye);
+	time.setMonth(mo-1);
+	time.setDate(da);
+	time.setHours(ho);
+	time.setMinutes(mi);
+	time.setSeconds(se);
+	res+='"'+Number(time)+'","problems":[';
+	let prblist=document.getElementById("get-problems").value.split(' ');
+	for(let i in prblist)
+		res+='"'+prblist[i]+'",';
+	res=res.substr(0,res.length-1);
+	res+='],"players":[';
+	let plylist=document.getElementById("get-players").value.split(' ');
+	for(let i in plylist)
+		res+='"'+plylist[i]+'",';
+	res=res.substr(0,res.length-1);
+	res+=']}';
+	document.getElementById("print-code").value=trans.encode(res);
+}
+function buildcontestpage(){
+	document.write("<p align=\"center\" style=\"font-style: italic;\">注意：该功能仍在施工，不保证没有锅</p>");
+	document.write("<p align=\"center\" style=\"font-style: italic;\">此处仍未开发完成，老版本的邀请码可能失效</p>");
+	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"showjoinpage()\">参加</a><a class=\"item\" onclick=\"showcreatepage()\">创建</a></div>");
+	document.write("<div id=\"cont-page\"><div id=\"join-page\">");
+	document.write("<div class=\"ui input\"><input id=\"rev-code\" style=\"width: 150;\" placeholder=\"输入邀请码\"></input></div>");
+	var p = document.getElementById('rev-code')
+	if (window.localStorage.getItem('inv-code') != undefined) 
+		p.value = window.localStorage.getItem('inv-code')
+	document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
+	document.write("</div><div id=\"create-page\">");
+	document.write("<div class=\"ui input\"><input id=\"get-title\" placeholder=\"比赛标题\"></input></div>");
+	document.write("<h4 class=\"ui header\">设置开始时间</h4>");
+	document.write("<div class=\"ui input\"><input id=\"get-start-ye\" placeholder=\"年\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"get-start-mo\" placeholder=\"月\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"get-start-da\" placeholder=\"日\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"get-start-ho\" placeholder=\"时\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"get-start-mi\" placeholder=\"分\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"get-start-se\" placeholder=\"秒\"></input></div>");
+	document.write("<h4 class=\"ui header\">设置结束时间</h4>");
+	document.write("<div class=\"ui input\"><input id=\"get-finish-ye\" placeholder=\"年\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"get-finish-mo\" placeholder=\"月\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"get-finish-da\" placeholder=\"日\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"get-finish-ho\" placeholder=\"时\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"get-finish-mi\" placeholder=\"分\"></input></div>");
+	document.write("<div class=\"ui input\"><input id=\"get-finish-se\" placeholder=\"秒\"></input></div>");
+	document.write("<h4 class=\"ui header\">参赛选手</h4>");
+	document.write("<div class=\"ui fluid input\"><input id=\"get-players\" placeholder=\"以半角空格分隔\"></input></div>");
+	document.write("<h4 class=\"ui header\">比赛题目</h4>");
+	document.write("<div class=\"ui fluid input\"><input id=\"get-problems\" placeholder=\"以半角空格分隔\"></input></div>");
+	document.write("<h4 class=\"ui header\">生成邀请码</h4>");
+	document.write("<div class=\"ui fluid input\"><input id=\"print-code\" placeholder=\"邀请码\"></input><button class=\"ui primary button\" onclick=\"printinvitecode()\">获取邀请码</button></div>");
+	document.write("</div>");
+	showjoinpage();
 }
 
 function buildw(){
@@ -863,7 +1070,6 @@ function buildw(){
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	window.onscroll=function(){
 		let cur=$(document).scrollTop();
-		console.log(cur,Math.abs(cur-$("#page-top").offset()["top"]),Math.abs(cur-$("#page-end").offset()["top"]));
 		document.getElementById("button-top").setAttribute("style",Math.abs(cur-$("#page-top").offset()["top"])<600
 			?"display: none;":"z-index: 999; position: fixed; right: 50; top: 50;");
 		document.getElementById("button-end").setAttribute("style",Math.abs(cur-$("#page-end").offset()["top"])<1000
@@ -902,12 +1108,13 @@ function buildw(){
 	readTextFile("tag-list.json","json",function(text){
 		taglist=JSON.parse(text);
 	});
-	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"listtoggle()\">筛选</a></div>");
+	document.write("<div class=\"ui menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"listtoggle()\">筛选</a><a class=\"item\" onclick=\"contesttoggle()\">比赛</a></div>");
 	
 	writeabc(rawd,tags,list["abc_list_tre"],list["abc_list_sol"],prbs);
 	writearc(rawd,tags,list["arc_list_tre"],list["arc_list_sol"],prbs);
 	writeagc(rawd,tags,list["agc_list_tre"],list["agc_list_sol"],prbs);
 	writelist(taglist);
+	buildcontestpage();
 	abctabletoggle();
 	
 	document.write("<div class=\"ui vertical footer segment\">\
