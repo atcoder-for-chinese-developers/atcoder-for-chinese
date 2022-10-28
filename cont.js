@@ -13,12 +13,12 @@ function Base64() {
 	this.encode = function (input) {
 		var output = "";
 		var chr1,
-		    chr2,
-		    chr3,
-		    enc1,
-		    enc2,
-		    enc3,
-		    enc4;
+		chr2,
+		chr3,
+		enc1,
+		enc2,
+		enc3,
+		enc4;
 		var i = 0;
 		input = _utf8_encode(input);
 		while (i < input.length) {
@@ -35,8 +35,8 @@ function Base64() {
 				enc4 = 64;
 			}
 			output = output +
-			         _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
-			         _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+				_keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+				_keyStr.charAt(enc3) + _keyStr.charAt(enc4);
 		}
 		return output;
 	}
@@ -45,12 +45,12 @@ function Base64() {
 	this.decode = function (input) {
 		var output = "";
 		var chr1,
-		    chr2,
-		    chr3;
+		chr2,
+		chr3;
 		var enc1,
-		    enc2,
-		    enc3,
-		    enc4;
+		enc2,
+		enc3,
+		enc4;
 		var i = 0;
 		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 		while (i < input.length) {
@@ -152,7 +152,7 @@ function showtable() {
 }
 function getpercent() {
 	let cur = new Date();
-	return (Math.min(end, cur) - beg) / (end - beg)
+	return Math.max((Math.min(end, cur) - beg) / (end - beg),0.0)
 }
 function refreshtime() {
 	let cur = new Date(),
@@ -161,15 +161,15 @@ function refreshtime() {
 	if (tst > 0)
 		rem = tst;
 	let da = Math.floor(rem / 86400),
-	    ho = Math.floor(rem % 86400 / 3600),
-	    mi = Math.floor(rem % 3600 / 60),
-	    se = rem % 60;
+	ho = Math.floor(rem % 86400 / 3600),
+	mi = Math.floor(rem % 3600 / 60),
+	se = rem % 60;
 	if (!flgshow && cur > beg)
 		showlist(), flgshow = 1;
 	document.getElementById("remain-time").innerText = cur < beg ? "距离比赛开始 " + ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? se.toFixed(3).toString() + " 秒 " : "")) : cur > end ? "已结束" :
-		        ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? se.toFixed(3).toString() + " 秒 " : ""));
+		((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? se.toFixed(3).toString() + " 秒 " : ""));
 	$("#timeprog").progress({
-percent: getpercent() * 100.
+		percent: getpercent() * 100.
 	});
 }
 function buildpage() {
@@ -179,12 +179,14 @@ function buildpage() {
 		document.write("<div class=\"ui container\">");
 		document.write("<div class=\"ui input\"><input id=\"inv-code\" style=\"width: 150;\" placeholder=\"输入邀请码\"></input></div>");
 		var p = document.getElementById('inv-code')
-		        if (window.localStorage.getItem('inv-code') != undefined)
-			        p.value = window.localStorage.getItem('inv-code')
-			                  document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
+			if (window.localStorage.getItem('inv-code') != undefined)
+				p.value = window.localStorage.getItem('inv-code')
+					document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
 	} else {
 		while (s.match('%22') != null)
 			s = s.replace('%22', '"');
+		while (s.match('%3D') != null)
+			s = s.replace('%3D', '=');
 		s = s.split('?')[1];
 		s = trans.decode(s);
 		var data = JSON.parse(s);
@@ -196,43 +198,47 @@ function buildpage() {
 		var subs = {};
 
 		var acc = [],
-		    ple = [],
-		    id = [];
+		ple = [],
+		id = [];
 		for (var i = 0; i < data.players.length; i++)
 			acc.push(0), ple.push(0), id.push(i);
 
 		for (var i = 0; i < data.players.length; i++) {
 			let sub;
 			readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
-			data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
+				data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
 				sub = JSON.parse(text);
 			})
 			subs[i] = {}
-			          subs[i].ac = {}
-			                       subs[i].pl = {}
-			                                    subs[i].tm = {}
+			subs[i].ac = {}
+			subs[i].pl = {}
+			subs[i].tm = {}
+			subs[i].wj = {}
 			for (var t = 0; t < sub.length; t++) {
 				var c = sub[t]
-				        if (Number(c.epoch_second) * 1000 >= end)
-					        continue;
-				for (var j = 0; j < data.problems.length; j++)
-					if (c.problem_id == data.problems[j]) {
-						if (c.result == 'AC') {
-							if (subs[i].ac[data.problems[j]] != 1)
-								acc[i] += 1;
-							subs[i].ac[data.problems[j]] = 1;
-							subs[i].tm[data.problems[j]] = c.epoch_second;
-							if (subs[i].pl[data.problems[j]] == undefined)
-								subs[i].pl[data.problems[j]] = 0;
-							ple[i] += (c.epoch_second * 1000 - beg) / 1000;
+					if (Number(c.epoch_second) * 1000 >= end)
+						continue;
+					for (var j = 0; j < data.problems.length; j++)
+						if (c.problem_id == data.problems[j]) {
+							if (c.result == 'AC') {
+								subs[i].wj = 0;
+								if (subs[i].ac[data.problems[j]] != 1)
+									acc[i] += 1;
+								subs[i].ac[data.problems[j]] = 1;
+								subs[i].tm[data.problems[j]] = c.epoch_second;
+								if (subs[i].pl[data.problems[j]] == undefined)
+									subs[i].pl[data.problems[j]] = 0;
+								ple[i] += (c.epoch_second * 1000 - beg) / 1000;
+							} else if (47 < c.result[0] || c.result[0] < 58 || c.result == 'WJ') {
+								subs[i].wj = 1;
+							} else if (c.result != 'CE') {
+								subs[i].wj = 0;
+								if (subs[i].pl[data.problems[j]] == undefined)
+									subs[i].pl[data.problems[j]] = 0;
+								subs[i].pl[data.problems[j]] += 1;
+								ple[i] += 300
+							}
 						}
-						if (c.result != 'CE' && c.result != 'AC') {
-							if (subs[i].pl[data.problems[j]] == undefined)
-								subs[i].pl[data.problems[j]] = 0;
-							subs[i].pl[data.problems[j]] += 1;
-							ple[i] += 300
-						}
-					}
 			}
 			let w = Date.now();
 			while (Date.now() < w + 500);
@@ -258,8 +264,8 @@ function buildpage() {
 		document.write("<thead><tr><th>题目编号</th><th>题目标题</th></tr></thead><tbody>");
 		for (let i in data.problems) {
 			var p = data.problems[i].lastIndexOf('_')
-			        var con = data.problems[i].substr(0, p)
-			                  document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
+				var con = data.problems[i].substr(0, p)
+				document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
 		}
 		document.write("</tbody></table>");
 
@@ -275,24 +281,25 @@ function buildpage() {
 		for (var t = 0; t < data.players.length; t++) {
 			var i = id[t];
 			document.write('<tr><td>(' + (t + 1) + ') <a href=\"https://atcoder.jp/users/' + data.players[i] + "\">" + data.players[i] + '</a></td>');
-			var dr = Math.floor(ple[i]),hours = Math.floor(dr / 3600),
-			    minu = Math.floor(dr % 3600 / 60),
-			    seco = dr % 60;
+			var dr = Math.floor(ple[i]),
+			hours = Math.floor(dr / 3600),
+			minu = Math.floor(dr % 3600 / 60),
+			seco = dr % 60;
 			document.write('<td> ' + ext2(hours) + ':' + ext2(minu) + ':' + ext2(seco) + '</td>');
 			for (var j = 0; j < data.problems.length; j++) {
-				if (subs[i].ac[data.problems[j]] == 1) {
-					document.write('<td class="positive">');
-					document.write('<i class="icon checkmark"></i>');
+				if(subs[i].wj[data.problems[j]]==1){
+					document.write("<td class=\"warning\"><i class=\"icon hourglass half\"></i>");
+				}else if (subs[i].ac[data.problems[j]] == 1) {
+					document.write('<td class="positive"><i class="icon checkmark"></i>');
 				} else if (subs[i].pl[data.problems[j]] != 0 && subs[i].pl[data.problems[j]] != undefined) {
-					document.write('<td class="negative">');
-					document.write('<i class="icon close"></i>');
+					document.write('<td class="negative"><i class="icon close"></i>');
 				} else
 					document.write('<td>-');
 				if (subs[i].ac[data.problems[j]] == 1) {
 					var dr = Math.floor((Number(subs[i].tm[data.problems[j]]) * 1000 - beg) / 1000);
 					var hours = Math.floor(dr / 3600),
-					    minu = Math.floor(dr % 3600 / 60),
-					    seco = dr % 60;
+					minu = Math.floor(dr % 3600 / 60),
+					seco = dr % 60;
 					document.write(' ' + ext2(hours) + ':' + ext2(minu) + ':' + ext2(seco));
 				}
 				if (subs[i].pl[data.problems[j]])

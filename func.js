@@ -1207,7 +1207,10 @@ function buildcontestpage() {
 	document.write("<div class=\"ui input\"><input id=\"get-finish-se\" placeholder=\"秒\"></input></div>");
 	document.write("<h4 class=\"ui header\">参赛选手</h4>");
 	document.write("<div class=\"ui fluid input\"><input id=\"get-players\" placeholder=\"以半角空格分隔\"></input></div>");
-	document.write("<h4 class=\"ui header\">比赛题目</h4>");
+	document.write("<h4 class=\"ui header\">比赛题目（请填写题目链接内的 AtCoder 格式标识符，例如下）</h4>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a>：abc255_h</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a>：arc103_b</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a>：zone2021_f</p>");
 	document.write("<div class=\"ui fluid input\"><input id=\"get-problems\" placeholder=\"以半角空格分隔\"></input></div>");
 	document.write("<h4 class=\"ui header\">生成邀请码</h4>");
 	document.write("<div class=\"ui fluid input\"><input id=\"print-code\" placeholder=\"邀请码\"></input><button class=\"ui primary button\" onclick=\"printinvitecode()\">获取邀请码</button></div>");
