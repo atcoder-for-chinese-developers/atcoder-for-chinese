@@ -13,12 +13,12 @@ function Base64() {
 	this.encode = function (input) {
 		var output = "";
 		var chr1,
-		    chr2,
-		    chr3,
-		    enc1,
-		    enc2,
-		    enc3,
-		    enc4;
+		chr2,
+		chr3,
+		enc1,
+		enc2,
+		enc3,
+		enc4;
 		var i = 0;
 		input = _utf8_encode(input);
 		while (i < input.length) {
@@ -35,8 +35,8 @@ function Base64() {
 				enc4 = 64;
 			}
 			output = output +
-			         _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
-			         _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+				_keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+				_keyStr.charAt(enc3) + _keyStr.charAt(enc4);
 		}
 		return output;
 	}
@@ -45,12 +45,12 @@ function Base64() {
 	this.decode = function (input) {
 		var output = "";
 		var chr1,
-		    chr2,
-		    chr3;
+		chr2,
+		chr3;
 		var enc1,
-		    enc2,
-		    enc3,
-		    enc4;
+		enc2,
+		enc3,
+		enc4;
 		var i = 0;
 		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 		while (i < input.length) {
@@ -203,23 +203,23 @@ function contesttoggle() {
 }
 function abctagtoggle(i, j) {
 	document.getElementById("tag-" + getabcname(i, j)).setAttribute("style",
-	        document.getElementById("tag-" + getabcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
+		document.getElementById("tag-" + getabcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
 }
 function arctagtoggle(i, j) {
 	document.getElementById("tag-" + getarcname(i, j)).setAttribute("style",
-	        document.getElementById("tag-" + getarcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
+		document.getElementById("tag-" + getarcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
 }
 function agctagtoggle(i, j) {
 	document.getElementById("tag-" + getagcname(i, j)).setAttribute("style",
-	        document.getElementById("tag-" + getagcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
+		document.getElementById("tag-" + getagcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
 }
 let problist = [];
 function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 	let Charl = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 	let Charu = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 	let Lim = 8,
-	    abccnt = 0,
-	    mx = 1005;
+	abccnt = 0,
+	mx = 1005;
 	while (getabcname(abccnt + 1, 1)in rawd)
 		abccnt++;
 
@@ -234,11 +234,11 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 	tg = new Array(mx);
 
 	let cnt = 0,
-	    cnte = list_tre.length,
-	    cnts = list_sol.length,
-	    cntt = 0,
-	    nametoid = [],
-	    abctitle = new Array(mx);
+	cnte = list_tre.length,
+	cnts = list_sol.length,
+	cntt = 0,
+	nametoid = [],
+	abctitle = new Array(mx);
 
 	for (let i = 1; i <= abccnt; i++)
 		Ava_tre[i] = new Array(10);
@@ -247,7 +247,7 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 			Ava_tre[i][j] = 0;
 	for (let i = 0; i < list_tre.length; i++) {
 		let x = list_tre[i][0],
-		    y = list_tre[i][1];
+		y = list_tre[i][1];
 		if (x > abccnt || x < 0 || y > getabccnt(x) || y < 0)
 			alert("problem " + getabcname_u(x, y) + " does not exist");
 		else
@@ -260,7 +260,7 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 			Ava_sol[i][j] = 0;
 	for (let i = 0; i < list_sol.length; i++) {
 		let x = list_sol[i][0],
-		    y = list_sol[i][1];
+		y = list_sol[i][1];
 		if (x > abccnt || x < 0 || y > getabccnt(x) || y < 0)
 			alert("problem " + getabcname_u(x, y) + " does not exist");
 		else
@@ -291,17 +291,17 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 		for (let j = 0; j < getabccnt(i); j++) {
 			tg[i][j] = tags[getabcname_u(i, j)];
 			problist[getabcname_u(i, j)] = {
-"tag":
+				"tag":
 				tg[i][j],
-"diff":
+				"diff":
 				x[i][j],
-"title":
+				"title":
 				abctitle[i][j],
-"org_a": "<a href=\"https://atcoder.jp/contests/abc"
-				+ ext3(i) + "/tasks/" + getabcname(i, j) + "\">" + getabcname_u(i, j) + "</a>",
-"prob_a":
+				"org_a": "<a href=\"https://atcoder.jp/contests/abc"
+				 + ext3(i) + "/tasks/" + getabcname(i, j) + "\">" + getabcname_u(i, j) + "</a>",
+				"prob_a":
 				Ava_tre[i][j] ? "<a href=\"?page=" + getabcname_u(i, j) + "_translation\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
-"solu_a": Ava_sol[i][j] ? "<a href=\"?page=" + getabcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
+				"solu_a": Ava_sol[i][j] ? "<a href=\"?page=" + getabcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
 			};
 		}
 	for (let i = abccnt; i >= 1; i--) {
@@ -356,15 +356,15 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
 	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H/Ex</th></thead><tbody>");
 	let abc = "abc",
-	    arc = "arc",
-	    agc = "agc";
+	arc = "arc",
+	agc = "agc";
 	let ABC = "ABC",
-	    ARC = "ARC",
-	    AGC = "AGC";
+	ARC = "ARC",
+	AGC = "AGC";
 	let webA = "<a href=\"https://atcoder.jp/contests/abc";
 	let tasA = "/tasks/abc",
-	    endA = " </a>",
-	    trbA = "<a href=\"?page=ABC";
+	endA = " </a>",
+	trbA = "<a href=\"?page=ABC";
 	let treA = "_translation\" class=link-disabled>题面</a> <a href=\"?page=ABC";
 	let treA_Av = "_translation\" class=link-black>题面</a> <a href=\"?page=ABC";
 	let solA = "_solution\" class=link-disabled>题解</a>";
@@ -375,7 +375,7 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 		document.write("<td" + ' id="gABC' + t + '"' + "><a href=\"https://atcoder.jp/contests/abc" + t + "\">ABC" + t + "</a></td>");
 		for (let j = 0; j < siz[i]; j++) {
 			let uC = Charu[j],
-			    lC = "_" + Charl[j] + "\" ";
+			lC = "_" + Charl[j] + "\" ";
 			if (j == 7 && i > 232)
 				uC = "Ex";
 			if (i < 20)
@@ -417,19 +417,19 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 	document.write("</tbody></table>");
 
 	let eper = (cnte / cnt * 100).toFixed(3).toString(),
-	    sper = (cnts / cnt * 100).toFixed(3).toString(),
-	    tper = (cntt / cnt * 100).toFixed(3);
+	sper = (cnts / cnt * 100).toFixed(3).toString(),
+	tper = (cntt / cnt * 100).toFixed(3);
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-abc\"><div class=\"bar\"></div><div class=\"label\">" + eper + "% 题面已完成</div></div></p>");
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-abc\"><div class=\"bar\"></div><div class=\"label\">" + sper + "% 题解已完成</div></div></p>");
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-abc\"><div class=\"bar\"></div><div class=\"label\">" + tper + "% 标签已完成</div></div></p></div>");
 	$('#progress-tre-abc').progress({
-percent: cnte / cnt * 100
+		percent: cnte / cnt * 100
 	});
 	$('#progress-sol-abc').progress({
-percent: cnts / cnt * 100
+		percent: cnts / cnt * 100
 	});
 	$('#progress-tag-abc').progress({
-percent: cntt / cnt * 100
+		percent: cntt / cnt * 100
 	});
 	console.log(cnt, cnte, cnts, cntt);
 }
@@ -438,8 +438,8 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 	let Charl = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 	let Charu = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 	let Lim = 7,
-	    arccnt = 0,
-	    mx = 1005;
+	arccnt = 0,
+	mx = 1005;
 	while (getarcname(arccnt + 1, 1)in rawd)
 		arccnt++;
 
@@ -454,11 +454,11 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 	tg = new Array(mx);
 
 	let cnt = 0,
-	    cnte = list_tre.length,
-	    cnts = list_sol.length,
-	    cntt = 0,
-	    nametoid = [],
-	    arctitle = new Array(mx);
+	cnte = list_tre.length,
+	cnts = list_sol.length,
+	cntt = 0,
+	nametoid = [],
+	arctitle = new Array(mx);
 
 	for (let i = 1; i <= arccnt; i++)
 		Ava_tre[i] = new Array(10);
@@ -467,7 +467,7 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			Ava_tre[i][j] = 0;
 	for (let i = 0; i < list_tre.length; i++) {
 		let x = list_tre[i][0],
-		    y = list_tre[i][1];
+		y = list_tre[i][1];
 		if (x > arccnt || x < 0 || y > getarccnt(x) || y < 0)
 			alert("problem " + getarcname_u(x, y) + " does not exist");
 		else
@@ -480,7 +480,7 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			Ava_sol[i][j] = 0;
 	for (let i = 0; i < list_sol.length; i++) {
 		let x = list_sol[i][0],
-		    y = list_sol[i][1];
+		y = list_sol[i][1];
 		if (x > arccnt || x < 0 || y > getarccnt(x) || y < 0)
 			alert("problem " + getarcname_u(x, y) + " does not exist");
 		else
@@ -505,17 +505,17 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 		for (let j = 57 < i && i < 104 ? 2 : 0; j < getarccnt(i); j++) {
 			tg[i][j] = tags[getarcname_u(i, j)];
 			problist[getarcname_u(i, j)] = {
-"tag":
+				"tag":
 				tg[i][j],
-"diff":
+				"diff":
 				x[i][j],
-"title":
+				"title":
 				arctitle[i][j],
-"org_a": "<a href=\"https://atcoder.jp/contests/arc"
-				+ ext3(i) + "/tasks/" + getarcname(i, j) + "\">" + getarcname_u(i, j) + "</a>",
-"prob_a":
+				"org_a": "<a href=\"https://atcoder.jp/contests/arc"
+				 + ext3(i) + "/tasks/" + getarcname(i, j) + "\">" + getarcname_u(i, j) + "</a>",
+				"prob_a":
 				Ava_tre[i][j] ? "<a href=\"?page=" + getarcname_u(i, j) + "_translation\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
-"solu_a": Ava_sol[i][j] ? "<a href=\"?page=" + getarcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
+				"solu_a": Ava_sol[i][j] ? "<a href=\"?page=" + getarcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
 			};
 		}
 	for (let i = arccnt; i >= 1; i--) {
@@ -570,15 +570,15 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
 	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>F2</th></thead><tbody>");
 	let abc = "abc",
-	    arc = "arc",
-	    agc = "agc";
+	arc = "arc",
+	agc = "agc";
 	let ABC = "ABC",
-	    ARC = "ARC",
-	    AGC = "AGC";
+	ARC = "ARC",
+	AGC = "AGC";
 	let webA = "<a href=\"https://atcoder.jp/contests/arc";
 	let tasA = "/tasks/arc",
-	    endA = " </a>",
-	    trbA = "<a href=\"?page=ARC";
+	endA = " </a>",
+	trbA = "<a href=\"?page=ARC";
 	let treA = "_translation\" class=link-disabled>题面</a> <a href=\"?page=ARC";
 	let treA_Av = "_translation\" class=link-black>题面</a> <a href=\"?page=ARC";
 	let solA = "_solution\" class=link-disabled>题解</a>";
@@ -586,13 +586,13 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 	for (let i = arccnt; i; i--) {
 		document.write("<tr>");
 		let t = ext3(i),
-		    w = 57 < i && i < 104 ? 2 : 0;
+		w = 57 < i && i < 104 ? 2 : 0;
 		document.write("<td><a href=\"https://atcoder.jp/contests/arc" + t + "\">ARC" + t + "</a></td>");
 		for (let j = 0; j < w; j++)
 			document.write("<td></td>");
 		for (let j = 0; j < siz[i]; j++) {
 			let uC = Charu[j],
-			    lC = "_" + Charl[j] + "\" ";
+			lC = "_" + Charl[j] + "\" ";
 			if (i == 120 && j == 6)
 				uC = "F2", lC = "_F2\" ";
 			let tre_cur = treA;
@@ -632,19 +632,19 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 	document.write("</tbody></table>");
 
 	let eper = (cnte / cnt * 100).toFixed(3).toString(),
-	    sper = (cnts / cnt * 100).toFixed(3).toString(),
-	    tper = (cntt / cnt * 100).toFixed(3);
+	sper = (cnts / cnt * 100).toFixed(3).toString(),
+	tper = (cntt / cnt * 100).toFixed(3);
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-arc\"><div class=\"bar\"></div><div class=\"label\">" + eper + "% 题面已完成</div></div></p>");
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-arc\"><div class=\"bar\"></div><div class=\"label\">" + sper + "% 题解已完成</div></div></p>");
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-arc\"><div class=\"bar\"></div><div class=\"label\">" + tper + "% 标签已完成</div></div></p></div>");
 	$('#progress-tre-arc').progress({
-percent: cnte / cnt * 100
+		percent: cnte / cnt * 100
 	});
 	$('#progress-sol-arc').progress({
-percent: cnts / cnt * 100
+		percent: cnts / cnt * 100
 	});
 	$('#progress-tag-arc').progress({
-percent: cntt / cnt * 100
+		percent: cntt / cnt * 100
 	});
 	console.log(cnt, cnte, cnts, cntt);
 }
@@ -653,8 +653,8 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 	let Charl = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 	let Charu = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 	let Lim = 7,
-	    agccnt = 0,
-	    mx = 1005;
+	agccnt = 0,
+	mx = 1005;
 	while (agccnt == 41 || getagcname(agccnt + 1, 1)in rawd)
 		agccnt++;
 
@@ -669,11 +669,11 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 	tg = new Array(mx);
 
 	let cnt = 0,
-	    cnte = list_tre.length,
-	    cnts = list_sol.length,
-	    cntt = 0,
-	    nametoid = [],
-	    agctitle = [];
+	cnte = list_tre.length,
+	cnts = list_sol.length,
+	cntt = 0,
+	nametoid = [],
+	agctitle = [];
 
 	for (let i = 1; i <= agccnt; i++)
 		Ava_tre[i] = new Array(10);
@@ -682,7 +682,7 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 			Ava_tre[i][j] = 0;
 	for (let i = 0; i < list_tre.length; i++) {
 		let x = list_tre[i][0],
-		    y = list_tre[i][1];
+		y = list_tre[i][1];
 		if (x > agccnt || x < 0 || y > getagccnt(x) || y < 0)
 			alert("problem " + getagcname_u(x, y) + " does not exist");
 		else
@@ -695,7 +695,7 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 			Ava_sol[i][j] = 0;
 	for (let i = 0; i < list_sol.length; i++) {
 		let x = list_sol[i][0],
-		    y = list_sol[i][1];
+		y = list_sol[i][1];
 		if (x > agccnt || x < 0 || y > getagccnt(x) || y < 0)
 			alert("problem " + getagcname_u(x, y) + " does not exist");
 		else
@@ -720,17 +720,17 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 		for (let j = 0; j < getagccnt(i); j++) {
 			tg[i][j] = tags[getagcname_u(i, j)];
 			problist[getagcname_u(i, j)] = {
-"tag":
+				"tag":
 				tg[i][j],
-"diff":
+				"diff":
 				x[i][j],
-"title":
+				"title":
 				agctitle[i][j],
-"org_a": "<a href=\"https://atcoder.jp/contests/agc"
-				+ ext3(i) + "/tasks/" + getagcname(i, j) + "\">" + getagcname_u(i, j) + "</a>",
-"prob_a":
+				"org_a": "<a href=\"https://atcoder.jp/contests/agc"
+				 + ext3(i) + "/tasks/" + getagcname(i, j) + "\">" + getagcname_u(i, j) + "</a>",
+				"prob_a":
 				Ava_tre[i][j] ? "<a href=\"?page=" + getagcname_u(i, j) + "_translation\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
-"solu_a": Ava_sol[i][j] ? "<a href=\"?page=" + getagcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
+				"solu_a": Ava_sol[i][j] ? "<a href=\"?page=" + getagcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
 			};
 		}
 	for (let i = agccnt; i >= 1; i--) {
@@ -785,15 +785,15 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
 	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>F2</th></thead><tbody>");
 	let abc = "abc",
-	    arc = "arc",
-	    agc = "agc";
+	arc = "arc",
+	agc = "agc";
 	let ABC = "ABC",
-	    ARC = "ARC",
-	    AGC = "AGC";
+	ARC = "ARC",
+	AGC = "AGC";
 	let webA = "<a href=\"https://atcoder.jp/contests/agc";
 	let tasA = "/tasks/agc",
-	    endA = " </a>",
-	    trbA = "<a href=\"?page=AGC";
+	endA = " </a>",
+	trbA = "<a href=\"?page=AGC";
 	let treA = "_translation\" class=link-disabled>题面</a> <a href=\"?page=AGC";
 	let treA_Av = "_translation\" class=link-black>题面</a> <a href=\"?page=AGC";
 	let solA = "_solution\" class=link-disabled>题解</a>";
@@ -806,7 +806,7 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 		document.write("<td><a href=\"https://atcoder.jp/contests/agc" + t + "\">AGC" + t + "</a></td>");
 		for (let j = 0; j < siz[i]; j++) {
 			let uC = Charu[j],
-			    lC = "_" + Charl[j] + "\" ";
+			lC = "_" + Charl[j] + "\" ";
 			if (i == 28 && j == 6)
 				uC = "F2", lC = "_F2\" ";
 			let tre_cur = treA;
@@ -846,19 +846,19 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 	document.write("</tbody></table>");
 
 	let eper = (cnte / cnt * 100).toFixed(3).toString(),
-	    sper = (cnts / cnt * 100).toFixed(3).toString(),
-	    tper = (cntt / cnt * 100).toFixed(3);
+	sper = (cnts / cnt * 100).toFixed(3).toString(),
+	tper = (cntt / cnt * 100).toFixed(3);
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-agc\"><div class=\"bar\"></div><div class=\"label\">" + eper + "% 题面已完成</div></div></p>");
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-agc\"><div class=\"bar\"></div><div class=\"label\">" + sper + "% 题解已完成</div></div></p>");
 	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-agc\"><div class=\"bar\"></div><div class=\"label\">" + tper + "% 标签已完成</div></div></p></div>");
 	$('#progress-tre-agc').progress({
-percent: cnte / cnt * 100
+		percent: cnte / cnt * 100
 	});
 	$('#progress-sol-agc').progress({
-percent: cnts / cnt * 100
+		percent: cnts / cnt * 100
 	});
 	$('#progress-tag-agc').progress({
-percent: cntt / cnt * 100
+		percent: cntt / cnt * 100
 	});
 	console.log(cnt, cnte, cnts, cntt);
 }
@@ -870,19 +870,19 @@ function refreshchart() {
 	cnt = new Array(44);
 	for (let i = 0; i < 44; i++)
 		ctg[i] = "<" + (i * 100 + 100).toString(), cnt[i] = {
-		y: 0,
-color:
-		i < 4 ? "rgb(128,128,128)" : i < 8 ? "rgb(128,64,0)" : i < 12 ? "rgb(0,128,0)" :
-		i < 16 ? "rgb(0,192,192)" : i < 20 ? "rgb(0,0,255)" : i < 24 ? "rgb(192,192,0)" : i < 28 ? "rgb(255,128,0)" : "rgb(255,0,0)"
-	};
+			y: 0,
+			color:
+			i < 4 ? "rgb(128,128,128)" : i < 8 ? "rgb(128,64,0)" : i < 12 ? "rgb(0,128,0)" :
+			i < 16 ? "rgb(0,192,192)" : i < 20 ? "rgb(0,0,255)" : i < 24 ? "rgb(192,192,0)" : i < 28 ? "rgb(255,128,0)" : "rgb(255,0,0)"
+		};
 	for (let i in problist)
 		if (isd1[i] && isd2[i] && problist[i]["diff"] < 4400)
 			cnt[Math.floor(problist[i]["diff"] / 100)].y++;
 	Highcharts.chart('container', {
-chart: {
-type: "column",
-events: {
-click: function (event) {
+		chart: {
+			type: "column",
+			events: {
+				click: function (event) {
 					let p = Math.round(event.xAxis[0].value);
 					if (presel != p) {
 						presel = p;
@@ -897,41 +897,41 @@ click: function (event) {
 				}
 			}
 		},
-title: {
-text: "题目难度统计"
+		title: {
+			text: "题目难度统计"
 		},
-subtitle: {
-text: ""
+		subtitle: {
+			text: ""
 		},
-xAxis: {
-categories: ctg,
-crosshair: true
+		xAxis: {
+			categories: ctg,
+			crosshair: true
 		},
-yAxis: {
-title: {
-useHTML: true,
-text: "数量"
+		yAxis: {
+			title: {
+				useHTML: true,
+				text: "数量"
 			}
 		},
-tooltip: {
-headerFormat: "<span style=\"font-size:10px\">{point.key}</span><table>",
-pointFormat: "<tr><td style=\"font-size:10px;color:{series.color};padding:0\">{}:</td>" +
+		tooltip: {
+			headerFormat: "<span style=\"font-size:10px\">{point.key}</span><table>",
+			pointFormat: "<tr><td style=\"font-size:10px;color:{series.color};padding:0\">{}:</td>" +
 			"<td style=\"font-size:10px;padding:0\"><b>{point.y:.0f}</b></td></tr>",
-footerFormat: "</table>",
-shared: true,
-useHTML: true
+			footerFormat: "</table>",
+			shared: true,
+			useHTML: true
 		},
-plotOptions: {
-column: {
+		plotOptions: {
+			column: {
 				pointPadding: 0.2,
 				borderWidth: 0
 			}
 		},
-series: [{
-name: "题目数量",
-data: cnt
-		}
-		        ]
+		series: [{
+				name: "题目数量",
+				data: cnt
+			}
+		]
 	});
 }
 
@@ -981,9 +981,9 @@ function isinarray(x, a) {
 function setfilter() {
 	document.getElementById("rndprob").innerHTML = "";
 	let dl = document.getElementById("diflb").value,
-	    dr = document.getElementById("difrb").value,
-	    utg = $(".ui.dropdown").dropdown("get value"),
-	    flgor = $(".ui.checkbox").checkbox("is checked");
+	dr = document.getElementById("difrb").value,
+	utg = $(".ui.dropdown").dropdown("get value"),
+	flgor = $(".ui.checkbox").checkbox("is checked");
 	dl = dl == "" || isNaN(Number(dl)) ? -10000 : Number(dl);
 	dr = dr == "" || isNaN(Number(dr)) ? 10000 : Number(dr);
 	utg = utg == '' ? 0 : utg.split(",");
@@ -1023,7 +1023,7 @@ function clrfilter() {
 function getrandprob() {
 	document.getElementById("rndprob").innerHTML = "";
 	let cnt = 0,
-	    p;
+	p;
 	for (let i in problist) {
 		if (document.getElementById(i + "-col").getAttribute("style") == "")
 			cnt++;
@@ -1056,8 +1056,8 @@ function writelist(taglist) {
 	}
 	document.write("</div></div>");
 	$(".ui.dropdown").dropdown({
-on: "hover",
-transition: "drop",
+		on: "hover",
+		transition: "drop",
 		allowAdditions: 1
 	});
 	document.write("&nbsp;&nbsp;<div class=\"ui checkbox\"><input type=\"checkbox\" name=\"example\"><label>按或合并标签</label></div>&nbsp;&nbsp;");
@@ -1088,18 +1088,16 @@ transition: "drop",
 }
 
 async function jumptotop() {
-	const delay = ms => new Promise((resolve, reject) => setTimeout(resolve, ms));
-	let stp = Math.abs($(document).scrollTop() - $("#page-top").offset()["top"]) / 25;
-	for (let i = $(document).scrollTop(), j = 0; j <= 25; i -= stp, j++)
-		window.scrollTo(0, i), await delay(0);
-	window.location = "#page-top";
+	window.scrollTo({
+		top: 0,
+		behavior: "smooth"
+	});
 }
 async function jumptobottom() {
-	const delay = ms => new Promise((resolve, reject) => setTimeout(resolve, ms));
-	let stp = Math.abs($(document).scrollTop() - $("#page-end").offset()["top"]) / 25;
-	for (let i = $(document).scrollTop(), j = 0; j <= 25; i += stp, j++)
-		window.scrollTo(0, i), await delay(0);
-	window.location = "#page-end";
+	window.scrollTo({
+		top: $("#page-end").offset()["top"],
+		behavior: "smooth"
+	});
 }
 
 function redr() {
@@ -1123,15 +1121,17 @@ function checknum(i) {
 }
 function printinvitecode() {
 	let res = "",
-	    trans = new Base64();
+	trans = new Base64();
 	res += '{"title":"' + document.getElementById("get-title").value + '","st":';
 	let ye = document.getElementById("get-start-ye").value,
-	    mo = document.getElementById("get-start-mo").value,
-	    da = document.getElementById("get-start-da").value,
-	    ho = document.getElementById("get-start-ho").value,
-	    mi = document.getElementById("get-start-mi").value,
-	    se = document.getElementById("get-start-se").value,
-	    time = new Date();
+	mo = document.getElementById("get-start-mo").value,
+	da = document.getElementById("get-start-da").value,
+	ho = document.getElementById("get-start-ho").value,
+	mi = document.getElementById("get-start-mi").value,
+	se = document.getElementById("get-start-se").value,
+	time = new Date(),
+	st = 0,
+	ed = 0;
 	if (checknum(ye) || checknum(mo) || checknum(da) || checknum(ho) || checknum(mi) || checknum(se)) {
 		alert("开始时间不合法");
 		return;
@@ -1141,7 +1141,8 @@ function printinvitecode() {
 	time.setDate(da);
 	time.setHours(ho);
 	time.setMinutes(mi);
-	time.setSeconds(se);
+	time.setSeconds(se),
+	st = Number(time);
 	res += '"' + Number(time) + '","ed":';
 	ye = document.getElementById("get-finish-ye").value,
 	mo = document.getElementById("get-finish-mo").value,
@@ -1159,7 +1160,12 @@ function printinvitecode() {
 	time.setDate(da);
 	time.setHours(ho);
 	time.setMinutes(mi);
-	time.setSeconds(se);
+	time.setSeconds(se),
+	ed = Number(time);
+	if (st > ed) {
+		alert("开始时间在结束时间前");
+		return;
+	}
 	res += '"' + Number(time) + '","problems":[';
 	let prblist = document.getElementById("get-problems").value.split(' ');
 	for (let i in prblist) {
@@ -1186,10 +1192,10 @@ function buildcontestpage() {
 	document.write("<div id=\"join-page\">");
 	document.write("<div class=\"ui input\"><input id=\"rev-code\" style=\"width: 150;\" placeholder=\"输入邀请码\"></input></div>");
 	var p = document.getElementById('rev-code')
-	        if (window.localStorage.getItem('inv-code') != undefined)
-		        p.value = window.localStorage.getItem('inv-code')
-		                  document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
-	document.write("</div><div id=\"create-page\">");
+		if (window.localStorage.getItem('inv-code') != undefined)
+			p.value = window.localStorage.getItem('inv-code')
+				document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
+		document.write("</div><div id=\"create-page\">");
 	document.write("<div class=\"ui input\"><input id=\"get-title\" placeholder=\"比赛标题\"></input></div>");
 	document.write("<h4 class=\"ui header\">设置开始时间</h4>");
 	document.write("<div class=\"ui input\"><input id=\"get-start-ye\" placeholder=\"年\"></input></div>");
@@ -1225,17 +1231,25 @@ function buildw() {
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	window.onscroll = function () {
 		let cur = $(document).scrollTop(),
-		    h = document.documentElement.clientHeight;
+		h = document.documentElement.clientHeight;
 		document.getElementById("button-top").setAttribute("style", cur - $("#page-top").offset()["top"] < 500
-		        ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
+			 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
 		document.getElementById("button-end").setAttribute("style", $("#page-end").offset()["top"] - h - cur < 500
-		        ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
+			 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
+	};
+	window.onclick = function () {
+		let cur = $(document).scrollTop(),
+		h = document.documentElement.clientHeight;
+		document.getElementById("button-top").setAttribute("style", cur - $("#page-top").offset()["top"] < 500
+			 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
+		document.getElementById("button-end").setAttribute("style", $("#page-end").offset()["top"] - h - cur < 500
+			 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
 	};
 	let rawd,
-	    list,
-	    tags,
-	    prbs,
-	    taglist;
+	list,
+	tags,
+	prbs,
+	taglist;
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json", "json", function (text) {
 		rawd = JSON.parse(text);
 	});
@@ -1247,18 +1261,12 @@ function buildw() {
 			list = JSON.parse(text);
 		} catch {
 			list = {
-"abc_list_tre":
-				[],
-"abc_list_sol":
-				[],
-"arc_list_tre":
-				[],
-"arc_list_sol":
-				[],
-"agc_list_tre":
-				[],
-"agc_list_sol":
-				[]
+				"abc_list_tre": [],
+				"abc_list_sol": [],
+				"arc_list_tre": [],
+				"arc_list_sol": [],
+				"agc_list_tre": [],
+				"agc_list_sol": []
 			};
 			alert("list is not valid");
 		}
