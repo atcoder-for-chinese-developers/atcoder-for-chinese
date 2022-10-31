@@ -400,7 +400,7 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 			}
 			document.write(uC + endA + trbA + t + "_" + uC + tre_cur + t + "_" + uC + sol_cur);
 			if (tg[i][j] != undefined)
-				document.write("<div onclick=\"abctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative;\"><a class=\"floating ui teal right label\">" + tg[i][j].length.toString() + "</a></div>");
+				document.write("<div onclick=\"abctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
 			document.write("<div id=\"tag-" + getabcname(i, j) + "\" style=\"display: none;\">");
 			if (tg[i][j] != undefined) {
 				cntt++;
@@ -615,7 +615,7 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			}
 			document.write(uC + endA + trbA + t + "_" + uC + tre_cur + t + "_" + uC + sol_cur);
 			if (tg[i][j] != undefined)
-				document.write("<div onclick=\"arctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative;\"><a class=\"floating ui teal right label\" style=\"z-index: 999;\">" + tg[i][j].length.toString() + "</a></div>");
+				document.write("<div onclick=\"arctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
 			document.write("<div id=\"tag-" + getarcname(i, j) + "\" style=\"display: none;\">");
 			if (tg[i][j] != undefined) {
 				cntt++;
@@ -829,7 +829,7 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 			}
 			document.write(uC + endA + trbA + t + "_" + uC + tre_cur + t + "_" + uC + sol_cur);
 			if (tg[i][j] != undefined)
-				document.write("<div onclick=\"agctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative;\"><a class=\"floating ui teal right label\" style=\"z-index: 999;\">" + tg[i][j].length.toString() + "</a></div>");
+				document.write("<div onclick=\"agctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
 			document.write("<div id=\"tag-" + getagcname(i, j) + "\" style=\"display: none;\">");
 			if (tg[i][j] != undefined) {
 				cntt++;
