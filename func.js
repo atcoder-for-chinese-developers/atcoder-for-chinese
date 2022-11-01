@@ -1,4 +1,5 @@
 function readTextFile(file, ext, callback) {
+	console.log(file);
 	let xhr = new XMLHttpRequest();
 	xhr.overrideMimeType("application/" + ext);
 	xhr.open("GET", file, false);
@@ -174,7 +175,6 @@ function sidebartoggle() {
 	$('.ui.sidebar').sidebar('toggle');
 }
 function closealltables() {
-	window.onscroll();
 	document.getElementById("abc-table").setAttribute("style", "display: none;");
 	document.getElementById("arc-table").setAttribute("style", "display: none;");
 	document.getElementById("agc-table").setAttribute("style", "display: none;");
@@ -234,8 +234,8 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 	tg = new Array(mx);
 
 	let cnt = 0,
-	cnte = list_tre.length,
-	cnts = list_sol.length,
+	cnte = 0,
+	cnts = 0,
 	cntt = 0,
 	nametoid = [],
 	abctitle = new Array(mx);
@@ -243,30 +243,25 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 	for (let i = 1; i <= abccnt; i++)
 		Ava_tre[i] = new Array(10);
 	for (let i = 1; i <= abccnt; i++)
-		for (let j = 1; j <= 10; j++)
-			Ava_tre[i][j] = 0;
-	for (let i = 0; i < list_tre.length; i++) {
-		let x = list_tre[i][0],
-		y = list_tre[i][1];
-		if (x > abccnt || x < 0 || y > getabccnt(x) || y < 0)
-			alert("problem " + getabcname_u(x, y) + " does not exist");
-		else
-			Ava_tre[x][y] = 1;
-	}
+		for (let j = 0; j <= 10; j++)
+			Ava_tre[i][j] = [];
 	for (let i = 1; i <= abccnt; i++)
 		Ava_sol[i] = new Array(10);
 	for (let i = 1; i <= abccnt; i++)
-		for (let j = 1; j <= 10; j++)
-			Ava_sol[i][j] = 0;
-	for (let i = 0; i < list_sol.length; i++) {
-		let x = list_sol[i][0],
-		y = list_sol[i][1];
-		if (x > abccnt || x < 0 || y > getabccnt(x) || y < 0)
-			alert("problem " + getabcname_u(x, y) + " does not exist");
-		else
-			Ava_sol[x][y] = 1;
-	}
-
+		for (let j = 0; j <= 10; j++)
+			Ava_sol[i][j] = [];
+	for (let i = 1; i <= abccnt; i++)
+		if (("abc" + ext3(i))in list_tre)
+			for (let j = 0; j < getabccnt(j); j++)
+				if (getabcname(i, j)in list_tre["abc" + ext3(i)])
+					for (let p in list_tre["abc" + ext3(i)][getabcname(i, j)])
+						Ava_tre[i][j].unshift(p);
+	for (let i = 1; i <= abccnt; i++)
+		if (("abc" + ext3(i))in list_sol)
+			for (let j = 0; j < getabccnt(j); j++)
+				if (getabcname(i, j)in list_sol["abc" + ext3(i)])
+					for (let p in list_sol["abc" + ext3(i)][getabcname(i, j)])
+						Ava_sol[i][j].unshift(p);
 	for (let i = 1, ri = 58; i <= abccnt; i++) {
 		x[i] = new Array(getabccnt(i));
 		tg[i] = new Array(getabccnt(i));
@@ -291,17 +286,13 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 		for (let j = 0; j < getabccnt(i); j++) {
 			tg[i][j] = tags[getabcname_u(i, j)];
 			problist[getabcname_u(i, j)] = {
-				"tag":
-				tg[i][j],
-				"diff":
-				x[i][j],
-				"title":
-				abctitle[i][j],
+				"tag": tg[i][j],
+				"diff": x[i][j],
+				"title": abctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/abc"
 				 + ext3(i) + "/tasks/" + getabcname(i, j) + "\">" + getabcname_u(i, j) + "</a>",
-				"prob_a":
-				Ava_tre[i][j] ? "<a href=\"?page=" + getabcname_u(i, j) + "_translation\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] ? "<a href=\"?page=" + getabcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
+				"prob_a": Ava_tre[i][j] != 0 ? "<a href=\"?page=" + getabcname_u(i, j) + "_translation\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
+				"solu_a": Ava_sol[i][j] != 0 ? "<a href=\"?page=" + getabcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
 			};
 		}
 	for (let i = abccnt; i >= 1; i--) {
@@ -364,28 +355,29 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 	let webA = "<a href=\"https://atcoder.jp/contests/abc";
 	let tasA = "/tasks/abc",
 	endA = " </a>",
-	trbA = "<a href=\"?page=ABC";
-	let treA = "_translation\" class=link-disabled>题面</a> <a href=\"?page=ABC";
-	let treA_Av = "_translation\" class=link-black>题面</a> <a href=\"?page=ABC";
-	let solA = "_solution\" class=link-disabled>题解</a>";
-	let solA_Av = "_solution\" class=link-black>题解</a>";
+	trbA = "<a href=\"?page=";
+	let treA = "\" class=link-disabled>题面</a> <a href=\"?page=";
+	let treA_Av = "\" class=link-black>题面</a> <a href=\"?page=";
+	let solA = "\" class=link-disabled>题解</a>";
+	let solA_Av = "\" class=link-black>题解</a>";
 	for (let i = abccnt; i; i--) {
 		document.write("<tr>");
 		let t = ext3(i);
 		document.write("<td" + ' id="gABC' + t + '"' + "><a href=\"https://atcoder.jp/contests/abc" + t + "\">ABC" + t + "</a></td>");
 		for (let j = 0; j < siz[i]; j++) {
 			let uC = Charu[j],
-			lC = "_" + Charl[j] + "\" ";
+			lC = "_" + Charl[j] + "\" ",
+			prbid = "abc" + ext3(i) + "." + getabcname(i, j) + ".";
 			if (j == 7 && i > 232)
 				uC = "Ex";
 			if (i < 20)
 				lC = "_" + (j + 1).toString() + "\" ";
 			let tre_cur = treA;
-			if (Ava_tre[i][j])
-				tre_cur = treA_Av;
+			if (Ava_tre[i][j] != 0)
+				tre_cur = Ava_tre[i][j][0] + treA_Av,cnte++;
 			let sol_cur = solA;
-			if (Ava_sol[i][j])
-				sol_cur = solA_Av;
+			if (Ava_sol[i][j] != 0)
+				sol_cur = Ava_sol[i][j][0] + solA_Av,cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getabcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"> <span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -398,7 +390,7 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 			} else {
 				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
 			}
-			document.write(uC + endA + trbA + t + "_" + uC + tre_cur + t + "_" + uC + sol_cur);
+			document.write(uC + endA + trbA + "T" + prbid + tre_cur + "S" + prbid + sol_cur);
 			if (tg[i][j] != undefined)
 				document.write("<div onclick=\"abctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
 			document.write("<div id=\"tag-" + getabcname(i, j) + "\" style=\"display: none;\">");
@@ -505,12 +497,9 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 		for (let j = 57 < i && i < 104 ? 2 : 0; j < getarccnt(i); j++) {
 			tg[i][j] = tags[getarcname_u(i, j)];
 			problist[getarcname_u(i, j)] = {
-				"tag":
-				tg[i][j],
-				"diff":
-				x[i][j],
-				"title":
-				arctitle[i][j],
+				"tag": tg[i][j],
+				"diff": x[i][j],
+				"title": arctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/arc"
 				 + ext3(i) + "/tasks/" + getarcname(i, j) + "\">" + getarcname_u(i, j) + "</a>",
 				"prob_a":
@@ -720,12 +709,9 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 		for (let j = 0; j < getagccnt(i); j++) {
 			tg[i][j] = tags[getagcname_u(i, j)];
 			problist[getagcname_u(i, j)] = {
-				"tag":
-				tg[i][j],
-				"diff":
-				x[i][j],
-				"title":
-				agctitle[i][j],
+				"tag": tg[i][j],
+				"diff": x[i][j],
+				"title": agctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/agc"
 				 + ext3(i) + "/tasks/" + getagcname(i, j) + "\">" + getagcname_u(i, j) + "</a>",
 				"prob_a":
@@ -1191,11 +1177,11 @@ function buildcontestpage() {
 
 	document.write("<div id=\"join-page\">");
 	document.write("<div class=\"ui input\"><input id=\"rev-code\" style=\"width: 150;\" placeholder=\"输入邀请码\"></input></div>");
-	var p = document.getElementById('rev-code')
-		if (window.localStorage.getItem('inv-code') != undefined)
-			p.value = window.localStorage.getItem('inv-code')
-				document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
-		document.write("</div><div id=\"create-page\">");
+	var p = document.getElementById('rev-code');
+	if (window.localStorage.getItem('inv-code') != undefined)
+		p.value = window.localStorage.getItem('inv-code')
+			document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
+	document.write("</div><div id=\"create-page\">");
 	document.write("<div class=\"ui input\"><input id=\"get-title\" placeholder=\"比赛标题\"></input></div>");
 	document.write("<h4 class=\"ui header\">设置开始时间</h4>");
 	document.write("<div class=\"ui input\"><input id=\"get-start-ye\" placeholder=\"年\"></input></div>");
@@ -1214,9 +1200,9 @@ function buildcontestpage() {
 	document.write("<h4 class=\"ui header\">参赛选手</h4>");
 	document.write("<div class=\"ui fluid input\"><input id=\"get-players\" placeholder=\"以半角空格分隔\"></input></div>");
 	document.write("<h4 class=\"ui header\">比赛题目（请填写题目链接内的 AtCoder 格式标识符，例如下）</h4>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a>：abc255_h</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a>：arc103_b</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a>：zone2021_f</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a> 的标识符为 abc255_h</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a> 的标识符为 arc103_b</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a> 的标识符为 zone2021_f</p>");
 	document.write("<div class=\"ui fluid input\"><input id=\"get-problems\" placeholder=\"以半角空格分隔\"></input></div>");
 	document.write("<h4 class=\"ui header\">生成邀请码</h4>");
 	document.write("<div class=\"ui fluid input\"><input id=\"print-code\" placeholder=\"邀请码\"></input><button class=\"ui primary button\" onclick=\"printinvitecode()\">获取邀请码</button></div>");
@@ -1246,7 +1232,8 @@ function buildw() {
 			 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
 	};
 	let rawd,
-	list,
+	tralist,
+	sollist,
 	tags,
 	prbs,
 	taglist;
@@ -1256,20 +1243,26 @@ function buildw() {
 	readTextFile("https://kenkoooo.com/atcoder/resources/problems.json", "json", function (text) {
 		prbs = JSON.parse(text);
 	});
-	readTextFile("list.json", "json", function (text) {
-		try {
-			list = JSON.parse(text);
-		} catch {
-			list = {
-				"abc_list_tre": [],
-				"abc_list_sol": [],
-				"arc_list_tre": [],
-				"arc_list_sol": [],
-				"agc_list_tre": [],
-				"agc_list_sol": []
-			};
-			alert("list is not valid");
-		}
+	// readTextFile("list.json", "json", function (text) {
+	// try {
+	// list = JSON.parse(text);
+	// } catch {
+	// list = {
+	// "abc_list_tre": [],
+	// "abc_list_sol": [],
+	// "arc_list_tre": [],
+	// "arc_list_sol": [],
+	// "agc_list_tre": [],
+	// "agc_list_sol": []
+	// };
+	// alert("list is not valid");
+	// }
+	// });
+	readTextFile("https://atcoder-for-chinese-developers.github.io/translations/list.json", "json", function (text) {
+		tralist = JSON.parse(text);
+	});
+	readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/list.json", "json", function (text) {
+		sollist = JSON.parse(text);
 	});
 	readTextFile("tags.json", "json", function (text) {
 		try {
@@ -1284,9 +1277,9 @@ function buildw() {
 	});
 	document.write("<div class=\"ui menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"listtoggle()\">筛选</a><a class=\"item\" onclick=\"contesttoggle()\">比赛</a></div>");
 
-	writeabc(rawd, tags, list["abc_list_tre"], list["abc_list_sol"], prbs);
-	writearc(rawd, tags, list["arc_list_tre"], list["arc_list_sol"], prbs);
-	writeagc(rawd, tags, list["agc_list_tre"], list["agc_list_sol"], prbs);
+	writeabc(rawd, tags, tralist, sollist, prbs);
+	writearc(rawd, tags, tralist, sollist, prbs);
+	writeagc(rawd, tags, tralist, sollist, prbs);
 	writelist(taglist);
 	buildcontestpage();
 

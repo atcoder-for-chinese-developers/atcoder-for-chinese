@@ -59,7 +59,7 @@
 	<script>
 		var lnk=escape(window.location.href);
 		if(lnk.indexOf("index.html")==-1){
-			window.location.href="/atcoder-for-chinese/index.html";
+			window.location.href="index.html";
 		}else if(lnk.indexOf("%3Fpage%3D")==-1){
 			console.log("main page");
 			document.write("<div class=\"ui main container\">");
@@ -68,23 +68,31 @@
 		}else{
 			let pos=lnk.indexOf("%3Fpage%3D")+10,
 				name=lnk.substr(pos),content="";
-			if(name.indexOf("sol")==-1){
-				console.log("prob page");
-				readTextFile("./translation/"+name+".md","md",function(text,stat){
+			if(name[0]=='T'){
+				name=name.substr(1);
+				console.log("translation page");
+				readTextFile("https://atcoder-for-chinese-developers.github.io/translations/"+name+".md","md",function(text,stat){
 					if(stat=="200"){
 						document.write("<scr"+"ipt src=\"mdstyle.js\">"+"</scri"+"pt>");
 						document.write("<textarea>"+text+"</textarea>");
-					}else
-						window.location.href="./translation/"+name+".html";
+					}else{
+						console.log(stat);
+						alert("没有找到这篇翻译");
+						window.location.href="index.html";
+					}
 				});
 			}else{
-				console.log("solu page");
-				readTextFile("./solution/"+name+".md","md",function(text,stat){
+				name=name.substr(1);
+				console.log("solution page");
+				readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/"+name+".md","md",function(text,stat){
 					if(stat=="200"){
 						document.write("<scr"+"ipt src=\"mdstyle.js\">"+"</scri"+"pt>");
 						document.write("<textarea>"+text+"</textarea>");
-					}else
-						window.location.href="./solution/"+name+".html";
+					}else{
+						console.log(stat);
+						alert("没有找到这篇题解");
+						window.location.href="index.html";
+					}
 				});
 			}
 		}

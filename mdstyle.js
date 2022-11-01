@@ -238,9 +238,7 @@ function tagtoggle(){
 		let tmp=JSON.parse(text),
 			str=escape(window.location.href);
 		str=str.substr(str.lastIndexOf("%3Fpage%3D")+10);
-		let p=7;
-		while(str[p]!='_')p++;
-		str=str.substr(0,p);
+		str=str.split('.')[1];
 		if(str in tmp)tg=tmp[str];
 	});
 	document.write("<div style=\"background: #333333; padding: 0px;\ top: 0px; position: sticky; z-index: 999;\">\
