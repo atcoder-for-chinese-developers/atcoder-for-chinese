@@ -181,17 +181,20 @@
 	r.main()
 }();
 
-function getproblink(s){
-	var pos=s.lastIndexOf("%3Fpage%3D")==-1?s.lastIndexOf("/"):s.lastIndexOf("%3Fpage%3D")+9;
-	return s.substr(pos+1,8+(s[pos+9]=='x'));
+function getprbname(){
+	let w=escape(window.location.href);
+	return w.substr(w.indexOf("%3Fpage%3D")+10).split('.')[1];
+}
+function getprbname_u(){
+	let w=getprbname().toUpperCase();
+	if(Number(w.substr(2,3)) > 232)
+		w=w.replace("H","Ex");
+	return w;
 }
 
-function getorglink(s){
-	var pos=s.lastIndexOf("%3Fpage%3D")==-1?s.lastIndexOf("/"):s.lastIndexOf("%3Fpage%3D")+9,
-		contest=s.substr(pos+1,6),problem=s.substr(pos+8,1);
-	if(s[pos+9]=="x")
-		problem="H";
-	return "https://atcoder.jp/contests/"+contest+"/tasks/"+contest+"_"+problem;
+function getorglink(){
+	let w=getprbname();
+	return "https://atcoder.jp/contests/"+w.split("_")[0]+"/tasks/"+w;
 }
 
 function jumplink1(){
@@ -199,19 +202,15 @@ function jumplink1(){
 }
 
 function jumplink2(){
-	var t=escape(window.location.href);
-	window.location.href=getorglink(t);
+	window.location.href=getorglink();
 }
 
 function gettitle(){
-	var t=escape(window.location.href),s="";
-	if(t.lastIndexOf("%3Fpage%3D")!=-1)
-		s=t.substr(t.lastIndexOf("%3Fpage%3D")+10);
-	else
-		s=t.substr(t.lastIndexOf("/")+1),s=s.substr(0,s.lastIndexOf(".html"));
-	s=s.replace("_"," ");
-	s=s.replace("_"," ");
-	return s;
+	let t=escape(window.location.href);
+	if(t.indexOf("%3Fpage%3D")==-1)
+		return "AtCoder 中文版";
+	t=t.substr(t.lastIndexOf("%3Fpage%3D")+10);
+	return t.split('.')[1].toUpperCase()+(t[0]=='T'?" 翻译":" 题解");
 }
 
 function readTextFile(file,ext,callback){
@@ -225,8 +224,6 @@ function readTextFile(file,ext,callback){
 	xhr.send();
 }
 
-let tg=[];
-
 function tagtoggle(){
 	document.getElementById("tags").setAttribute("style",
 		document.getElementById("tags").getAttribute("style")=="display: none;"?"display: inline-block;":"display: none;"
@@ -234,11 +231,14 @@ function tagtoggle(){
 }
 
 !function(){
+	let tg=[];
 	readTextFile("tags.json","json",function(text){
 		let tmp=JSON.parse(text),
 			str=escape(window.location.href);
 		str=str.substr(str.lastIndexOf("%3Fpage%3D")+10);
-		str=str.split('.')[1];
+		str=str.split('.')[1].toUpperCase();
+		if(Number(str.substr(2,3)) > 232 && str[7]=='H')
+			str=str.substr(7)+"Ex";
 		if(str in tmp)tg=tmp[str];
 	});
 	document.write("<div style=\"background: #333333; padding: 0px;\ top: 0px; position: sticky; z-index: 999;\">\
@@ -263,7 +263,7 @@ function tagtoggle(){
 				原题链接\
 			</div>\
 			<div class=\"hidden content\">\
-				"+getproblink(escape(window.location.href))+"\
+				"+getprbname_u()+"\
 			</div>\
 		</button>\
 	</div>\

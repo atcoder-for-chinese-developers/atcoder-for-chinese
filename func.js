@@ -252,13 +252,13 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 			Ava_sol[i][j] = [];
 	for (let i = 1; i <= abccnt; i++)
 		if (("abc" + ext3(i))in list_tre)
-			for (let j = 0; j < getabccnt(j); j++)
+			for (let j = 0; j < getabccnt(i); j++)
 				if (getabcname(i, j)in list_tre["abc" + ext3(i)])
 					for (let p in list_tre["abc" + ext3(i)][getabcname(i, j)])
 						Ava_tre[i][j].unshift(p);
 	for (let i = 1; i <= abccnt; i++)
 		if (("abc" + ext3(i))in list_sol)
-			for (let j = 0; j < getabccnt(j); j++)
+			for (let j = 0; j < getabccnt(i); j++)
 				if (getabcname(i, j)in list_sol["abc" + ext3(i)])
 					for (let p in list_sol["abc" + ext3(i)][getabcname(i, j)])
 						Ava_sol[i][j].unshift(p);
@@ -446,8 +446,8 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 	tg = new Array(mx);
 
 	let cnt = 0,
-	cnte = list_tre.length,
-	cnts = list_sol.length,
+	cnte = 0,
+	cnts = 0,
 	cntt = 0,
 	nametoid = [],
 	arctitle = new Array(mx);
@@ -457,28 +457,23 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 	for (let i = 1; i <= arccnt; i++)
 		for (let j = 1; j <= 10; j++)
 			Ava_tre[i][j] = 0;
-	for (let i = 0; i < list_tre.length; i++) {
-		let x = list_tre[i][0],
-		y = list_tre[i][1];
-		if (x > arccnt || x < 0 || y > getarccnt(x) || y < 0)
-			alert("problem " + getarcname_u(x, y) + " does not exist");
-		else
-			Ava_tre[x][y] = 1;
-	}
 	for (let i = 1; i <= arccnt; i++)
 		Ava_sol[i] = new Array(10);
 	for (let i = 1; i <= arccnt; i++)
 		for (let j = 1; j <= 10; j++)
 			Ava_sol[i][j] = 0;
-	for (let i = 0; i < list_sol.length; i++) {
-		let x = list_sol[i][0],
-		y = list_sol[i][1];
-		if (x > arccnt || x < 0 || y > getarccnt(x) || y < 0)
-			alert("problem " + getarcname_u(x, y) + " does not exist");
-		else
-			Ava_sol[x][y] = 1;
-	}
-
+	for (let i = 1; i <= arccnt; i++)
+		if (("arc" + ext3(i))in list_tre)
+			for (let j = 0; j < getarccnt(i); j++)
+				if (getarcname(i, j)in list_tre["arc" + ext3(i)])
+					for (let p in list_tre["arc" + ext3(i)][getarcname(i, j)])
+						Ava_tre[i][j].unshift(p);
+	for (let i = 1; i <= arccnt; i++)
+		if (("arc" + ext3(i))in list_sol)
+			for (let j = 0; j < getarccnt(i); j++)
+				if (getarcname(i, j)in list_sol["arc" + ext3(i)])
+					for (let p in list_sol["arc" + ext3(i)][getarcname(i, j)])
+						Ava_sol[i][j].unshift(p);
 	for (let i = 1; i <= arccnt; i++) {
 		x[i] = new Array(getarccnt(i));
 		tg[i] = new Array(getarccnt(i));
@@ -502,9 +497,8 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 				"title": arctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/arc"
 				 + ext3(i) + "/tasks/" + getarcname(i, j) + "\">" + getarcname_u(i, j) + "</a>",
-				"prob_a":
-				Ava_tre[i][j] ? "<a href=\"?page=" + getarcname_u(i, j) + "_translation\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] ? "<a href=\"?page=" + getarcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
+				"prob_a": Ava_tre[i][j] != 0 ? "<a href=\"?page=" + getarcname_u(i, j) + "_translation\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
+				"solu_a": Ava_sol[i][j] != 0 ? "<a href=\"?page=" + getarcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
 			};
 		}
 	for (let i = arccnt; i >= 1; i--) {
@@ -567,11 +561,11 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 	let webA = "<a href=\"https://atcoder.jp/contests/arc";
 	let tasA = "/tasks/arc",
 	endA = " </a>",
-	trbA = "<a href=\"?page=ARC";
-	let treA = "_translation\" class=link-disabled>题面</a> <a href=\"?page=ARC";
-	let treA_Av = "_translation\" class=link-black>题面</a> <a href=\"?page=ARC";
-	let solA = "_solution\" class=link-disabled>题解</a>";
-	let solA_Av = "_solution\" class=link-black>题解</a>";
+	trbA = "<a href=\"?page=";
+	let treA = "\" class=link-disabled>题面</a> <a href=\"?page=";
+	let treA_Av = "\" class=link-black>题面</a> <a href=\"?page=";
+	let solA = "\" class=link-disabled>题解</a>";
+	let solA_Av = "\" class=link-black>题解</a>";
 	for (let i = arccnt; i; i--) {
 		document.write("<tr>");
 		let t = ext3(i),
@@ -581,15 +575,16 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			document.write("<td></td>");
 		for (let j = 0; j < siz[i]; j++) {
 			let uC = Charu[j],
-			lC = "_" + Charl[j] + "\" ";
+			lC = "_" + Charl[j] + "\" ",
+			prbid = "arc" + ext3(i) + "." + getarcname(i, j) + ".";
 			if (i == 120 && j == 6)
 				uC = "F2", lC = "_F2\" ";
 			let tre_cur = treA;
 			if (Ava_tre[i][j])
-				tre_cur = treA_Av;
+				tre_cur = treA_Av,cnte++;
 			let sol_cur = solA;
 			if (Ava_sol[i][j])
-				sol_cur = solA_Av;
+				sol_cur = solA_Av,cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -602,7 +597,7 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			} else {
 				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
 			}
-			document.write(uC + endA + trbA + t + "_" + uC + tre_cur + t + "_" + uC + sol_cur);
+			document.write(uC + endA + trbA + "T" + prbid + tre_cur + "S" + prbid + sol_cur);
 			if (tg[i][j] != undefined)
 				document.write("<div onclick=\"arctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
 			document.write("<div id=\"tag-" + getarcname(i, j) + "\" style=\"display: none;\">");
@@ -658,8 +653,8 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 	tg = new Array(mx);
 
 	let cnt = 0,
-	cnte = list_tre.length,
-	cnts = list_sol.length,
+	cnte = 0,
+	cnts = 0,
 	cntt = 0,
 	nametoid = [],
 	agctitle = [];
@@ -669,28 +664,23 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 	for (let i = 1; i <= agccnt; i++)
 		for (let j = 1; j <= 10; j++)
 			Ava_tre[i][j] = 0;
-	for (let i = 0; i < list_tre.length; i++) {
-		let x = list_tre[i][0],
-		y = list_tre[i][1];
-		if (x > agccnt || x < 0 || y > getagccnt(x) || y < 0)
-			alert("problem " + getagcname_u(x, y) + " does not exist");
-		else
-			Ava_tre[x][y] = 1;
-	}
 	for (let i = 1; i <= agccnt; i++)
 		Ava_sol[i] = new Array(10);
 	for (let i = 1; i <= agccnt; i++)
 		for (let j = 1; j <= 10; j++)
 			Ava_sol[i][j] = 0;
-	for (let i = 0; i < list_sol.length; i++) {
-		let x = list_sol[i][0],
-		y = list_sol[i][1];
-		if (x > agccnt || x < 0 || y > getagccnt(x) || y < 0)
-			alert("problem " + getagcname_u(x, y) + " does not exist");
-		else
-			Ava_sol[x][y] = 1;
-	}
-
+	for (let i = 1; i <= agccnt; i++)
+		if (("agc" + ext3(i))in list_tre)
+			for (let j = 0; j < getagccnt(i); j++)
+				if (getagcname(i, j)in list_tre["agc" + ext3(i)])
+					for (let p in list_tre["agc" + ext3(i)][getagcname(i, j)])
+						Ava_tre[i][j].unshift(p);
+	for (let i = 1; i <= agccnt; i++)
+		if (("agc" + ext3(i))in list_sol)
+			for (let j = 0; j < getagccnt(i); j++)
+				if (getagcname(i, j)in list_sol["agc" + ext3(i)])
+					for (let p in list_sol["agc" + ext3(i)][getagcname(i, j)])
+						Ava_sol[i][j].unshift(p);
 	for (let i = 1; i <= agccnt; i++) {
 		x[i] = new Array(getagccnt(i));
 		tg[i] = new Array(getagccnt(i));
@@ -779,11 +769,11 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 	let webA = "<a href=\"https://atcoder.jp/contests/agc";
 	let tasA = "/tasks/agc",
 	endA = " </a>",
-	trbA = "<a href=\"?page=AGC";
-	let treA = "_translation\" class=link-disabled>题面</a> <a href=\"?page=AGC";
-	let treA_Av = "_translation\" class=link-black>题面</a> <a href=\"?page=AGC";
-	let solA = "_solution\" class=link-disabled>题解</a>";
-	let solA_Av = "_solution\" class=link-black>题解</a>";
+	trbA = "<a href=\"?page=";
+	let treA = "\" class=link-disabled>题面</a> <a href=\"?page=";
+	let treA_Av = "\" class=link-black>题面</a> <a href=\"?page=";
+	let solA = "\" class=link-disabled>题解</a>";
+	let solA_Av = "\" class=link-black>题解</a>";
 	for (let i = agccnt; i; i--) {
 		if (i == 42)
 			continue;
@@ -797,10 +787,10 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 				uC = "F2", lC = "_F2\" ";
 			let tre_cur = treA;
 			if (Ava_tre[i][j])
-				tre_cur = treA_Av;
+				tre_cur = treA_Av,cnte++;
 			let sol_cur = solA;
 			if (Ava_sol[i][j])
-				sol_cur = solA_Av;
+				sol_cur = solA_Av,cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getagcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
