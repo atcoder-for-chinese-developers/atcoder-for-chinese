@@ -581,10 +581,10 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 				uC = "F2", lC = "_F2\" ";
 			let tre_cur = treA;
 			if (Ava_tre[i][j] != 0)
-				tre_cur = treA_Av, cnte++;
+				tre_cur = Ava_tre[i][j][0] + treA_Av, cnte++;
 			let sol_cur = solA;
 			if (Ava_sol[i][j] != 0)
-				sol_cur = solA_Av, cnts++;
+				sol_cur = Ava_sol[i][j][0] + solA_Av, cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -788,10 +788,10 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 				uC = "F2", lC = "_F2\" ";
 			let tre_cur = treA;
 			if (Ava_tre[i][j] != 0)
-				tre_cur = treA_Av, cnte++;
+				tre_cur = Ava_tre[i][j][0] + treA_Av, cnte++;
 			let sol_cur = solA;
 			if (Ava_sol[i][j] != 0)
-				sol_cur = solA_Av, cnts++;
+				sol_cur = Ava_sol[i][j][0] + solA_Av, cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getagcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
