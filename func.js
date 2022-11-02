@@ -455,13 +455,13 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 	for (let i = 1; i <= arccnt; i++)
 		Ava_tre[i] = new Array(10);
 	for (let i = 1; i <= arccnt; i++)
-		for (let j = 1; j <= 10; j++)
-			Ava_tre[i][j] = 0;
+		for (let j = 0; j <= 10; j++)
+			Ava_tre[i][j] = [];
 	for (let i = 1; i <= arccnt; i++)
 		Ava_sol[i] = new Array(10);
 	for (let i = 1; i <= arccnt; i++)
-		for (let j = 1; j <= 10; j++)
-			Ava_sol[i][j] = 0;
+		for (let j = 0; j <= 10; j++)
+			Ava_sol[i][j] = [];
 	for (let i = 1; i <= arccnt; i++)
 		if (("arc" + ext3(i))in list_tre)
 			for (let j = 0; j < getarccnt(i); j++)
@@ -662,13 +662,13 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 	for (let i = 1; i <= agccnt; i++)
 		Ava_tre[i] = new Array(10);
 	for (let i = 1; i <= agccnt; i++)
-		for (let j = 1; j <= 10; j++)
-			Ava_tre[i][j] = 0;
+		for (let j = 0; j <= 10; j++)
+			Ava_tre[i][j] = [];
 	for (let i = 1; i <= agccnt; i++)
 		Ava_sol[i] = new Array(10);
 	for (let i = 1; i <= agccnt; i++)
-		for (let j = 1; j <= 10; j++)
-			Ava_sol[i][j] = 0;
+		for (let j = 0; j <= 10; j++)
+			Ava_sol[i][j] = [];
 	for (let i = 1; i <= agccnt; i++)
 		if (("agc" + ext3(i))in list_tre)
 			for (let j = 0; j < getagccnt(i); j++)
@@ -1305,6 +1305,6 @@ function buildw() {
 		</p>\
 		</div>\
 		</div>");
-	document.write("<div id=\"page-end\" style=\"diaplay: none;\"></div>");
+	document.write("<div id=\"page-end\" style=\"display: none;\"></div>");
 	abctabletoggle();
 }
