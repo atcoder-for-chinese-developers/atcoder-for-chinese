@@ -374,10 +374,10 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 				lC = "_" + (j + 1).toString() + "\" ";
 			let tre_cur = treA;
 			if (Ava_tre[i][j] != 0)
-				tre_cur = Ava_tre[i][j][0] + treA_Av,cnte++;
+				tre_cur = Ava_tre[i][j][0] + treA_Av, cnte++;
 			let sol_cur = solA;
 			if (Ava_sol[i][j] != 0)
-				sol_cur = Ava_sol[i][j][0] + solA_Av,cnts++;
+				sol_cur = Ava_sol[i][j][0] + solA_Av, cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getabcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"> <span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -580,11 +580,11 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			if (i == 120 && j == 6)
 				uC = "F2", lC = "_F2\" ";
 			let tre_cur = treA;
-			if (Ava_tre[i][j])
-				tre_cur = treA_Av,cnte++;
+			if (Ava_tre[i][j] != 0)
+				tre_cur = treA_Av, cnte++;
 			let sol_cur = solA;
-			if (Ava_sol[i][j])
-				sol_cur = solA_Av,cnts++;
+			if (Ava_sol[i][j] != 0)
+				sol_cur = solA_Av, cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -782,15 +782,16 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 		document.write("<td><a href=\"https://atcoder.jp/contests/agc" + t + "\">AGC" + t + "</a></td>");
 		for (let j = 0; j < siz[i]; j++) {
 			let uC = Charu[j],
-			lC = "_" + Charl[j] + "\" ";
+			lC = "_" + Charl[j] + "\" ",
+			prbid = "arc" + ext3(i) + "." + getarcname(i, j) + ".";
 			if (i == 28 && j == 6)
 				uC = "F2", lC = "_F2\" ";
 			let tre_cur = treA;
-			if (Ava_tre[i][j])
-				tre_cur = treA_Av,cnte++;
+			if (Ava_tre[i][j] != 0)
+				tre_cur = treA_Av, cnte++;
 			let sol_cur = solA;
-			if (Ava_sol[i][j])
-				sol_cur = solA_Av,cnts++;
+			if (Ava_sol[i][j] != 0)
+				sol_cur = solA_Av, cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getagcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -803,7 +804,7 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 			} else {
 				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
 			}
-			document.write(uC + endA + trbA + t + "_" + uC + tre_cur + t + "_" + uC + sol_cur);
+			document.write(uC + endA + trbA + "T" + prbid + tre_cur + "S" + prbid + sol_cur);
 			if (tg[i][j] != undefined)
 				document.write("<div onclick=\"agctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
 			document.write("<div id=\"tag-" + getagcname(i, j) + "\" style=\"display: none;\">");
@@ -1233,21 +1234,6 @@ function buildw() {
 	readTextFile("https://kenkoooo.com/atcoder/resources/problems.json", "json", function (text) {
 		prbs = JSON.parse(text);
 	});
-	// readTextFile("list.json", "json", function (text) {
-	// try {
-	// list = JSON.parse(text);
-	// } catch {
-	// list = {
-	// "abc_list_tre": [],
-	// "abc_list_sol": [],
-	// "arc_list_tre": [],
-	// "arc_list_sol": [],
-	// "agc_list_tre": [],
-	// "agc_list_sol": []
-	// };
-	// alert("list is not valid");
-	// }
-	// });
 	readTextFile("https://atcoder-for-chinese-developers.github.io/translations/list.json", "json", function (text) {
 		tralist = JSON.parse(text);
 	});
