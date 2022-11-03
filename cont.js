@@ -150,12 +150,12 @@ function showtable() {
 	if (Number(cur) >= Number(beg))
 		document.getElementById("table").setAttribute("style", "");
 }
-function jumplink1(){
-	window.location.href="https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/";
+function jumplink1() {
+	window.location.href = "https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/";
 }
 function getpercent() {
 	let cur = new Date();
-	return Math.max((Math.min(end, cur) - beg) / (end - beg),0.0)
+	return Math.max((Math.min(end, cur) - beg) / (end - beg), 0.0)
 }
 function refreshtime() {
 	let cur = new Date(),
@@ -268,8 +268,8 @@ function buildpage() {
 		document.write("<thead><tr><th>题目编号</th><th>题目标题</th></tr></thead><tbody>");
 		for (let i in data.problems) {
 			var p = data.problems[i].lastIndexOf('_');
-				var con = data.problems[i].substr(0, p);
-				document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
+			var con = data.problems[i].substr(0, p);
+			document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
 		}
 		document.write("</tbody></table>");
 
@@ -291,9 +291,9 @@ function buildpage() {
 			seco = dr % 60;
 			document.write('<td> ' + ext2(hours) + ':' + ext2(minu) + ':' + ext2(seco) + '</td>');
 			for (var j = 0; j < data.problems.length; j++) {
-				if(subs[i].wj[data.problems[j]]==1){
+				if (subs[i].wj[data.problems[j]] == 1) {
 					document.write("<td class=\"warning\"><i class=\"icon hourglass half\"></i>");
-				}else if (subs[i].ac[data.problems[j]] == 1) {
+				} else if (subs[i].ac[data.problems[j]] == 1) {
 					document.write('<td class="positive"><i class="icon checkmark"></i>');
 				} else if (subs[i].pl[data.problems[j]] != 0 && subs[i].pl[data.problems[j]] != undefined) {
 					document.write('<td class="negative"><i class="icon close"></i>');

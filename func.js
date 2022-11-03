@@ -174,7 +174,6 @@ function sidebartoggle() {
 	$('.ui.sidebar').sidebar('toggle');
 }
 function closealltables() {
-	window.onscroll();
 	document.getElementById("abc-table").setAttribute("style", "display: none;");
 	document.getElementById("arc-table").setAttribute("style", "display: none;");
 	document.getElementById("agc-table").setAttribute("style", "display: none;");
@@ -291,12 +290,9 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 		for (let j = 0; j < getabccnt(i); j++) {
 			tg[i][j] = tags[getabcname_u(i, j)];
 			problist[getabcname_u(i, j)] = {
-				"tag":
-				tg[i][j],
-				"diff":
-				x[i][j],
-				"title":
-				abctitle[i][j],
+				"tag": tg[i][j],
+				"diff": x[i][j],
+				"title": abctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/abc"
 				 + ext3(i) + "/tasks/" + getabcname(i, j) + "\">" + getabcname_u(i, j) + "</a>",
 				"prob_a":
@@ -505,12 +501,9 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 		for (let j = 57 < i && i < 104 ? 2 : 0; j < getarccnt(i); j++) {
 			tg[i][j] = tags[getarcname_u(i, j)];
 			problist[getarcname_u(i, j)] = {
-				"tag":
-				tg[i][j],
-				"diff":
-				x[i][j],
-				"title":
-				arctitle[i][j],
+				"tag": tg[i][j],
+				"diff": x[i][j],
+				"title": arctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/arc"
 				 + ext3(i) + "/tasks/" + getarcname(i, j) + "\">" + getarcname_u(i, j) + "</a>",
 				"prob_a":
@@ -720,12 +713,9 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 		for (let j = 0; j < getagccnt(i); j++) {
 			tg[i][j] = tags[getagcname_u(i, j)];
 			problist[getagcname_u(i, j)] = {
-				"tag":
-				tg[i][j],
-				"diff":
-				x[i][j],
-				"title":
-				agctitle[i][j],
+				"tag": tg[i][j],
+				"diff": x[i][j],
+				"title": agctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/agc"
 				 + ext3(i) + "/tasks/" + getagcname(i, j) + "\">" + getagcname_u(i, j) + "</a>",
 				"prob_a":
@@ -1191,11 +1181,11 @@ function buildcontestpage() {
 
 	document.write("<div id=\"join-page\">");
 	document.write("<div class=\"ui input\"><input id=\"rev-code\" style=\"width: 150;\" placeholder=\"输入邀请码\"></input></div>");
-	var p = document.getElementById('rev-code')
-		if (window.localStorage.getItem('inv-code') != undefined)
-			p.value = window.localStorage.getItem('inv-code')
-				document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
-		document.write("</div><div id=\"create-page\">");
+	var p = document.getElementById('rev-code');
+	if (window.localStorage.getItem('inv-code') != undefined)
+		p.value = window.localStorage.getItem('inv-code')
+			document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
+	document.write("</div><div id=\"create-page\">");
 	document.write("<div class=\"ui input\"><input id=\"get-title\" placeholder=\"比赛标题\"></input></div>");
 	document.write("<h4 class=\"ui header\">设置开始时间</h4>");
 	document.write("<div class=\"ui input\"><input id=\"get-start-ye\" placeholder=\"年\"></input></div>");
@@ -1214,9 +1204,9 @@ function buildcontestpage() {
 	document.write("<h4 class=\"ui header\">参赛选手</h4>");
 	document.write("<div class=\"ui fluid input\"><input id=\"get-players\" placeholder=\"以半角空格分隔\"></input></div>");
 	document.write("<h4 class=\"ui header\">比赛题目（请填写题目链接内的 AtCoder 格式标识符，例如下）</h4>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a>：abc255_h</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a>：arc103_b</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a>：zone2021_f</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a> 的标识符为 abc255_h</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a> 的标识符为 arc103_b</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a> 的标识符为 zone2021_f</p>");
 	document.write("<div class=\"ui fluid input\"><input id=\"get-problems\" placeholder=\"以半角空格分隔\"></input></div>");
 	document.write("<h4 class=\"ui header\">生成邀请码</h4>");
 	document.write("<div class=\"ui fluid input\"><input id=\"print-code\" placeholder=\"邀请码\"></input><button class=\"ui primary button\" onclick=\"printinvitecode()\">获取邀请码</button></div>");
@@ -1271,6 +1261,12 @@ function buildw() {
 			alert("list is not valid");
 		}
 	});
+	// readTextFile("https://atcoder-for-chinese-developers.github.io/translations/list.json","json",function(text){
+		// tralist=JSON.parse(text);
+	// });
+	// readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/list.json","json",function(text){
+		// sollist=JSON.parse(text);
+	// });
 	readTextFile("tags.json", "json", function (text) {
 		try {
 			tags = JSON.parse(text);
