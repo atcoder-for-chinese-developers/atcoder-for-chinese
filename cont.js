@@ -269,6 +269,8 @@ function buildpage() {
 		for (let i in data.problems) {
 			var p = data.problems[i].lastIndexOf('_');
 			var con = data.problems[i].substr(0, p);
+			while (con.match("_") != null)
+				con = con.replace("_", "-");
 			document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
 		}
 		document.write("</tbody></table>");
@@ -279,6 +281,8 @@ function buildpage() {
 		for (var i = 0; i < data.problems.length; i++) {
 			var p = data.problems[i].lastIndexOf('_');
 			var con = data.problems[i].substr(0, p);
+			while (con.match("_") != null)
+				con = con.replace("_", "-");
 			document.write('<th>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + (i + 1) + '</a></th>');
 		}
 		document.write('</tr></thead><tbody>');
