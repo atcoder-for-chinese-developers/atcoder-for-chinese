@@ -189,6 +189,8 @@ function getprbname_u(){
 	let w=getprbname().toUpperCase();
 	if(Number(w.substr(2,3)) > 232)
 		w=w.replace("H","Ex");
+	if(!isNaN(Number(w.split("_")[1]))
+		w=w.replace(w.split("_")[1],String.fromCharCode(Number(w.split("_")[1])+64));
 	return w;
 }
 
