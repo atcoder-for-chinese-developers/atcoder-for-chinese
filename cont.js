@@ -205,13 +205,20 @@ function buildpage() {
 		id = [];
 		for (var i = 0; i < data.players.length; i++)
 			acc.push(0), ple.push(0), id.push(i);
-
+		var hascf = 0
+		for (var i in data.problems)
+			if (data.problems[i].substr(0, 2) == 'cf') hascf = 1
 		for (var i = 0; i < data.players.length; i++) {
-			let sub;
+			let sub, cfsub;
 			readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
 				data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
 				sub = JSON.parse(text);
 			})
+			if (hascf == 1)
+				readTextFile('https://codeforces.com/api/user.status?handle=' + data.players[i] + '&from=1&count=100', 'json', function (text) {
+					cfsub = JSON.parse(text)
+				})
+			cfsub = cfsub.result
 			subs[i] = {}
 			subs[i].ac = {}
 			subs[i].pl = {}
@@ -242,6 +249,36 @@ function buildpage() {
 								ple[i] += 300
 							}
 						}
+			}
+			if (hascf) {
+				for (var t = 0; t < cfsub.length; t++) {
+					var c = cfsub[t];
+					if (Number(c.creationTimeSeconds) * 1000 >= end)
+						continue;
+					for (var j = 0; j < data.problems.length; j++) {
+						var problem_id = c.problem.contestId + c.problem.index;
+						if (problem_id == data.problems[j].substr(2)) {
+							if (c.verdict == 'OK') {
+								subs[i].wj = 0;
+								if (subs[i].ac[data.problems[j]] != 1)
+									acc[i] += 1;
+								subs[i].ac[data.problems[j]] = 1;
+								subs[i].tm[data.problems[j]] = c.creationTimeSeconds;
+								if (subs[i].pl[data.problems[j]] == undefined)
+									subs[i].pl[data.problems[j]] = 0;
+								ple[i] += (c.creationTimeSeconds * 1000 - beg) / 1000;
+							} else if (c.verdict == 'TESTING') {
+								subs[i].wj = 1;
+							} else if (c.verdict != 'COMPILATION_ERROR') {
+								subs[i].wj = 0;
+								if (subs[i].pl[data.problems[j]] == undefined)
+									subs[i].pl[data.problems[j]] = 0;
+								subs[i].pl[data.problems[j]] += 1;
+								ple[i] += 300
+							}
+						}
+					}
+				}
 			}
 			let w = Date.now();
 			while (Date.now() < w + 500);
