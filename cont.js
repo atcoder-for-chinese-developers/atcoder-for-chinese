@@ -214,11 +214,12 @@ function buildpage() {
 				data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
 				sub = JSON.parse(text);
 			})
-			if (hascf == 1)
+			if (hascf == 1) {
 				readTextFile('https://codeforces.com/api/user.status?handle=' + data.players[i] + '&from=1&count=100', 'json', function (text) {
 					cfsub = JSON.parse(text)
 				})
-			cfsub = cfsub.result
+				cfsub = cfsub.result
+			}
 			subs[i] = {}
 			subs[i].ac = {}
 			subs[i].pl = {}
