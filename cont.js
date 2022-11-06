@@ -207,7 +207,7 @@ function buildpage() {
 			acc.push(0), ple.push(0), id.push(i);
 		var hascf = 0
 		for (var i in data.problems)
-			if (data.problems[i].substr(0, 2) == 'cf') hascf = 1
+			if (data.problems[i].substr(0, 2) == 'CF') hascf = 1
 		for (var i = 0; i < data.players.length; i++) {
 			let sub, cfsub;
 			readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
@@ -308,7 +308,15 @@ function buildpage() {
 			var con = data.problems[i].substr(0, p);
 			while (con.match("_") != null)
 				con = con.replace("_", "-");
-			document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
+			if (data.problems[i].substr(0, 2) != 'CF') document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
+			else {
+				var c = data.problems[i].substr(2), p, q;
+				var pos = 0;
+				for (var j = 0; j < c.length; j++)
+					if (c[j] >= 'A') { pos = j; break; }
+				p = c.substr(0, pos), q = c.substr(pos);
+				document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + c + '</a></td></tr>');
+			}
 		}
 		document.write("</tbody></table>");
 
@@ -320,7 +328,15 @@ function buildpage() {
 			var con = data.problems[i].substr(0, p);
 			while (con.match("_") != null)
 				con = con.replace("_", "-");
-			document.write('<th>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + (i + 1) + '</a></th>');
+			if (data.problems[i].substr(0, 2) != 'CF') document.write('<th>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + (i + 1) + '</a></th>');
+			else {
+				var c = data.problems[i].substr(2), p, q;
+				var pos = 0;
+				for (var j = 0; j < c.length; j++)
+					if (c[j] >= 'A') { pos = j; break; }
+				p = c.substr(0, pos), q = c.substr(pos);
+				document.write('<th>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + (i + 1) + '</a></th>');
+			}
 		}
 		document.write('</tr></thead><tbody>');
 		for (var t = 0; t < data.players.length; t++) {
