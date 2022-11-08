@@ -150,12 +150,12 @@ function showtable() {
 	if (Number(cur) >= Number(beg))
 		document.getElementById("table").setAttribute("style", "");
 }
-function jumplink1(){
-	window.location.href="https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/";
+function jumplink1() {
+	window.location.href = "https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/";
 }
 function getpercent() {
 	let cur = new Date();
-	return Math.max((Math.min(end, cur) - beg) / (end - beg),0.0)
+	return Math.max((Math.min(end, cur) - beg) / (end - beg), 0.0)
 }
 function refreshtime() {
 	let cur = new Date(),
@@ -205,13 +205,21 @@ function buildpage() {
 		id = [];
 		for (var i = 0; i < data.players.length; i++)
 			acc.push(0), ple.push(0), id.push(i);
-
+		var hascf = 0
+		for (var i in data.problems)
+			if (data.problems[i].substr(0, 2) == 'CF') hascf = 1
 		for (var i = 0; i < data.players.length; i++) {
-			let sub;
+			let sub, cfsub;
 			readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
 				data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
 				sub = JSON.parse(text);
 			})
+			if (hascf == 1) {
+				readTextFile('https://codeforces.com/api/user.status?handle=' + data.players[i] + '&from=1&count=100', 'json', function (text) {
+					cfsub = JSON.parse(text)
+				})
+				cfsub = cfsub.result
+			}
 			subs[i] = {}
 			subs[i].ac = {}
 			subs[i].pl = {}
@@ -243,6 +251,36 @@ function buildpage() {
 							}
 						}
 			}
+			if (hascf) {
+				for (var t = 0; t < cfsub.length; t++) {
+					var c = cfsub[t];
+					if (Number(c.creationTimeSeconds) * 1000 >= end)
+						continue;
+					for (var j = 0; j < data.problems.length; j++) {
+						var problem_id = c.problem.contestId + c.problem.index;
+						if (problem_id == data.problems[j].substr(2)) {
+							if (c.verdict == 'OK') {
+								subs[i].wj = 0;
+								if (subs[i].ac[data.problems[j]] != 1)
+									acc[i] += 1;
+								subs[i].ac[data.problems[j]] = 1;
+								subs[i].tm[data.problems[j]] = c.creationTimeSeconds;
+								if (subs[i].pl[data.problems[j]] == undefined)
+									subs[i].pl[data.problems[j]] = 0;
+								ple[i] += (c.creationTimeSeconds * 1000 - beg) / 1000;
+							} else if (c.verdict == 'TESTING') {
+								subs[i].wj = 1;
+							} else if (c.verdict != 'COMPILATION_ERROR') {
+								subs[i].wj = 0;
+								if (subs[i].pl[data.problems[j]] == undefined)
+									subs[i].pl[data.problems[j]] = 0;
+								subs[i].pl[data.problems[j]] += 1;
+								ple[i] += 300
+							}
+						}
+					}
+				}
+			}
 			let w = Date.now();
 			while (Date.now() < w + 500);
 		}
@@ -268,8 +306,18 @@ function buildpage() {
 		document.write("<thead><tr><th>题目编号</th><th>题目标题</th></tr></thead><tbody>");
 		for (let i in data.problems) {
 			var p = data.problems[i].lastIndexOf('_');
-				var con = data.problems[i].substr(0, p);
-				document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
+			var con = data.problems[i].substr(0, p);
+			while (con.match("_") != null)
+				con = con.replace("_", "-");
+			if (data.problems[i].substr(0, 2) != 'CF') document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
+			else {
+				var c = data.problems[i].substr(2), p, q;
+				var pos = 0;
+				for (var j = 0; j < c.length; j++)
+					if (c[j] >= 'A') { pos = j; break; }
+				p = c.substr(0, pos), q = c.substr(pos);
+				document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + c + '</a></td></tr>');
+			}
 		}
 		document.write("</tbody></table>");
 
@@ -279,7 +327,17 @@ function buildpage() {
 		for (var i = 0; i < data.problems.length; i++) {
 			var p = data.problems[i].lastIndexOf('_');
 			var con = data.problems[i].substr(0, p);
-			document.write('<th>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + (i + 1) + '</a></th>');
+			while (con.match("_") != null)
+				con = con.replace("_", "-");
+			if (data.problems[i].substr(0, 2) != 'CF') document.write('<th>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + (i + 1) + '</a></th>');
+			else {
+				var c = data.problems[i].substr(2), p, q;
+				var pos = 0;
+				for (var j = 0; j < c.length; j++)
+					if (c[j] >= 'A') { pos = j; break; }
+				p = c.substr(0, pos), q = c.substr(pos);
+				document.write('<th>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + (i + 1) + '</a></th>');
+			}
 		}
 		document.write('</tr></thead><tbody>');
 		for (var t = 0; t < data.players.length; t++) {
@@ -291,9 +349,9 @@ function buildpage() {
 			seco = dr % 60;
 			document.write('<td> ' + ext2(hours) + ':' + ext2(minu) + ':' + ext2(seco) + '</td>');
 			for (var j = 0; j < data.problems.length; j++) {
-				if(subs[i].wj[data.problems[j]]==1){
+				if (subs[i].wj[data.problems[j]] == 1) {
 					document.write("<td class=\"warning\"><i class=\"icon hourglass half\"></i>");
-				}else if (subs[i].ac[data.problems[j]] == 1) {
+				} else if (subs[i].ac[data.problems[j]] == 1) {
 					document.write('<td class="positive"><i class="icon checkmark"></i>');
 				} else if (subs[i].pl[data.problems[j]] != 0 && subs[i].pl[data.problems[j]] != undefined) {
 					document.write('<td class="negative"><i class="icon close"></i>');
