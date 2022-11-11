@@ -12,6 +12,14 @@
 
 如果发现自己的文件没有更新，首先等待 github pages 进行部署（[在自己库中部署的前置操作](https://www.luogu.com.cn/paste/r39mg2gg)），然后刷新，再不行就 Ctrl+F5 清除缓存。
 
+## 临时通知
+
+11.11 更新后贡献格式有较大改变。如果只是想传题解不会对前端做出贡献的同学，可以删除在主团队内的 fork，改到 translations / solutions 仓库下。贡献格式见仓库内 README，仓库网址为：
+
+<https://github.com/atcoder-for-chinese-developers/translations>
+
+<https://github.com/atcoder-for-chinese-developers/solutions>
+
 # AtCoder for Chinese
 
 Atcoder Descripution and Solution for Chinese. Now support both [web](https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/) and [script](https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B) version.
