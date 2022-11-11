@@ -2,31 +2,36 @@
 	<meta charset="UTF-8">
 	<meta name="referrer" content="no-referrer" />
 	<script>
-		function gettitle(){
-			var t=escape(window.location.href),s="";
-			if(t.lastIndexOf("%3Fpage%3D")!=-1)
-				s=t.substr(t.lastIndexOf("%3Fpage%3D")+10);
-			else
-				s=t.substr(t.lastIndexOf("/")+1),s=s.substr(0,s.lastIndexOf(".html"));
-			s=s.replace("_"," ");
-			s=s.replace("_"," ");
-			return s;
+		function getprbname(){
+			let w=escape(window.location.href);
+			return w.substr(w.indexOf("%3Fpage%3D")+10).split('.')[1];
 		}
-		var t=escape(window.location.href);
-		if(t.indexOf("%3Fpage%3D")==-1)
-			document.write("<title>AtCoder 中文版</title>");
-		else
-			document.write("<title>"+gettitle()+"</title>");
+		function getprbname_u(){
+			let w=getprbname().toUpperCase();
+			if(w[0]=='A'&&w[2]=='C'&&Number(w.substr(3,3)) > 232)
+				w=w.replace("H","Ex");
+			if(!isNaN(Number(w.split("_")[1])))
+				w=w.split("_")[0]+"_"+String.fromCharCode(Number(w.split("_")[1])+64);
+			return w;
+		}
+		function gettitle(){
+			let t=escape(window.location.href);
+			if(t.indexOf("%3Fpage%3D")==-1)
+				return "AtCoder 中文版";
+			t=t.substr(t.lastIndexOf("%3Fpage%3D")+10);
+			return getprbname_u().replace("_","")+(t[0]=='T'?" 翻译":" 题解");
+		}
+		document.write("<title>"+gettitle()+"</title>");
 	</script>
 	<link rel="shortcut icon" href="images/favicon.ico">
-	<script type="text/javascript" src="func.js"></script>
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" rel="stylesheet" type="text/css">
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/highcharts.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/exporting.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/export-data.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/es-modules/Accessibility/Accessibility.min.js"></script>
+	<script type="text/javascript" src="src/func.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/highcharts.min.js" integrity="sha512-AuSt9Vn4P8B4rNTBOOJGGqI89ktzlGugnty4mZa+dR7koM6sJCJVFwtRiM6lIVmFwHOGIdSCyY1l6UcD78CaBA==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/exporting.min.js" integrity="sha512-r0RhVDm8cW1TRmbiQN1wnfXBRxUkoao6eMPEDs+HpL5QyDdmwKKFTfztgOdtgzDqkYC60C116MWKtkT76F0IAg==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/export-data.min.js" integrity="sha512-empeVXImIgoDsUiZt8rvDYuIULbNE1s1c51wKGBo0fRn6LU8XT3rA/48WPWfnG1CaonZyIEk4P8qDIdtBOmVHA==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/accessibility.min.js" integrity="sha512-3v4MQPK+fT3z2i57H073Q3Emgd0TCeq+rvAFeDCd9vZ4VnYmtGU25LI5cni1ryxfHA8KDPg5MMTIqQLfabQlhA==" crossorigin="anonymous"></script>
 </head>
 <style type="text/css">
 	.diff-red      {color: #ff0000;}
@@ -60,7 +65,7 @@
 	<script>
 		var lnk=escape(window.location.href);
 		if(lnk.indexOf("index.html")==-1){
-			window.location.href="/atcoder-for-chinese/index.html";
+			window.location.href="index.html";
 		}else if(lnk.indexOf("%3Fpage%3D")==-1){
 			console.log("main page");
 			document.write("<div class=\"ui main container\">");
@@ -69,23 +74,31 @@
 		}else{
 			let pos=lnk.indexOf("%3Fpage%3D")+10,
 				name=lnk.substr(pos),content="";
-			if(name.indexOf("sol")==-1){
-				console.log("prob page");
-				readTextFile("./translation/"+name+".md","md",function(text,stat){
+			if(name[0]=='T'){
+				name=name.substr(1);
+				console.log("translation page");
+				readTextFile("https://atcoder-for-chinese-developers.github.io/translations/"+name+".md","md",function(text,stat){
 					if(stat=="200"){
-						document.write("<scr"+"ipt src=\"mdstyle.js\">"+"</scri"+"pt>");
+						document.write("<scr"+"ipt src=\"src/mdstyle.js\">"+"</scri"+"pt>");
 						document.write("<textarea>"+text+"</textarea>");
-					}else
-						window.location.href="./translation/"+name+".html";
+					}else{
+						console.log(stat);
+						alert("没有找到这篇翻译");
+						window.location.href="index.html";
+					}
 				});
 			}else{
-				console.log("solu page");
-				readTextFile("./solution/"+name+".md","md",function(text,stat){
+				name=name.substr(1);
+				console.log("solution page");
+				readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/"+name+".md","md",function(text,stat){
 					if(stat=="200"){
-						document.write("<scr"+"ipt src=\"mdstyle.js\">"+"</scri"+"pt>");
+						document.write("<scr"+"ipt src=\"src/mdstyle.js\">"+"</scri"+"pt>");
 						document.write("<textarea>"+text+"</textarea>");
-					}else
-						window.location.href="./solution/"+name+".html";
+					}else{
+						console.log(stat);
+						alert("没有找到这篇题解");
+						window.location.href="index.html";
+					}
 				});
 			}
 		}
