@@ -290,8 +290,8 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 				"title": abctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/abc"
 				 + ext3(i) + "/tasks/" + getabcname(i, j) + "\">" + getabcname_u(i, j) + "</a>",
-				"prob_a": Ava_tre[i][j] != 0 ? "<a href=\"?page=" + getabcname_u(i, j) + "_translation\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] != 0 ? "<a href=\"?page=" + getabcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
+				"prob_a": Ava_tre[i][j] != 0 ? "<a href=\"?page=Tabc" + ext3(i) + "." + getabcname(i, j) + "." + Ava_tre[i][j][0] + "\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
+				"solu_a": Ava_sol[i][j] != 0 ? "<a href=\"?page=Sabc" + ext3(i) + "." + getabcname(i, j) + "." + Ava_sol[i][j][0] + "\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
 			};
 		}
 	for (let i = abccnt; i >= 1; i--) {
@@ -495,8 +495,8 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 				"title": arctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/arc"
 				 + ext3(i) + "/tasks/" + getarcname(i, j) + "\">" + getarcname_u(i, j) + "</a>",
-				"prob_a": Ava_tre[i][j] != 0 ? "<a href=\"?page=" + getarcname_u(i, j) + "_translation\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] != 0 ? "<a href=\"?page=" + getarcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
+				"prob_a": Ava_tre[i][j] != 0 ? "<a href=\"?page=Tarc" + ext3(i) + "." + getarcname(i, j) + "." + Ava_tre[i][j][0] + "\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
+				"solu_a": Ava_sol[i][j] != 0 ? "<a href=\"?page=Sarc" + ext3(i) + "." + getarcname(i, j) + "." + Ava_sol[i][j][0] + "\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
 			};
 		}
 	for (let i = arccnt; i >= 1; i--) {
@@ -701,9 +701,8 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 				"title": agctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/agc"
 				 + ext3(i) + "/tasks/" + getagcname(i, j) + "\">" + getagcname_u(i, j) + "</a>",
-				"prob_a":
-				Ava_tre[i][j] ? "<a href=\"?page=" + getagcname_u(i, j) + "_translation\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] ? "<a href=\"?page=" + getagcname_u(i, j) + "_solution\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
+				"prob_a": Ava_tre[i][j] != 0 ? "<a href=\"?page=Tagc" + ext3(i) + "." + getagcname(i, j) + "." + Ava_tre[i][j][0] + "\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
+				"solu_a": Ava_sol[i][j] != 0 ? "<a href=\"?page=Sagc" + ext3(i) + "." + getagcname(i, j) + "." + Ava_sol[i][j][0] + "\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
 			};
 		}
 	for (let i = agccnt; i >= 1; i--) {
@@ -1061,13 +1060,13 @@ function writelist(taglist) {
 	refreshchart();
 }
 
-async function jumptotop() {
+function jumptotop() {
 	window.scrollTo({
 		top: 0,
 		behavior: "smooth"
 	});
 }
-async function jumptobottom() {
+function jumptobottom() {
 	window.scrollTo({
 		top: $("#page-end").offset()["top"],
 		behavior: "smooth"
