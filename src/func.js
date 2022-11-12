@@ -1232,10 +1232,10 @@ function buildw() {
 		prbs = JSON.parse(text);
 	});
 	readTextFile("https://atcoder-for-chinese-developers.github.io/translations/list.json", "json", function (text) {
-		tralist = JSON.parse(text);
+		tralist = JSON.parse(text)["data"];
 	});
 	readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/list.json", "json", function (text) {
-		sollist = JSON.parse(text);
+		sollist = JSON.parse(text)["data"];
 	});
 	readTextFile("tags.json", "json", function (text) {
 		try {

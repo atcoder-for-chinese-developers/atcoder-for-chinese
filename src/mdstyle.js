@@ -10,8 +10,8 @@
 	const r={},a={},m=(r.setDefaultOptions=function(){
 		a.renderOnLoad=!0,a.useMathJax=!0,a.protectMath=!0,
 		a.style="viewer",a.onRenderPage=void 0,
-		a.markdownURL="https://cdn.jsdelivr.net/npm/marked@4.0.12/marked.min.js",
-		a.MathJaxURL="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"},
+		a.markdownURL="https://cdnjs.cloudflare.com/ajax/libs/marked/4.2.2/marked.min.js",
+		a.MathJaxURL="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"},
 		r.setOption=function(e,n){a[e]=n},r.tokenType={MARK:0,MASK:1},
 		r.tokenLiteral={MASK:"::MASK::"},{
 			plain:[
