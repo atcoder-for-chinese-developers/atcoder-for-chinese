@@ -151,7 +151,7 @@ function showtable() {
 		document.getElementById("table").setAttribute("style", "");
 }
 function jumplink1() {
-	window.location.href = "https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/";
+	window.open("https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/");
 }
 function getpercent() {
 	let cur = new Date();
@@ -449,7 +449,7 @@ function buildpage() {
 				return acc[b] - acc[a];
 		});
 
-		document.write('<h1>' + data['title'] + '</h1>');
+		document.write('<h1>' + data['title'] + '</h1>' );
 		// document.write("<button class=\"ui right animated fade primary button\" onclick=\"jumplink1()\"><div class=\"visible content\">&nbsp;&nbsp;←返回主界面&nbsp;&nbsp;</div><div class=\"hidden content\">AtCoder for Chinese</div></button>");
 		document.write("<div class=\"ui divided selection list\">");
 		document.write('<a class=\"item\"><div class=\"ui red horizontal label\">开始时间</div><p style=\"color: #000; display: inline-block\">' + start.toString() + '</p>');

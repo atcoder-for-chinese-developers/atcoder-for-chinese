@@ -200,11 +200,11 @@ function getorglink(){
 }
 
 function jumplink1(){
-	window.location.href="https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/";
+	window.open("https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/");
 }
 
 function jumplink2(){
-	window.location.href=getorglink();
+	window.open(getorglink());
 }
 
 function gettitle(){
