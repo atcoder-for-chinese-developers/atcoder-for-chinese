@@ -112,6 +112,8 @@ Markdown 文件内写入题解/题面内容，题解没有特定格式要求。
 
 - 筛选的表格可排序。（计划）
 
+- 比赛每个题有不同的分数。
+
 - ~~题目 tag 筛选由 `input` 改为 `dropdown`。（完成）~~
 
 - ~~去掉 `list.json`，使用团队内用 github action 配置的 translation / solution repo 自动爬取记录。（完成）~~
