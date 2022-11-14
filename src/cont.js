@@ -355,7 +355,7 @@ function rankfresh(data) {
 function buildpage() {
 	var s = window.location.href;
 	var trans = new Base64();
-	if (s.split('?').length == 1) {
+	if (s.split('?id=').length == 1) {
 		document.write("<div class=\"ui container\">");
 		document.write("<div class=\"ui input\"><input id=\"inv-code\" style=\"width: 150;\" placeholder=\"输入邀请码\"></input></div>");
 		var p = document.getElementById('inv-code')
@@ -367,7 +367,7 @@ function buildpage() {
 			s = s.replace('%22', '"');
 		while (s.match('%3D') != null)
 			s = s.replace('%3D', '=');
-		s = s.split('?')[1];
+		s = s.split('?')[1].substr(3);
 		s = trans.decode(s);
 		var data = JSON.parse(s);
 		beg = Number(data.st),
@@ -472,7 +472,7 @@ function buildpage() {
 				return acc[b] - acc[a];
 		});
 
-		document.write("<div><h1 style=\"display: inline;\">" + data['title'] + "</h1><i class=\"ui home link icon\" style=\"font-size: 1.5em; float: right;\" onclick=\"jumplink1()\"></i></div>");
+		document.write("<p></p><div><h1 style=\"display: inline;\">" + data['title'] + "</h1><i class=\"ui home link icon\" style=\"font-size: 1.5em; float: right;\" onclick=\"jumplink1()\"></i></div>");
 		document.write("<div class=\"ui divided selection list\">");
 		document.write('<a class=\"item\"><div class=\"ui red horizontal label\">开始时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(start) + '</p>');
 		document.write('<a class=\"item\"><div class=\"ui green horizontal label\">结束时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(finish) + '</p>');

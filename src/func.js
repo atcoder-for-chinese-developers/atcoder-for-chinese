@@ -389,15 +389,15 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 				sol_cur = Ava_sol[i][j][0] + solA_Av, cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getabcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
-				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"> <span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
+				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
 			} else if (x[i][j] < 3600) {
-				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
+				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle bronze-circle\"></span></ta>");
 			} else if (x[i][j] < 4000) {
-				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
+				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle silver-circle\"></span></ta>");
 			} else if (x[i][j] < 10000) {
-				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"> <span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
+				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle gold-circle\"></span></ta>");
 			} else {
-				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
+				document.write("<ta href=\"\" title=\"难度:暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
 			}
 			document.write(uC + endA + trbA + "T" + prbid + tre_cur + "S" + prbid + sol_cur);
 			if (tg[i][j] != undefined)
@@ -597,13 +597,13 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
 			} else if (x[i][j] < 3600) {
-				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
+				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle bronze-circle\"></span></ta>");
 			} else if (x[i][j] < 4000) {
-				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
+				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle silver-circle\"></span></ta>");
 			} else if (x[i][j] < 10000) {
-				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
+				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle gold-circle\"></span></ta>");
 			} else {
-				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
+				document.write("<ta href=\"\" title=\"难度:暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
 			}
 			document.write(uC + endA + trbA + "T" + prbid + tre_cur + "S" + prbid + sol_cur);
 			if (tg[i][j] != undefined)
@@ -802,13 +802,13 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
 			} else if (x[i][j] < 3600) {
-				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: rgb(150, 92, 44); background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));\"></span></ta>");
+				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle bronze-circle\"></span></ta>");
 			} else if (x[i][j] < 4000) {
-				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: rgb(128, 128, 128); background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));\"></span></ta>");
+				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle silver-circle\"></span></ta>");
 			} else if (x[i][j] < 10000) {
-				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: rgb(255, 215, 0); background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));\"></span></ta>");
+				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle gold-circle\"></span></ta>");
 			} else {
-				document.write("<ta href=\"\" title=\"难度:暂未评定\"> <span style=\"display: inline-block; border-radius: 10rem; margin-right: 5px; font-size: 5px; font-weight: 700; color: #fff; padding: 0.25em 0.4em; padding-left: .6em; padding-right: .6em; line-height: 1; background-color: #17a2b8\">?</span></ta>");
+				document.write("<ta href=\"\" title=\"难度:暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
 			}
 			document.write(uC + endA + trbA + "T" + prbid + tre_cur + "S" + prbid + sol_cur);
 			if (tg[i][j] != undefined)
@@ -1085,7 +1085,7 @@ function jumptobottom() {
 
 function redr() {
 	window.localStorage.setItem('inv-code', document.getElementById("rev-code").value);
-	window.location.href = "contest.html?" + escape(document.getElementById("rev-code").value);
+	window.location.href = "contest.html?id=" + escape(document.getElementById("rev-code").value);
 }
 function closecontestpage() {
 	document.getElementById("join-page").setAttribute("style", "display: none;");

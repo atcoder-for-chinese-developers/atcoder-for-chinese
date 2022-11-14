@@ -24,10 +24,28 @@ a:visited{
 	height: 12px;
 	width: 12px;
 }
-code{
-	background-color: #f8f8f8;
-	padding: 2px 4px;
-	color: #202020;
-	white-space: nowrap;
-	border-radius: 0;
+.bronze-circle{
+	border-color: rgb(150, 92, 44);
+	background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));
+}
+.silver-circle{
+	border-color: rgb(128, 128, 128);
+	background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));
+}
+.gold-circle{
+	border-color: rgb(255, 215, 0);
+	background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));
+}
+.diff-unavailable{
+	display: inline-block;
+	border-radius: 10rem;
+	margin-right: 5px;
+	font-size: 5px;
+	font-weight: 700;
+	color: #fff;
+	padding: 0.25em 0.4em;
+	padding-left: .6em;
+	padding-right: .6em;
+	line-height: 1;
+	background-color: #17a2b8
 }
