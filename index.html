@@ -23,9 +23,10 @@
 		}
 		document.write("<title>"+gettitle()+"</title>");
 	</script>
+	<link rel="stylesheet" href="src/style.css"/>
 	<link rel="shortcut icon" href="images/favicon.ico">
 	<script type="text/javascript" src="src/func.js"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous"/>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw==" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/highcharts.min.js" integrity="sha512-AuSt9Vn4P8B4rNTBOOJGGqI89ktzlGugnty4mZa+dR7koM6sJCJVFwtRiM6lIVmFwHOGIdSCyY1l6UcD78CaBA==" crossorigin="anonymous"></script>
@@ -33,34 +34,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/export-data.min.js" integrity="sha512-empeVXImIgoDsUiZt8rvDYuIULbNE1s1c51wKGBo0fRn6LU8XT3rA/48WPWfnG1CaonZyIEk4P8qDIdtBOmVHA==" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/accessibility.min.js" integrity="sha512-3v4MQPK+fT3z2i57H073Q3Emgd0TCeq+rvAFeDCd9vZ4VnYmtGU25LI5cni1ryxfHA8KDPg5MMTIqQLfabQlhA==" crossorigin="anonymous"></script>
 </head>
-<style type="text/css">
-	.diff-red      {color: #ff0000;}
-	.diff-orange   {color: #ff8000;}
-	.diff-yellow   {color: #c0c000;}
-	.diff-blue     {color: #0000ff;}
-	.diff-cyan     {color: #00c0c0;}
-	.diff-green    {color: #008000;}
-	.diff-brown    {color: #804000;}
-	.diff-grey     {color: #808080;}
-	.diff-black    {color: #000000;}
-	.link-disabled {display:  none;}
-	.link-black    {color: #000000;}
-	a:link{
-		text-decoration: none;
-	}
-	a:visited{
-		text-decoration: none;
-	}
-	.difficulty-circle {
-		display: inline-block;
-		border-radius: 50%;
-		border-style: solid;
-		border-width: 1px;
-		margin-right: 5px;
-		height: 12px;
-		width: 12px;
-	}
-</style>
 <body>
 	<script>
 		var lnk=escape(window.location.href);

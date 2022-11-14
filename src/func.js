@@ -1181,35 +1181,27 @@ function buildcontestpage() {
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"showjoinpage()\">参加</a><a class=\"item\" onclick=\"showcreatepage()\">创建</a></div>");
 
 	document.write("<div id=\"join-page\">");
-	document.write("<div class=\"ui input\"><input id=\"rev-code\" style=\"width: 150;\" placeholder=\"输入邀请码\"></input></div>");
+	document.write("<div class=\"ui fluid input\"><input id=\"rev-code\" placeholder=\"输入邀请码\"></input><button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button></div>");
 	let p = document.getElementById('rev-code'), tm = new Date();
 	if (window.localStorage.getItem('inv-code') != undefined)
-		p.value = window.localStorage.getItem('inv-code')
-			document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
+		p.value = window.localStorage.getItem('inv-code');
 	document.write("</div><div id=\"create-page\">");
 	document.write("<h4 class=\"ui header\">设置比赛标题</h4>");
-	document.write("<div class=\"ui input\"><input id=\"get-title\" placeholder=\"比赛标题\"></input></div>");
+	document.write("<div class=\"ui fluid input\"><input id=\"get-title\" placeholder=\"比赛标题\"></input></div>");
 	document.write("<h4 class=\"ui header\">设置开始时间</h4><div style=\"display: inline;\">");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-block\"><input id=\"get-start-ye\" value=\"" + (tm.getYear() + 1900) + "\"></input><div class=\"ui label\">年</div></div>");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-block\"><input id=\"get-start-mo\" value=\"" + (tm.getMonth() + 1) + "\"></input><div class=\"ui label\">月</div></div>");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-block\"><input id=\"get-start-da\" value=\"" + tm.getDate() + "\"></input><div class=\"ui label\">日</div></div>");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-block\"><input id=\"get-start-ho\" value=\"" + tm.getHours() + "\"></input><div class=\"ui label\">时</div></div>");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-block\"><input id=\"get-start-mi\" value=\"" + tm.getMinutes() + "\"></input><div class=\"ui label\">分</div></div>");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-block\"><input id=\"get-start-se\" value=\"" + tm.getSeconds() + "\"></input><div class=\"ui label\">秒</div></div></div>");
+	document.write("<div class=\"ui right labeled fluid input\"><input id=\"get-start-ye\" value=\"" + (tm.getYear() + 1900) + "\"></input><div class=\"ui label\">年</div><input id=\"get-start-mo\" value=\"" + (tm.getMonth() + 1) + "\"></input><div class=\"ui label\">月</div><input id=\"get-start-da\" value=\"" + tm.getDate() + "\"></input><div class=\"ui label\">日</div><input id=\"get-start-ho\" value=\"" + tm.getHours() + "\"></input><div class=\"ui label\">时</div><input id=\"get-start-mi\" value=\"" + tm.getMinutes() + "\"></input><div class=\"ui label\">分</div><input id=\"get-start-se\" value=\"" + tm.getSeconds() + "\"></input><div class=\"ui label\">秒</div></div></div>");
 	document.write("<h4 class=\"ui header\">设置结束时间</h4><p>");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-table\"><input id=\"get-finish-ye\" placeholder=\"年\" value=\"" + (tm.getYear() + 1900) + "\"></input><div class=\"ui label\">年</div></div>");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-table\"><input id=\"get-finish-mo\" placeholder=\"月\" value=\"" + (tm.getMonth() + 1) + "\"></input><div class=\"ui label\">月</div></div>");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-table\"><input id=\"get-finish-da\" placeholder=\"日\" value=\"" + tm.getDate() + "\"></input><div class=\"ui label\">日</div></div>");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-table\"><input id=\"get-finish-ho\" placeholder=\"时\" value=\"" + tm.getHours() + "\"></input><div class=\"ui label\">时</div></div>");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-table\"><input id=\"get-finish-mi\" placeholder=\"分\" value=\"" + tm.getMinutes() + "\"></input><div class=\"ui label\">分</div></div>");
-	document.write("<div class=\"ui right labeled input\" style=\"display: inline-table\"><input id=\"get-finish-se\" placeholder=\"秒\" value=\"" + tm.getSeconds() + "\"></input><div class=\"ui label\">秒</div></div></p>");
+	document.write("<div class=\"ui right labeled fluid input\"><input id=\"get-finish-ye\" placeholder=\"年\" value=\"" + (tm.getYear() + 1900) + "\"></input><div class=\"ui label\">年</div><input id=\"get-finish-mo\" placeholder=\"月\" value=\"" + (tm.getMonth() + 1) + "\"></input><div class=\"ui label\">月</div><input id=\"get-finish-da\" placeholder=\"日\" value=\"" + tm.getDate() + "\"></input><div class=\"ui label\">日</div><input id=\"get-finish-ho\" placeholder=\"时\" value=\"" + tm.getHours() + "\"></input><div class=\"ui label\">时</div><input id=\"get-finish-mi\" placeholder=\"分\" value=\"" + tm.getMinutes() + "\"></input><div class=\"ui label\">分</div><input id=\"get-finish-se\" placeholder=\"秒\" value=\"" + tm.getSeconds() + "\"></input><div class=\"ui label\">秒</div></div></p>");
 	document.write("<h4 class=\"ui header\">参赛选手</h4>");
 	document.write("<div class=\"ui fluid input\"><input id=\"get-players\" placeholder=\"以半角空格分隔\"></input></div>");
-	document.write("<h4 class=\"ui header\">比赛题目（请填写题目链接内的 AtCoder 格式标识符，例如下）</h4>");
+	document.write("<h4 class=\"ui header\">比赛题目</h4>");
+	document.write("<div class=\"ui accordion\" id=\"id-sample\"><div class=\"title\"><i class=\"dropdown icon\"></i>格式说明</div><div class=\"content\">");
+	document.write("<p>请填写题目链接内的 AtCoder 格式标识符（<code>atcoder.jp/<比赛标识符>/tasks/<题目标识符></code>），例如下：</p>");
 	document.write("<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a> 的标识符为 abc255_h</p>");
 	document.write("<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a> 的标识符为 arc103_b</p>");
 	document.write("<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a> 的标识符为 zone2021_f</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/code-festival-2017-qualc/tasks/code_festival_2017_qualc_f\">CF17QualcF</a> 的标识符为 code_festival_2017_qualc_f</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/code-festival-2017-qualc/tasks/code_festival_2017_qualc_f\">CF17QualcF</a> 的标识符为 code_festival_2017_qualc_f</p></div></div><p></p>");
+	$("#id-sample").accordion();
 	document.write("<div class=\"ui fluid input\"><input id=\"get-problems\" placeholder=\"以半角空格分隔\"></input></div>");
 	document.write("<h4 class=\"ui header\">生成邀请码</h4>");
 	document.write("<div class=\"ui fluid input\"><input id=\"print-code\" placeholder=\"邀请码\"></input><button class=\"ui primary button\" onclick=\"printinvitecode()\" id=\"getCode\" data-title=\"\" data-content=\"邀请码已复制\">获取邀请码</button></div>");

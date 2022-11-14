@@ -1,0 +1,33 @@
+.diff-red      {color: #ff0000;}
+.diff-orange   {color: #ff8000;}
+.diff-yellow   {color: #c0c000;}
+.diff-blue     {color: #0000ff;}
+.diff-cyan     {color: #00c0c0;}
+.diff-green    {color: #008000;}
+.diff-brown    {color: #804000;}
+.diff-grey     {color: #808080;}
+.diff-black    {color: #000000;}
+.link-disabled {display:  none;}
+.link-black    {color: #000000;}
+a:link{
+	text-decoration: none;
+}
+a:visited{
+	text-decoration: none;
+}
+.difficulty-circle {
+	display: inline-block;
+	border-radius: 50%;
+	border-style: solid;
+	border-width: 1px;
+	margin-right: 5px;
+	height: 12px;
+	width: 12px;
+}
+code{
+	background-color: #f8f8f8;
+	padding: 2px 4px;
+	color: #202020;
+	white-space: nowrap;
+	border-radius: 0;
+}

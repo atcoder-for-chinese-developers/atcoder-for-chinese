@@ -150,6 +150,30 @@ function showtable() {
 	if (Number(cur) >= Number(beg))
 		document.getElementById("table").setAttribute("style", "");
 }
+function dateToString(t){
+	Date.prototype.format = function(fmt){
+		let o = {
+			"M+": this.getMonth() + 1,
+			"d+": this.getDate(),
+			"h+": this.getHours(),
+			"m+": this.getMinutes(),
+			"s+": this.getSeconds(),
+			"q+": Math.floor((this.getMonth() + 3) / 3),
+			"S": this.getMilliseconds()
+		};
+		if (/(y+)/.test(fmt)) {
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+		}
+		for (var k in o) {
+			if (new RegExp("(" + k + ")").test(fmt)) {
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+			}
+		}
+		return fmt;
+	}
+	let cur = new Date(t).format("yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒");
+	return cur.toString();
+}
 function jumplink1() {
 	window.open("https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/");
 }
@@ -169,15 +193,14 @@ function refreshtime() {
 	se = rem % 60;
 	if (!flgshow && cur > beg)
 		showlist(), flgshow = 1;
-	document.getElementById("remain-time").innerText = cur < beg ? "距离比赛开始 " + ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? se.toFixed(3).toString() + " 秒 " : "")) : cur > end ? "已结束" :
-		((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? se.toFixed(3).toString() + " 秒 " : ""));
+	document.getElementById("remain-time").innerText = cur < beg ? "距离比赛开始 " + ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : "")) : cur > end ? "已结束" :
+		((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : ""));
 	$("#timeprog").progress({
-		percent: getpercent() * 100.
+		percent: getpercent() * 100
 	});
 }
 
 function rankfresh(data) {
-
 		beg = Number(data.st),
 		end = Number(data.ed);
 		var start = new Date(beg),
@@ -449,11 +472,10 @@ function buildpage() {
 				return acc[b] - acc[a];
 		});
 
-		document.write('<h1>' + data['title'] + '</h1>' );
-		// document.write("<button class=\"ui right animated fade primary button\" onclick=\"jumplink1()\"><div class=\"visible content\">&nbsp;&nbsp;←返回主界面&nbsp;&nbsp;</div><div class=\"hidden content\">AtCoder for Chinese</div></button>");
+		document.write("<div><h1 style=\"display: inline;\">" + data['title'] + "</h1><i class=\"ui home link icon\" style=\"font-size: 1.5em; float: right;\" onclick=\"jumplink1()\"></i></div>");
 		document.write("<div class=\"ui divided selection list\">");
-		document.write('<a class=\"item\"><div class=\"ui red horizontal label\">开始时间</div><p style=\"color: #000; display: inline-block\">' + start.toString() + '</p>');
-		document.write('<a class=\"item\"><div class=\"ui green horizontal label\">结束时间</div><p style=\"color: #000; display: inline-block\">' + finish.toString() + '</p>');
+		document.write('<a class=\"item\"><div class=\"ui red horizontal label\">开始时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(start) + '</p>');
+		document.write('<a class=\"item\"><div class=\"ui green horizontal label\">结束时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(finish) + '</p>');
 		document.write('<a class=\"item\"><div class=\"ui blue horizontal label\">倒计时</div><p style=\"color: #000; display: inline-block\" id=\"remain-time\"></p></div>');
 		document.write("<div class=\"ui top attached indicating progress\" id=\"timeprog\"><div class=\"bar\"></div></div>")
 		document.write("<div class=\"ui menu\">");
@@ -489,7 +511,7 @@ function buildpage() {
 		rankfresh(data);
 		setInterval(rankfresh, 1000 * 120, data);
 		$(function () {
-			setInterval("refreshtime();", 1);
+			setInterval("refreshtime();", 500);
 		})
 	}
 }
