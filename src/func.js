@@ -253,7 +253,7 @@ function formatDate(s) {
 		return fmt;
 	}
 
-	let t = new Date(s).format("yy 年 MM 月 dd 日 hh 时 mm 分 ss 秒");
+	let t = new Date(s).format("yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒");
 	return t.toString();
 }
 function showProbModal(cid, pid, title, op) {
@@ -1079,7 +1079,7 @@ function writelist(taglist) {
 	document.write("<thead><tr><th>编号</th><th>标题</th><th>链接</th><th>难度</th><th>标签</th></thead><tbody>");
 	for (let i in problist) {
 		isd1[i] = isd2[i] = 1;
-		document.write("<tr id=\"" + i + "-col\" style=\"\">");
+		document.write("<tr id=\"" + i + "-col\">");
 		document.write("<td>" + problist[i]["org_a"] + "</td>");
 		document.write("<td>" + problist[i]["title"] + "</td>");
 		document.write("<td>" + problist[i]["prob_a"] + problist[i]["solu_a"] + "</td>");
@@ -1244,7 +1244,7 @@ function buildw() {
 	document.write("<div id=\"page-top\" class=\"display: inline;\"></div>");
 	document.write("<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; right: 50; top: 50;\" id=\"button-top\"><i style=\"font-size: 1em;\" class=\"arrow up icon\"></i><p style=\"font-size: 10px; display: inline-block;\">&nbsp;到顶部</p></button>");
 	document.write("<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; right: 50; bottom: 80;\" id=\"button-end\"><i style=\"font-size: 1em;\" class=\"arrow down icon\"></i><p style=\"font-size: 10px; display: inline-block;\">&nbsp;到底部</p></button>");
-	document.write("<div class=\"ui modal\" id=\"show-prob-list\"></div>");
+	document.write("<div class=\"ui large basic modal\" id=\"show-prob-list\"></div>");
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	window.onscroll = function () {
 		let cur = $(document).scrollTop(),
