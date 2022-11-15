@@ -1,5 +1,4 @@
 function readTextFile(file, ext, callback) {
-//	console.log(file);
 	let xhr = new XMLHttpRequest();
 	xhr.overrideMimeType("application/" + ext);
 	xhr.open("GET", file, false);
@@ -10,13 +9,13 @@ function readTextFile(file, ext, callback) {
 	xhr.send();
 }
 
-function copyToClipboard(txt){
-	const t = document.createElement('textarea')
-	t.value = txt
-	document.body.appendChild(t)
-	t.select()
-	document.execCommand('copy')
-	document.body.removeChild(t)
+function copyToClipboard(txt) {
+	const t = document.createElement('textarea');
+	t.value = txt;
+	document.body.appendChild(t);
+	t.select();
+	document.execCommand('copy');
+	document.body.removeChild(t);
 }
 
 function Base64() {
@@ -223,7 +222,62 @@ function agctagtoggle(i, j) {
 	document.getElementById("tag-" + getagcname(i, j)).setAttribute("style",
 		document.getElementById("tag-" + getagcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
 }
-let problist = [];
+let problist = [],
+rawd,
+tralist,
+sollist,
+tags,
+prbs,
+taglist;
+function formatDate(s) {
+	if (s == "")
+		return "";
+	Date.prototype.format = function (fmt) {
+		let o = {
+			"M+": this.getMonth() + 1,
+			"d+": this.getDate(),
+			"h+": this.getHours(),
+			"m+": this.getMinutes(),
+			"s+": this.getSeconds(),
+			"q+": Math.floor((this.getMonth() + 3) / 3),
+			"S": this.getMilliseconds()
+		};
+		if (/(y+)/.test(fmt)) {
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+		}
+		for (var k in o) {
+			if (new RegExp("(" + k + ")").test(fmt)) {
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+			}
+		}
+		return fmt;
+	}
+
+	let t = new Date(s).format("yy 年 MM 月 dd 日 hh 时 mm 分 ss 秒");
+	return t.toString();
+}
+function showProbModal(cid, pid, title, op) {
+	let list = (op ? sollist : tralist)[cid][pid],
+	content = "<div class=\"ui segment\"><H2 class=\"ui medium block top attached header\">" + title + "</h2>";
+	if (list == 0) {
+		content += "<div class=\"ui placeholder attached segment\"><div class=\"ui icon header\"><i aria-hidden=\"true\" class=\"hdd outline icon\ \"></i>没有内容</div></div>";
+	} else {
+		content += "<div class=\"ui attached segment\"><table class=\"ui single line table fixed\"> <thead><tr><th>标题</th><th>作者</th><th>创建时间</th><th>最后修改时间</th></tr></thead><tbody>";
+		for (let i in list) {
+			let cur = list[i];
+			content += "<tr>";
+			content += "<td><a href=\"?page=" + (op ? "S" : "T") + cid + "." + pid + "." + i + "\">" + cur.title + "</a></td>";
+			content += "<td>" + cur.author + "</td>";
+			content += "<td>" + formatDate(cur.created) + "</td>";
+			content += "<td>" + formatDate(cur.lastCommit.date) + "</td>";
+			content += "</tr>";
+		}
+		content += "</tbody></table></div></div>";
+	}
+	document.getElementById("show-prob-list").innerHTML = content;
+	$("#show-prob-list").modal("show");
+}
+
 function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 	let Lim = 8,
 	abccnt = 0,
@@ -262,14 +316,12 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 		if (("abc" + ext3(i))in list_tre)
 			for (let j = 0; j < getabccnt(i); j++)
 				if (getabcname(i, j)in list_tre["abc" + ext3(i)])
-					for (let p in list_tre["abc" + ext3(i)][getabcname(i, j)])
-						Ava_tre[i][j].unshift(p);
+					Ava_tre[i][j] = list_tre["abc" + ext3(i)][getabcname(i, j)];
 	for (let i = 1; i <= abccnt; i++)
 		if (("abc" + ext3(i))in list_sol)
 			for (let j = 0; j < getabccnt(i); j++)
 				if (getabcname(i, j)in list_sol["abc" + ext3(i)])
-					for (let p in list_sol["abc" + ext3(i)][getabcname(i, j)])
-						Ava_sol[i][j].unshift(p);
+					Ava_sol[i][j] = list_sol["abc" + ext3(i)][getabcname(i, j)];
 
 	for (let i = 1, ri = 58; i <= abccnt; i++) {
 		x[i] = new Array(getabccnt(i));
@@ -361,32 +413,23 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 	let ABC = "ABC",
 	ARC = "ARC",
 	AGC = "AGC";
-	let webA = "<a href=\"https://atcoder.jp/contests/abc";
-	let tasA = "/tasks/abc",
-	endA = " </a>",
-	trbA = "<a href=\"?page=";
-	let treA = "\" class=link-disabled>题面</a> <a href=\"?page=";
-	let treA_Av = "\" class=link-black>题面</a> <a href=\"?page=";
-	let solA = "\" class=link-disabled>题解</a>";
-	let solA_Av = "\" class=link-black>题解</a>";
+	let webA = "<a href=\"https://atcoder.jp/contests/abc",
+	tasA = "/tasks/abc",
+	endA = " </a>";
 	for (let i = abccnt; i; i--) {
 		document.write("<tr>");
 		let t = ext3(i);
 		document.write("<td" + ' id="gABC' + t + '"' + "><a href=\"https://atcoder.jp/contests/abc" + t + "\">ABC" + t + "</a></td>");
 		for (let j = 0; j < siz[i]; j++) {
-			let uC = String.fromCharCode(j+65),
-			lC = "_" + String.fromCharCode(j+97) + "\" ",
-			prbid = "abc" + ext3(i) + "." + getabcname(i, j) + ".";
+			let uC = String.fromCharCode(j + 65);
 			if (j == 7 && i > 232)
 				uC = "Ex";
-			if (i < 20)
-				lC = "_" + (j + 1).toString() + "\" ";
-			let tre_cur = treA;
+			let traLink = "",
+			solLink = "";
 			if (Ava_tre[i][j] != 0)
-				tre_cur = Ava_tre[i][j][0] + treA_Av, cnte++;
-			let sol_cur = solA;
+				traLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;", cnte++;
 			if (Ava_sol[i][j] != 0)
-				sol_cur = Ava_sol[i][j][0] + solA_Av, cnts++;
+				solLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>", cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getabcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -399,7 +442,7 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 			} else {
 				document.write("<ta href=\"\" title=\"难度:暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
 			}
-			document.write(uC + endA + trbA + "T" + prbid + tre_cur + "S" + prbid + sol_cur);
+			document.write(uC + endA + traLink + solLink);
 			if (tg[i][j] != undefined)
 				document.write("<div onclick=\"abctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
 			document.write("<div id=\"tag-" + getabcname(i, j) + "\" style=\"display: none;\">");
@@ -473,14 +516,12 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 		if (("arc" + ext3(i))in list_tre)
 			for (let j = 0; j < getarccnt(i); j++)
 				if (getarcname(i, j)in list_tre["arc" + ext3(i)])
-					for (let p in list_tre["arc" + ext3(i)][getarcname(i, j)])
-						Ava_tre[i][j].unshift(p);
+					Ava_tre[i][j] = list_tre["arc" + ext3(i)][getarcname(i, j)];
 	for (let i = 1; i <= arccnt; i++)
 		if (("arc" + ext3(i))in list_sol)
 			for (let j = 0; j < getarccnt(i); j++)
 				if (getarcname(i, j)in list_sol["arc" + ext3(i)])
-					for (let p in list_sol["arc" + ext3(i)][getarcname(i, j)])
-						Ava_sol[i][j].unshift(p);
+					Ava_sol[i][j] = list_sol["arc" + ext3(i)][getarcname(i, j)];
 
 	for (let i = 1; i <= arccnt; i++) {
 		x[i] = new Array(getarccnt(i));
@@ -570,10 +611,6 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 	let tasA = "/tasks/arc",
 	endA = " </a>",
 	trbA = "<a href=\"?page=";
-	let treA = "\" class=link-disabled>题面</a> <a href=\"?page=";
-	let treA_Av = "\" class=link-black>题面</a> <a href=\"?page=";
-	let solA = "\" class=link-disabled>题解</a>";
-	let solA_Av = "\" class=link-black>题解</a>";
 	for (let i = arccnt; i; i--) {
 		document.write("<tr>");
 		let t = ext3(i),
@@ -582,17 +619,15 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 		for (let j = 0; j < w; j++)
 			document.write("<td></td>");
 		for (let j = 0; j < siz[i]; j++) {
-			let uC = String.fromCharCode(j+65),
-			lC = "_" + String.fromCharCode(j+97) + "\" ",
-			prbid = "arc" + ext3(i) + "." + getarcname(i, j) + ".";
+			let uC = String.fromCharCode(j + 65);
 			if (i == 120 && j == 6)
-				uC = "F2", lC = "_F2\" ";
-			let tre_cur = treA;
+				uC = "F2";
+			let traLink = "",
+			solLink = "";
 			if (Ava_tre[i][j] != 0)
-				tre_cur = Ava_tre[i][j][0] + treA_Av, cnte++;
-			let sol_cur = solA;
+				traLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;", cnte++;
 			if (Ava_sol[i][j] != 0)
-				sol_cur = Ava_sol[i][j][0] + solA_Av, cnts++;
+				solLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>", cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -605,7 +640,7 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			} else {
 				document.write("<ta href=\"\" title=\"难度:暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
 			}
-			document.write(uC + endA + trbA + "T" + prbid + tre_cur + "S" + prbid + sol_cur);
+			document.write(uC + endA + traLink + solLink);
 			if (tg[i][j] != undefined)
 				document.write("<div onclick=\"arctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
 			document.write("<div id=\"tag-" + getarcname(i, j) + "\" style=\"display: none;\">");
@@ -679,14 +714,12 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 		if (("agc" + ext3(i))in list_tre)
 			for (let j = 0; j < getagccnt(i); j++)
 				if (getagcname(i, j)in list_tre["agc" + ext3(i)])
-					for (let p in list_tre["agc" + ext3(i)][getagcname(i, j)])
-						Ava_tre[i][j].unshift(p);
+					Ava_tre[i][j] = list_tre["agc" + ext3(i)][getagcname(i, j)];
 	for (let i = 1; i <= agccnt; i++)
 		if (("agc" + ext3(i))in list_sol)
 			for (let j = 0; j < getagccnt(i); j++)
 				if (getagcname(i, j)in list_sol["agc" + ext3(i)])
-					for (let p in list_sol["agc" + ext3(i)][getagcname(i, j)])
-						Ava_sol[i][j].unshift(p);
+					Ava_sol[i][j] = list_sol["agc" + ext3(i)][getagcname(i, j)];
 
 	for (let i = 1; i <= agccnt; i++) {
 		x[i] = new Array(getagccnt(i));
@@ -776,10 +809,6 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 	let tasA = "/tasks/agc",
 	endA = " </a>",
 	trbA = "<a href=\"?page=";
-	let treA = "\" class=link-disabled>题面</a> <a href=\"?page=";
-	let treA_Av = "\" class=link-black>题面</a> <a href=\"?page=";
-	let solA = "\" class=link-disabled>题解</a>";
-	let solA_Av = "\" class=link-black>题解</a>";
 	for (let i = agccnt; i; i--) {
 		if (i == 42)
 			continue;
@@ -787,18 +816,16 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 		let t = ext3(i);
 		document.write("<td><a href=\"https://atcoder.jp/contests/agc" + t + "\">AGC" + t + "</a></td>");
 		for (let j = 0; j < siz[i]; j++) {
-			let uC = String.fromCharCode(j+65),
-			lC = "_" + String.fromCharCode(j+97) + "\" ",
-			prbid = "agc" + ext3(i) + "." + getagcname(i, j) + ".";
+			let uC = String.fromCharCode(j + 65);
 			if (i == 28 && j == 6)
 				uC = "F2", lC = "_F2\" ";
-			let tre_cur = treA;
+			let traLink = "",
+			solLink = "";
 			if (Ava_tre[i][j] != 0)
-				tre_cur = Ava_tre[i][j][0] + treA_Av, cnte++;
-			let sol_cur = solA;
+				traLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;", cnte++;
 			if (Ava_sol[i][j] != 0)
-				sol_cur = Ava_sol[i][j][0] + solA_Av, cnts++;
-			document.write("<td>" + webA + t + "/tasks/" + getagcname(i, j) + "\" " + y[i][j] + ">");
+				solLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>", cnts++;
+			document.write("<td>" + webA + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
 			} else if (x[i][j] < 3600) {
@@ -810,7 +837,7 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 			} else {
 				document.write("<ta href=\"\" title=\"难度:暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
 			}
-			document.write(uC + endA + trbA + "T" + prbid + tre_cur + "S" + prbid + sol_cur);
+			document.write(uC + endA + traLink + solLink);
 			if (tg[i][j] != undefined)
 				document.write("<div onclick=\"agctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
 			document.write("<div id=\"tag-" + getagcname(i, j) + "\" style=\"display: none;\">");
@@ -1151,7 +1178,7 @@ function printinvitecode() {
 	}
 	res += '"' + Number(time) + '","problems":[';
 	let prblist = document.getElementById("get-problems").value.split(' ');
-	if(document.getElementById("get-problems").value == ""){
+	if (document.getElementById("get-problems").value == "") {
 		alert("没有题目");
 		return;
 	}
@@ -1162,7 +1189,7 @@ function printinvitecode() {
 	res = res.substr(0, res.length - 1);
 	res += '],"players":[';
 	let plylist = document.getElementById("get-players").value.split(' ');
-	if(document.getElementById("get-players").value == ""){
+	if (document.getElementById("get-players").value == "") {
 		alert("没有参赛者");
 		return;
 	}
@@ -1182,7 +1209,8 @@ function buildcontestpage() {
 
 	document.write("<div id=\"join-page\">");
 	document.write("<div class=\"ui fluid input\"><input id=\"rev-code\" placeholder=\"输入邀请码\"></input><button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button></div>");
-	let p = document.getElementById('rev-code'), tm = new Date();
+	let p = document.getElementById('rev-code'),
+	tm = new Date();
 	if (window.localStorage.getItem('inv-code') != undefined)
 		p.value = window.localStorage.getItem('inv-code');
 	document.write("</div><div id=\"create-page\">");
@@ -1216,6 +1244,7 @@ function buildw() {
 	document.write("<div id=\"page-top\" class=\"display: inline;\"></div>");
 	document.write("<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; right: 50; top: 50;\" id=\"button-top\"><i style=\"font-size: 1em;\" class=\"arrow up icon\"></i><p style=\"font-size: 10px; display: inline-block;\">&nbsp;到顶部</p></button>");
 	document.write("<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; right: 50; bottom: 80;\" id=\"button-end\"><i style=\"font-size: 1em;\" class=\"arrow down icon\"></i><p style=\"font-size: 10px; display: inline-block;\">&nbsp;到底部</p></button>");
+	document.write("<div class=\"ui modal\" id=\"show-prob-list\"></div>");
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	window.onscroll = function () {
 		let cur = $(document).scrollTop(),
@@ -1233,12 +1262,6 @@ function buildw() {
 		document.getElementById("button-end").setAttribute("style", $("#page-end").offset()["top"] - h - cur < 500
 			 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
 	};
-	let rawd,
-	tralist,
-	sollist,
-	tags,
-	prbs,
-	taglist;
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json", "json", function (text) {
 		rawd = JSON.parse(text);
 	});
@@ -1275,21 +1298,21 @@ function buildw() {
 		<div class=\"ui section divider\"></div>\
 		<div class=\"ui buttons\">\
 		<script>\
-			function jumplink1(){\
-				window.open(\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\");\
-			}\
-			function jumplink2(){\
-				window.open(\"https://atcoder.jp/\");\
-			}\
-				function jumplink3(){\
-				window.open(\"https://kenkoooo.com/atcoder/#/table/\");\
-			}\
-			function jumplink4(){\
-				window.open(\"https://semantic-ui.com/\");\
-			}\
-			function jumplink5(){\
-				window.open(\"https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B\");\
-			}\
+		function jumplink1(){\
+		window.open(\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\");\
+		}\
+		function jumplink2(){\
+		window.open(\"https://atcoder.jp/\");\
+		}\
+		function jumplink3(){\
+		window.open(\"https://kenkoooo.com/atcoder/#/table/\");\
+		}\
+		function jumplink4(){\
+		window.open(\"https://semantic-ui.com/\");\
+		}\
+		function jumplink5(){\
+		window.open(\"https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B\");\
+		}\
 		</script>\
 		<button class=\"ui basic button\" onclick=\"jumplink1()\"><img src=\"images/logo1.png\"      class=\"ui centered mini image\"/></button>\
 		<button class=\"ui basic button\" onclick=\"jumplink2()\"><img src=\"images/atcoder.png\"    class=\"ui centered mini image\"/></button>\
