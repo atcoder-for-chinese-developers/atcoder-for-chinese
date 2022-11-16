@@ -1,3 +1,13 @@
+function readTextFile(file, ext, callback) {
+	let xhr = new XMLHttpRequest();
+	xhr.overrideMimeType("application/" + ext);
+	xhr.open("GET", file, false);
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState === 4)
+			callback(xhr.responseText, xhr.status);
+	}
+	xhr.send();
+}
 function getProbName() {
 	let w = escape(window.location.href);
 	return w.substr(w.indexOf("%3Fpage%3D") + 10).split('.')[1];
@@ -10,16 +20,13 @@ function getProbName_u() {
 		w = w.split("_")[0] + "_" + String.fromCharCode(Number(w.split("_")[1]) + 64);
 	return w;
 }
-
 function getProbLink() {
 	let w = getProbName();
 	return "https://atcoder.jp/contests/" + w.split("_")[0] + "/tasks/" + w;
 }
-
 function jumpLink2() {
 	window.open(getProbLink());
 }
-
 function getTitle() {
 	let t = escape(window.location.href);
 	if (t.indexOf("%3Fpage%3D") == -1)
@@ -27,18 +34,66 @@ function getTitle() {
 	t = t.substr(t.lastIndexOf("%3Fpage%3D") + 10);
 	return getProbName_u().replace("_", "") + (t[0] == 'T' ? " 翻译" : " 题解");
 }
-
-function readTextFile(file, ext, callback) {
-	let xhr = new XMLHttpRequest();
-	xhr.overrideMimeType("application/" + ext);
-	xhr.open("GET", file, false);
-	xhr.onreadystatechange = function () {
-		if (xhr.readyState === 4)
-			callback(xhr.responseText, xhr.status);
+function getColor(k) {
+	if (k == 100000) {
+		return {
+			rgb: "rgb(0,0,0)",
+			val: "0",
+			name: "black"
+		};
+	} else if (k < 400) {
+		return {
+			rgb: "rgb(128,128,128)",
+			val: (k / 4).toString(),
+			name: "grey"
+		};
+	} else if (k < 800) {
+		return {
+			rgb: "rgb(128,64,0)",
+			val: ((k - 400) / 4).toString(),
+			name: "brown"
+		};
+	} else if (k < 1200) {
+		return {
+			rgb: "rgb(0,128,0)",
+			val: ((k - 800) / 4).toString(),
+			name: "green"
+		};
+	} else if (k < 1600) {
+		return {
+			rgb: "rgb(0,192,192)",
+			val: ((k - 1200) / 4).toString(),
+			name: "cyan"
+		};
+	} else if (k < 2000) {
+		return {
+			rgb: "rgb(0,0,255)",
+			val: ((k - 1600) / 4).toString(),
+			name: "blue"
+		};
+	} else if (k < 2400) {
+		return {
+			rgb: "rgb(192,192,0)",
+			val: ((k - 2000) / 4).toString(),
+			name: "yellow"
+		};
+	} else if (k < 2800) {
+		return {
+			rgb: "rgb(255,128,0)",
+			val: ((k - 2400) / 4).toString(),
+			name: "orange"
+		};
+	} else {
+		return {
+			rgb: "rgb(255,0,0)",
+			val: ((k - 2800) / 4).toString(),
+			name: "red"
+		};
 	}
-	xhr.send();
 }
-
+function transdiff(d) {
+	return Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
+}
 function tagToggle() {
 	document.getElementById("tags").setAttribute("style",
 		document.getElementById("tags").getAttribute("style") == "position: relative; display: none" ? "position: relative; display: inline-block" : "position: relative; display: none");
@@ -46,10 +101,46 @@ function tagToggle() {
 
 function buildPage(content) {
 	let tg = [], tags = "<button class=\"ui grey label\" onclick=\"tagToggle()\">切换标签显示</button><div id=\"tags\" style=\"position: relative; display: none\">";
-	readTextFile("tags.json", "json", function (text) {
-		let tmp = JSON.parse(text), str = getProbName_u(escape(window.location.href));
-		if (str in tmp)
-			tg = tmp[str];
+	readTextFile("https://kenkoooo.com/atcoder/resources/problems.json", "json", function (txt, sta) {
+		if (sta == "200") {
+			let prob = JSON.parse(txt);
+			for (let i in prob)
+				if (prob[i].id == getProbName()) {
+					readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json", "json", function (txt, sta) {
+						if (sta == 200) {
+							let diff = transdiff(JSON.parse(txt)[getProbName()].difficulty), st = getColor(diff);
+							if (diff < 3200) {
+								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large\" style=\"border-color: " + st.rgb + "; background: linear-gradient(to top, " + st.rgb + " " + st.val + "%, rgba(0, 0, 0, 0) " + st.val + "%) border-box;\"></span></ta><span style=\"color:" + st.rgb + "\">" + prob[i].title + "</span>"+ " " + getTitle().split(" ")[1] + "</h2>" + content;
+							} else if (diff < 3600) {
+								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large bronze-circle\"></span></ta><span style=\"color:red\">" + prob[i].title + "</span>"+ " " + getTitle().split(" ")[1] + "</h2>" + content;
+							} else if (diff < 4000) {
+								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large silver-circle\"></span></ta><span style=\"color:red\">" + prob[i].title + "</span>"+ " " + getTitle().split(" ")[1] + "</h2>" + content;
+							} else if (diff < 10000) {
+								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large gold-circle\"></span></ta><span style=\"color:red\">" + prob[i].title + "</span>"+ " " + getTitle().split(" ")[1] + "</h2>" + content;
+							} else {
+								content = "<h2>" + prob[i].title + " " + getTitle().split(" ")[1] + "</h2>" + content;
+							}
+						} else {
+							alert("请求难度失败");
+							content = "<h2>" + prob[i].title + " " + getTitle().split(" ")[1] + "</h2>" + content;
+						}
+					});
+					break;
+				}
+		} else {
+			alert("请求标题失败");
+		}
+	});
+	readTextFile("tags.json", "json", function (txt, sta) {
+		if (sta == "200") {
+			let tmp = JSON.parse(txt), str = getProbName_u(escape(window.location.href));
+			if (str in tmp)
+				tg = tmp[str];
+		} else {
+			alert("请求标签失败");
+			window.location.href = "index.html";
+			return;
+		}
 	});
 	document.write("<div class=\"mdpagetop\"><a href=\"https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/\"><img src=\"images/logo2.png\" class=\"mdpageicon\"/></a><span class=\"mdpagetop title\">" + getTitle() + "</span>");
 

@@ -188,6 +188,63 @@ function agctagtoggle(i, j) {
 	document.getElementById("tag-" + getagcname(i, j)).setAttribute("style",
 		document.getElementById("tag-" + getagcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
 }
+function getColor(k) {
+	if (k == 100000) {
+		return {
+			rgb: "rgb(0,0,0)",
+			val: "0",
+			name: "black"
+		};
+	} else if (k < 400) {
+		return {
+			rgb: "rgb(128,128,128)",
+			val: (k / 4).toString(),
+			name: "grey"
+		};
+	} else if (k < 800) {
+		return {
+			rgb: "rgb(128,64,0)",
+			val: ((k - 400) / 4).toString(),
+			name: "brown"
+		};
+	} else if (k < 1200) {
+		return {
+			rgb: "rgb(0,128,0)",
+			val: ((k - 800) / 4).toString(),
+			name: "green"
+		};
+	} else if (k < 1600) {
+		return {
+			rgb: "rgb(0,192,192)",
+			val: ((k - 1200) / 4).toString(),
+			name: "cyan"
+		};
+	} else if (k < 2000) {
+		return {
+			rgb: "rgb(0,0,255)",
+			val: ((k - 1600) / 4).toString(),
+			name: "blue"
+		};
+	} else if (k < 2400) {
+		return {
+			rgb: "rgb(192,192,0)",
+			val: ((k - 2000) / 4).toString(),
+			name: "yellow"
+		};
+	} else if (k < 2800) {
+		return {
+			rgb: "rgb(255,128,0)",
+			val: ((k - 2400) / 4).toString(),
+			name: "orange"
+		};
+	} else {
+		return {
+			rgb: "rgb(255,0,0)",
+			val: ((k - 2800) / 4).toString(),
+			name: "red"
+		};
+	}
+}
 let problist = [], rawd, tralist, sollist, tags, prbs, taglist;
 function formatDate(s) {
 	if (s == "")
@@ -269,9 +326,9 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 		let flg = 0;
 		for (let j = 0; j < getabccnt(i); j++) {
 			if (i < 42 || i > 125 || j < 2 || getabcname(i, j) in rawd)
-				x[i][j] = !(getabcname(i, j) in rawd) || !("difficulty" in rawd[getabcname(i, j)]) ? 100000 : transdiff(rawd[getabcname(i, j)]["difficulty"], 0);
+				x[i][j] = !(getabcname(i, j) in rawd) || !("difficulty" in rawd[getabcname(i, j)]) ? 100000 : transdiff(rawd[getabcname(i, j)].difficulty, 0);
 			else
-				x[i][j] = !("difficulty" in rawd[getarcname(ri, j - 2)]) ? 100000 : transdiff(rawd[getarcname(ri, j - 2)]["difficulty"], 0), flg = 1, abctoarc[i] = ri;
+				x[i][j] = !("difficulty" in rawd[getarcname(ri, j - 2)]) ? 100000 : transdiff(rawd[getarcname(ri, j - 2)].difficulty, 0), flg = 1, abctoarc[i] = ri;
 		}
 		ri += flg;
 	}
@@ -279,8 +336,8 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 		for (let j = 0; j < getabccnt(i); j++)
 			nametoid[getabcname(i, j)] = [i, j];
 	for (let i in prbs)
-		if (prbs[i]["id"] in nametoid)
-			abctitle[nametoid[prbs[i]["id"]][0]][nametoid[prbs[i]["id"]][1]] = prbs[i]["title"];
+		if (prbs[i].id in nametoid)
+			abctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
 	for (let i = 1; i <= abccnt; i++)
 		for (let j = 0; j < getabccnt(i); j++) {
 			tg[i][j] = tags[getabcname_u(i, j)];
@@ -300,44 +357,11 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 		RG[i] = new Array(siz[i]);
 		CCC[i] = new Array(siz[i]);
 		for (let j = 0; j < siz[i]; j++) {
-			CCC[i][j] = "难度:" + x[i][j].toString();
-			if (x[i][j] == 100000) {
-				RG[i][j] = "rgb(0,0,0)";
-				Val[i][j] = "0";
-				y[i][j] = "class=\"diff-black\"";
-			} else if (x[i][j] < 400) {
-				RG[i][j] = "rgb(128,128,128)";
-				Val[i][j] = (x[i][j] / 4).toString();
-				y[i][j] = "class=\"diff-grey\"";
-			} else if (x[i][j] < 800) {
-				RG[i][j] = "rgb(128,64,0)";
-				Val[i][j] = ((x[i][j] - 400) / 4).toString();
-				y[i][j] = "class=\"diff-brown\"";
-			} else if (x[i][j] < 1200) {
-				RG[i][j] = "rgb(0,128,0)";
-				Val[i][j] = ((x[i][j] - 800) / 4).toString();
-				y[i][j] = "class=\"diff-green\"";
-			} else if (x[i][j] < 1600) {
-				RG[i][j] = "rgb(0,192,192)";
-				Val[i][j] = ((x[i][j] - 1200) / 4).toString();
-				y[i][j] = "class=\"diff-cyan\"";
-			} else if (x[i][j] < 2000) {
-				RG[i][j] = "rgb(0,0,255)";
-				Val[i][j] = ((x[i][j] - 1600) / 4).toString();
-				y[i][j] = "class=\"diff-blue\"";
-			} else if (x[i][j] < 2400) {
-				RG[i][j] = "rgb(192,192,0)";
-				Val[i][j] = ((x[i][j] - 2000) / 4).toString();
-				y[i][j] = "class=\"diff-yellow\"";
-			} else if (x[i][j] < 2800) {
-				RG[i][j] = "rgb(255,128,0)";
-				Val[i][j] = ((x[i][j] - 2400) / 4).toString();
-				y[i][j] = "class=\"diff-orange\"";
-			} else {
-				RG[i][j] = "rgb(255,0,0)";
-				Val[i][j] = ((x[i][j] - 2800) / 4).toString();
-				y[i][j] = "class=\"diff-red\"";
-			}
+			CCC[i][j] = "难度：" + x[i][j].toString();
+			let c = getColor(x[i][j]);
+			RG[i][j] = c.rgb;
+			Val[i][j] = c.val;
+			y[i][j] = "class=\"diff-" + c.name + "\"";
 		}
 	}
 	document.write("<div id=\"abc-table\">");
@@ -351,9 +375,9 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 			if (j == 7 && i > 232)
 				uC = "Ex";
 			if (Ava_tre[i][j] != 0)
-				traLink = problist[getabcname_u(i, j)]["prob_a"], cnte++;
+				traLink = problist[getabcname_u(i, j)].prob_a, cnte++;
 			if (Ava_sol[i][j] != 0)
-				solLink = problist[getabcname_u(i, j)]["solu_a"], cnts++;
+				solLink = problist[getabcname_u(i, j)].solu_a, cnts++;
 			document.write("<td><a href=\"https://atcoder.jp/contests/abc" + t + "/tasks/" + getabcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -364,7 +388,7 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 			} else if (x[i][j] < 10000) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle gold-circle\"></span></ta>");
 			} else {
-				document.write("<ta href=\"\" title=\"难度:暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
+				document.write("<ta href=\"\" title=\"难度：暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
 			}
 			document.write(uC + " </a>" + traLink + solLink);
 			if (tg[i][j] != undefined)
@@ -431,14 +455,14 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 		arctitle[i] = new Array(getarccnt(i));
 		cnt += x[i].length;
 		for (let j = 0; j < getarccnt(i); j++)
-			x[i][j] = !(getarcname(i, j) in rawd) || !("difficulty" in rawd[getarcname(i, j)]) ? 100000 : transdiff(rawd[getarcname(i, j)]["difficulty"], 0);
+			x[i][j] = !(getarcname(i, j) in rawd) || !("difficulty" in rawd[getarcname(i, j)]) ? 100000 : transdiff(rawd[getarcname(i, j)].difficulty, 0);
 	}
 	for (let i = 1; i <= arccnt; i++)
 		for (let j = 0; j < getarccnt(i); j++)
 			nametoid[getarcname(i, j)] = [i, j];
 	for (let i in prbs)
-		if (prbs[i]["id"] in nametoid)
-			arctitle[nametoid[prbs[i]["id"]][0]][nametoid[prbs[i]["id"]][1]] = prbs[i]["title"];
+		if (prbs[i].id in nametoid)
+			arctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
 	for (let i = 1; i <= arccnt; i++)
 		for (let j = 57 < i && i < 104 ? 2 : 0; j < getarccnt(i); j++) {
 			tg[i][j] = tags[getarcname_u(i, j)];
@@ -458,44 +482,11 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 		RG[i] = new Array(siz[i]);
 		CCC[i] = new Array(siz[i]);
 		for (let j = 0; j < siz[i]; j++) {
-			CCC[i][j] = "难度:" + x[i][j].toString();
-			if (x[i][j] == 100000) {
-				RG[i][j] = "rgb(0,0,0)";
-				Val[i][j] = "0";
-				y[i][j] = "class=\"diff-black\"";
-			} else if (x[i][j] < 400) {
-				RG[i][j] = "rgb(128,128,128)";
-				Val[i][j] = (x[i][j] / 4).toString();
-				y[i][j] = "class=\"diff-grey\"";
-			} else if (x[i][j] < 800) {
-				RG[i][j] = "rgb(128,64,0)";
-				Val[i][j] = ((x[i][j] - 400) / 4).toString();
-				y[i][j] = "class=\"diff-brown\"";
-			} else if (x[i][j] < 1200) {
-				RG[i][j] = "rgb(0,128,0)";
-				Val[i][j] = ((x[i][j] - 800) / 4).toString();
-				y[i][j] = "class=\"diff-green\"";
-			} else if (x[i][j] < 1600) {
-				RG[i][j] = "rgb(0,192,192)";
-				Val[i][j] = ((x[i][j] - 1200) / 4).toString();
-				y[i][j] = "class=\"diff-cyan\"";
-			} else if (x[i][j] < 2000) {
-				RG[i][j] = "rgb(0,0,255)";
-				Val[i][j] = ((x[i][j] - 1600) / 4).toString();
-				y[i][j] = "class=\"diff-blue\"";
-			} else if (x[i][j] < 2400) {
-				RG[i][j] = "rgb(192,192,0)";
-				Val[i][j] = ((x[i][j] - 2000) / 4).toString();
-				y[i][j] = "class=\"diff-yellow\"";
-			} else if (x[i][j] < 2800) {
-				RG[i][j] = "rgb(255,128,0)";
-				Val[i][j] = ((x[i][j] - 2400) / 4).toString();
-				y[i][j] = "class=\"diff-orange\"";
-			} else {
-				RG[i][j] = "rgb(255,0,0)";
-				Val[i][j] = ((x[i][j] - 2800) / 4).toString();
-				y[i][j] = "class=\"diff-red\"";
-			}
+			CCC[i][j] = "难度：" + x[i][j].toString();
+			let c = getColor(x[i][j]);
+			RG[i][j] = c.rgb;
+			Val[i][j] = c.val;
+			y[i][j] = "class=\"diff-" + c.name + "\"";
 		}
 	}
 	document.write("<div id=\"arc-table\">");
@@ -511,9 +502,9 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			if (i == 120 && j == 6)
 				uC = "F2";
 			if (Ava_tre[i][j] != 0)
-				traLink = problist[getarcname_u(i, j)]["prob_a"], cnte++;
+				traLink = problist[getarcname_u(i, j)].prob_a, cnte++;
 			if (Ava_sol[i][j] != 0)
-				solLink = problist[getarcname_u(i, j)]["solu_a"], cnts++;
+				solLink = problist[getarcname_u(i, j)].solu_a, cnts++;
 			document.write("<td><a href=\"https://atcoder.jp/contests/arc" + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -524,7 +515,7 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			} else if (x[i][j] < 10000) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle gold-circle\"></span></ta>");
 			} else {
-				document.write("<ta href=\"\" title=\"难度:暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
+				document.write("<ta href=\"\" title=\"难度：暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
 			}
 			document.write(uC + " </a>" + traLink + solLink);
 			if (tg[i][j] != undefined)
@@ -591,14 +582,14 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 		agctitle[i] = new Array(getagccnt(i));
 		cnt += x[i].length;
 		for (let j = 0; j < getagccnt(i); j++)
-			x[i][j] = !(getagcname(i, j) in rawd) || !("difficulty" in rawd[getagcname(i, j)]) ? 100000 : transdiff(rawd[getagcname(i, j)]["difficulty"], 0);
+			x[i][j] = !(getagcname(i, j) in rawd) || !("difficulty" in rawd[getagcname(i, j)]) ? 100000 : transdiff(rawd[getagcname(i, j)].difficulty, 0);
 	}
 	for (let i = 1; i <= agccnt; i++)
 		for (let j = 0; j < getagccnt(i); j++)
 			nametoid[getagcname(i, j)] = [i, j];
 	for (let i in prbs)
-		if (prbs[i]["id"] in nametoid)
-			agctitle[nametoid[prbs[i]["id"]][0]][nametoid[prbs[i]["id"]][1]] = prbs[i]["title"];
+		if (prbs[i].id in nametoid)
+			agctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
 	for (let i = 1; i <= agccnt; i++)
 		for (let j = 0; j < getagccnt(i); j++) {
 			tg[i][j] = tags[getagcname_u(i, j)];
@@ -618,44 +609,11 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 		RG[i] = new Array(siz[i]);
 		CCC[i] = new Array(siz[i]);
 		for (let j = 0; j < siz[i]; j++) {
-			CCC[i][j] = "难度:" + x[i][j].toString();
-			if (x[i][j] == 100000) {
-				RG[i][j] = "rgb(0,0,0)";
-				Val[i][j] = "0";
-				y[i][j] = "class=\"diff-black\"";
-			} else if (x[i][j] < 400) {
-				RG[i][j] = "rgb(128,128,128)";
-				Val[i][j] = (x[i][j] / 4).toString();
-				y[i][j] = "class=\"diff-grey\"";
-			} else if (x[i][j] < 800) {
-				RG[i][j] = "rgb(128,64,0)";
-				Val[i][j] = ((x[i][j] - 400) / 4).toString();
-				y[i][j] = "class=\"diff-brown\"";
-			} else if (x[i][j] < 1200) {
-				RG[i][j] = "rgb(0,128,0)";
-				Val[i][j] = ((x[i][j] - 800) / 4).toString();
-				y[i][j] = "class=\"diff-green\"";
-			} else if (x[i][j] < 1600) {
-				RG[i][j] = "rgb(0,192,192)";
-				Val[i][j] = ((x[i][j] - 1200) / 4).toString();
-				y[i][j] = "class=\"diff-cyan\"";
-			} else if (x[i][j] < 2000) {
-				RG[i][j] = "rgb(0,0,255)";
-				Val[i][j] = ((x[i][j] - 1600) / 4).toString();
-				y[i][j] = "class=\"diff-blue\"";
-			} else if (x[i][j] < 2400) {
-				RG[i][j] = "rgb(192,192,0)";
-				Val[i][j] = ((x[i][j] - 2000) / 4).toString();
-				y[i][j] = "class=\"diff-yellow\"";
-			} else if (x[i][j] < 2800) {
-				RG[i][j] = "rgb(255,128,0)";
-				Val[i][j] = ((x[i][j] - 2400) / 4).toString();
-				y[i][j] = "class=\"diff-orange\"";
-			} else {
-				RG[i][j] = "rgb(255,0,0)";
-				Val[i][j] = ((x[i][j] - 2800) / 4).toString();
-				y[i][j] = "class=\"diff-red\"";
-			}
+			CCC[i][j] = "难度：" + x[i][j].toString();
+			let c = getColor(x[i][j]);
+			RG[i][j] = c.rgb;
+			Val[i][j] = c.val;
+			y[i][j] = "class=\"diff-" + c.name + "\"";
 		}
 	}
 	document.write("<div id=\"agc-table\">");
@@ -672,10 +630,10 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 			if (i == 28 && j == 6)
 				uC = "F2", lC = "_F2\" ";
 			if (Ava_tre[i][j] != 0)
-				traLink = problist[getagcname_u(i, j)]["prob_a"], cnte++;
+				traLink = problist[getagcname_u(i, j)].prob_a, cnte++;
 			if (Ava_sol[i][j] != 0)
-				solLink = problist[getagcname_u(i, j)]["solu_a"], cnts++;
-			document.write("<td><a href=\"https://atcoder.jp/contests/agc" + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">");
+				solLink = problist[getagcname_u(i, j)].solu_a, cnts++;
+			document.write("<td><a href=\"https://atcoder.jp/contests/agc" + t + "/tasks/" + getagcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
 			} else if (x[i][j] < 3600) {
@@ -685,7 +643,7 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 			} else if (x[i][j] < 10000) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle gold-circle\"></span></ta>");
 			} else {
-				document.write("<ta href=\"\" title=\"难度:暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
+				document.write("<ta href=\"\" title=\"难度：暂未评定\"><span class=\"diff-unavailable\">?</span></ta>");
 			}
 			document.write(uC + " </a>" + traLink + solLink);
 			if (tg[i][j] != undefined)
@@ -730,8 +688,8 @@ function refreshchart() {
 			color: i < 4 ? "rgb(128,128,128)" : i < 8 ? "rgb(128,64,0)" : i < 12 ? "rgb(0,128,0)" : i < 16 ? "rgb(0,192,192)" : i < 20 ? "rgb(0,0,255)" : i < 24 ? "rgb(192,192,0)" : i < 28 ? "rgb(255,128,0)" : "rgb(255,0,0)"
 		};
 	for (let i in problist)
-		if (isd1[i] && isd2[i] && problist[i]["diff"] < 4400)
-			cnt[Math.floor(problist[i]["diff"] / 100)].y++;
+		if (isd1[i] && isd2[i] && problist[i].diff < 4400)
+			cnt[Math.floor(problist[i].diff / 100)].y++;
 	Highcharts.chart('container', {
 		chart: {
 			type: "column",
@@ -839,15 +797,15 @@ function setfilter() {
 	dr = dr == "" || isNaN(Number(dr)) ? 10000 : Number(dr);
 	utg = utg == '' ? 0 : utg.split(",");
 	for (let i in problist) {
-		let flg = (dl == -10000 && dr == 10000) || (dl <= problist[i]["diff"] && problist[i]["diff"] <= dr);
+		let flg = (dl == -10000 && dr == 10000) || (dl <= problist[i].diff && problist[i].diff <= dr);
 		if (!flgor) {
 			for (let j in utg)
-				flg &= isinarray(utg[j], problist[i]["tag"]);
+				flg &= isinarray(utg[j], problist[i].tag);
 		} else {
 			if (utg) {
 				let flg1 = 0;
 				for (let j in utg)
-					flg1 |= isinarray(utg[j], problist[i]["tag"]);
+					flg1 |= isinarray(utg[j], problist[i].tag);
 				flg &= flg1;
 			}
 		}
@@ -917,13 +875,13 @@ function writelist(taglist) {
 	for (let i in problist) {
 		isd1[i] = isd2[i] = 1;
 		document.write("<tr id=\"" + i + "-col\">");
-		document.write("<td>" + problist[i]["org_a"] + "</td>");
-		document.write("<td>" + problist[i]["title"] + "</td>");
-		document.write("<td>" + problist[i]["prob_a"] + problist[i]["solu_a"] + "</td>");
-		document.write("<td>" + (problist[i]["diff"] == 100000 ? "unavailable" : problist[i]["diff"].toString()) + "</td>");
+		document.write("<td>" + problist[i].org_a + "</td>");
+		document.write("<td>" + problist[i].title + "</td>");
+		document.write("<td>" + problist[i].prob_a + problist[i].solu_a + "</td>");
+		document.write("<td>" + (problist[i].diff == 100000 ? "unavailable" : problist[i].diff.toString()) + "</td>");
 		document.write("<td>");
-		if (problist[i]["tag"] != undefined) {
-			let t = problist[i]["tag"];
+		if (problist[i].tag != undefined) {
+			let t = problist[i].tag;
 			for (let j = 0; j < t.length; j++) {
 				document.write("<div class=\"ui tag label\">" + t[j] + "</div>");
 			}
@@ -942,7 +900,7 @@ function jumptotop() {
 }
 function jumptobottom() {
 	window.scrollTo({
-		top: $("#page-end").offset()["top"],
+		top: $("#page-end").offset().top,
 		behavior: "smooth"
 	});
 }
@@ -1078,13 +1036,13 @@ function buildw() {
 	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
 	window.onscroll = function () {
 		let cur = $(document).scrollTop(), h = document.documentElement.clientHeight;
-		document.getElementById("button-top").setAttribute("style", cur - $("#page-top").offset()["top"] < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
-		document.getElementById("button-end").setAttribute("style", $("#page-end").offset()["top"] - h - cur < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
+		document.getElementById("button-top").setAttribute("style", cur - $("#page-top").offset().top < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
+		document.getElementById("button-end").setAttribute("style", $("#page-end").offset().top - h - cur < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
 	};
 	window.onclick = function () {
 		let cur = $(document).scrollTop(), h = document.documentElement.clientHeight;
-		document.getElementById("button-top").setAttribute("style", cur - $("#page-top").offset()["top"] < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
-		document.getElementById("button-end").setAttribute("style", $("#page-end").offset()["top"] - h - cur < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
+		document.getElementById("button-top").setAttribute("style", cur - $("#page-top").offset().top < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
+		document.getElementById("button-end").setAttribute("style", $("#page-end").offset().top - h - cur < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
 	};
 	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json", "json", function (text) {
 		rawd = JSON.parse(text);
@@ -1093,10 +1051,10 @@ function buildw() {
 		prbs = JSON.parse(text);
 	});
 	readTextFile("https://atcoder-for-chinese-developers.github.io/translations/list.json", "json", function (text) {
-		tralist = JSON.parse(text)["data"];
+		tralist = JSON.parse(text).data;
 	});
 	readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/list.json", "json", function (text) {
-		sollist = JSON.parse(text)["data"];
+		sollist = JSON.parse(text).data;
 	});
 	readTextFile("tags.json", "json", function (text) {
 		try {
@@ -1151,4 +1109,5 @@ function buildw() {
 		</div>");
 	document.write("<div id=\"page-end\" style=\"display: inline;\"></div>");
 	abctabletoggle();
+	window.onclick();
 }

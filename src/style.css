@@ -60,6 +60,11 @@ a:visited {
 	width: 12px;
 }
 
+.difficulty-circle.large {
+	height: 24px;
+	width: 24px;
+}
+
 .bronze-circle {
 	border-color: rgb(150, 92, 44);
 	background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));
