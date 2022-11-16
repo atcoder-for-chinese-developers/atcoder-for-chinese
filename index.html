@@ -26,6 +26,8 @@
 	<link rel="stylesheet" href="src/style.css"/>
 	<link rel="shortcut icon" href="images/favicon.ico">
 	<script type="text/javascript" src="src/func.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism.min.css" integrity="sha512-/mZ1FHPkg6EKcxo0fKXF51ak6Cr2ocgDi5ytaTBjsQZIH/RNs6GF6+oId/vPe3eJB836T36nXwVh/WBl/cWT4w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.3/katex.min.css" integrity="sha512-6VMVcy7XQNyarhVuiL50FzpgCFKsyTd6YO93aaQEyET+BNaWvj0IgKR86Bf6+AmWczxAcSnL+JGjo+iStgO1gQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous"/>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw==" crossorigin="anonymous"></script>
@@ -37,44 +39,16 @@
 <body>
 	<noscript> You need to enable JavaScript to view the page. </noscript>
 	<script>
-		var lnk=escape(window.location.href);
-		if(lnk.indexOf("index.html")==-1){
-			window.location.href="index.html";
-		}else if(lnk.indexOf("%3Fpage%3D")==-1){
+		var lnk = escape(window.location.href);
+		if (lnk.indexOf("index.html") == -1) {
+			window.location.href = "index.html";
+		} else if (lnk.indexOf("%3Fpage%3D") == -1) {
 			console.log("main page");
 			document.write("<div class=\"ui main container\">");
 			buildw();
 			document.write("</div>");
-		}else{
-			let pos=lnk.indexOf("%3Fpage%3D")+10,
-				name=lnk.substr(pos),content="";
-			if(name[0]=='T'){
-				name=name.substr(1);
-				console.log("translation page");
-				readTextFile("https://atcoder-for-chinese-developers.github.io/translations/"+name+".md","md",function(text,stat){
-					if(stat=="200"){
-						document.write("<scr"+"ipt src=\"src/mdstyle.js\">"+"</scri"+"pt>");
-						document.write("<textarea>"+text+"</textarea>");
-					}else{
-						console.log(stat);
-						alert("没有找到这篇翻译");
-						window.location.href="index.html";
-					}
-				});
-			}else{
-				name=name.substr(1);
-				console.log("solution page");
-				readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/"+name+".md","md",function(text,stat){
-					if(stat=="200"){
-						document.write("<scr"+"ipt src=\"src/mdstyle.js\">"+"</scri"+"pt>");
-						document.write("<textarea>"+text+"</textarea>");
-					}else{
-						console.log(stat);
-						alert("没有找到这篇题解");
-						window.location.href="index.html";
-					}
-				});
-			}
+		} else {
+			document.write("<scr" + "ipt src=\"src/page.js\">" + "</scri" + "pt>");
 		}
 	</script>
 </body>

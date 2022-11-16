@@ -24,19 +24,19 @@ a:visited{
 	height: 12px;
 	width: 12px;
 }
-.bronze-circle{
+.bronze-circle {
 	border-color: rgb(150, 92, 44);
 	background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));
 }
-.silver-circle{
+.silver-circle {
 	border-color: rgb(128, 128, 128);
 	background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));
 }
-.gold-circle{
+.gold-circle {
 	border-color: rgb(255, 215, 0);
 	background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));
 }
-.diff-unavailable{
+.diff-unavailable {
 	display: inline-block;
 	border-radius: 10rem;
 	margin-right: 5px;
@@ -48,4 +48,36 @@ a:visited{
 	padding-right: .6em;
 	line-height: 1;
 	background-color: #17a2b8
+}
+.mdpage {
+	width: 70em;
+	display: block;
+	max-width: 70em;
+	font-size: 1.2em;
+	background: #fff;
+    margin: auto auto;
+	box-sizing: inherit;
+    padding: 60px 45px 25px;
+    box-shadow: 0px 0px 10px 5px #888;
+}
+.mdpagetop {
+	top: 0px;
+	z-index: 999;
+	padding: 0px;
+	position: sticky;
+	max-height: 340px;
+	background: #222222;
+	font-size: 14px !important;
+}
+.mdpageicon {
+	max-width: 87px;
+	margin-left: 5px;
+	margin-right: 5px;
+	filter: invert(100%);
+}
+.mdpagetop.title {
+	top: -15px;
+	color: #fff;
+	padding: 10px 10px;
+	position: relative;
 }
