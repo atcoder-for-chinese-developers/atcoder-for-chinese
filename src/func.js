@@ -352,8 +352,8 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 				"title": abctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/abc"
 				 + ext3(i) + "/tasks/" + getabcname(i, j) + "\">" + getabcname_u(i, j) + "</a>",
-				"prob_a": Ava_tre[i][j] != 0 ? "<a href=\"?page=Tabc" + ext3(i) + "." + getabcname(i, j) + "." + Ava_tre[i][j][0] + "\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] != 0 ? "<a href=\"?page=Sabc" + ext3(i) + "." + getabcname(i, j) + "." + Ava_sol[i][j][0] + "\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
+				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;" : "",
+				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
 			};
 		}
 	for (let i = abccnt; i >= 1; i--) {
@@ -427,9 +427,9 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 			let traLink = "",
 			solLink = "";
 			if (Ava_tre[i][j] != 0)
-				traLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;", cnte++;
+				traLink = problist[getabcname_u(i, j)]["prob_a"], cnte++;
 			if (Ava_sol[i][j] != 0)
-				solLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>", cnts++;
+				solLink = problist[getabcname_u(i, j)]["solu_a"], cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getabcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -546,8 +546,8 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 				"title": arctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/arc"
 				 + ext3(i) + "/tasks/" + getarcname(i, j) + "\">" + getarcname_u(i, j) + "</a>",
-				"prob_a": Ava_tre[i][j] != 0 ? "<a href=\"?page=Tarc" + ext3(i) + "." + getarcname(i, j) + "." + Ava_tre[i][j][0] + "\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] != 0 ? "<a href=\"?page=Sarc" + ext3(i) + "." + getarcname(i, j) + "." + Ava_sol[i][j][0] + "\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
+				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;" : "",
+				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
 			};
 		}
 	for (let i = arccnt; i >= 1; i--) {
@@ -625,9 +625,9 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			let traLink = "",
 			solLink = "";
 			if (Ava_tre[i][j] != 0)
-				traLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;", cnte++;
+				traLink = problist[getarcname_u(i, j)]["prob_a"], cnte++;
 			if (Ava_sol[i][j] != 0)
-				solLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>", cnts++;
+				solLink = problist[getarcname_u(i, j)]["solu_a"], cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
@@ -744,8 +744,8 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 				"title": agctitle[i][j],
 				"org_a": "<a href=\"https://atcoder.jp/contests/agc"
 				 + ext3(i) + "/tasks/" + getagcname(i, j) + "\">" + getagcname_u(i, j) + "</a>",
-				"prob_a": Ava_tre[i][j] != 0 ? "<a href=\"?page=Tagc" + ext3(i) + "." + getagcname(i, j) + "." + Ava_tre[i][j][0] + "\">翻译</a>&nbsp;&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] != 0 ? "<a href=\"?page=Sagc" + ext3(i) + "." + getagcname(i, j) + "." + Ava_sol[i][j][0] + "\">题解</a>&nbsp;&nbsp;&nbsp;" : ""
+				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>" : "",
+				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
 			};
 		}
 	for (let i = agccnt; i >= 1; i--) {
@@ -822,9 +822,9 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 			let traLink = "",
 			solLink = "";
 			if (Ava_tre[i][j] != 0)
-				traLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;", cnte++;
+				traLink = problist[getagcname_u(i, j)]["prob_a"], cnte++;
 			if (Ava_sol[i][j] != 0)
-				solLink = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>", cnts++;
+				solLink = problist[getagcname_u(i, j)]["solu_a"], cnts++;
 			document.write("<td>" + webA + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
