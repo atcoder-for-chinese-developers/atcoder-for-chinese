@@ -176,6 +176,13 @@ function rankfresh(data) {
 	for (let i in data.problems)
 		if (data.problems[i].substr(0, 2) == 'CF')
 			hascf = 1
+	let cfid = []
+	for (var i in data.players) {
+		var li = data.players[i].split('(')
+		if (li.length == 2)
+			data.players[i] = li[0], cfid.push(li[1].substr(0, li[1].length - 1));
+		else cfid.push(data.players[i])
+	}
 	for (let i = 0; i < data.players.length; i++) {
 		let sub, cfsub;
 		readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
@@ -183,7 +190,7 @@ function rankfresh(data) {
 				sub = JSON.parse(text)
 			})
 		if (hascf == 1) {
-			readTextFile('https://codeforces.com/api/user.status?handle=' + data.players[i] + '&from=1&count=100', 'json', function (text) {
+			readTextFile('https://codeforces.com/api/user.status?handle=' + cfid[i] + '&from=1&count=100', 'json', function (text) {
 				cfsub = JSON.parse(text)
 			})
 			cfsub = cfsub.result
@@ -197,7 +204,7 @@ function rankfresh(data) {
 		for (let t = 0; t < sub.length; t++) {
 			let c = sub[t]
 			if (Number(c.epoch_second) * 1000 >= end)
-				continue
+				continue	
 			for (var j = 0; j < data.problems.length; j++)
 				if (c.problem_id == data.problems[j]) {
 					if (c.result == 'AC') {
@@ -330,6 +337,14 @@ function buildpage() {
 		beg = Number(data.st), end = Number(data.ed);
 		start = new Date(beg), finish = new Date(end);
 
+		let cfid = []
+		for (var i in data.players) {
+			var li = data.players[i].split('(')
+			if (li.length == 2)
+				data.players[i] = li[0], cfid.push(li[1].substr(0, li[1].length - 1));
+			else cfid.push(data.players[i])
+		}
+		
 		let len = data.players.length, subs = {}, acc = [], ple = [], id = [], hascf = 0;
 		for (let i = 0; i < len; i++)
 			acc.push(0), ple.push(0), id.push(i);
@@ -343,7 +358,7 @@ function buildpage() {
 					sub = JSON.parse(text);
 				})
 			if (hascf == 1) {
-				readTextFile('https://codeforces.com/api/user.status?handle=' + data.players[i] + '&from=1&count=100', 'json', function (text) {
+				readTextFile('https://codeforces.com/api/user.status?handle=' + cfid[i] + '&from=1&count=100', 'json', function (text) {
 					cfsub = JSON.parse(text)
 				})
 				cfsub = cfsub.result
