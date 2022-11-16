@@ -476,7 +476,7 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			};
 		}
 	for (let i = arccnt; i >= 1; i--) {
-		siz[i] = getabccnt(i);
+		siz[i] = getarccnt(i);
 		y[i] = new Array(siz[i]);
 		Val[i] = new Array(siz[i]);
 		RG[i] = new Array(siz[i]);
