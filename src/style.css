@@ -57,16 +57,17 @@ a:visited{
 	background: #fff;
     margin: auto auto;
 	box-sizing: inherit;
-    padding: 60px 45px 25px;
+    padding: 100px 45px 25px;
     box-shadow: 0px 0px 10px 5px #888;
 }
 .mdpagetop {
 	top: 0px;
+	width: 100%;
 	z-index: 999;
 	padding: 0px;
-	position: sticky;
-	max-height: 340px;
+	position: fixed;
 	background: #222222;
+	overflow: visible !important;
 	font-size: 14px !important;
 }
 .mdpageicon {
@@ -80,4 +81,18 @@ a:visited{
 	color: #fff;
 	padding: 10px 10px;
 	position: relative;
+}
+.mdpage h1 {
+	font-size: 63px;
+}
+.mdpage h2 {
+	font-size: 30px;
+}
+.mdpage h3 {
+	font-size: 24px;
+}
+.mdpage code {
+	color: #c7254e;
+	border-radius: 3px;
+	background-color: #f9f2f4;
 }

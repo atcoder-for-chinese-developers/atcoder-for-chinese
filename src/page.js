@@ -45,7 +45,8 @@ function tagToggle() {
 }
 
 function buildPage(content) {
-	let tg = [], tags = "<button class=\"ui grey label\" onclick=\"tagToggle()\">切换标签显示</button><div id=\"tags\" style=\"position: relative; display: none\">";
+	let tg = [],
+	tags = "<button class=\"ui grey label\" onclick=\"tagToggle()\">切换标签显示</button><div id=\"tags\" style=\"position: relative; display: none\">";
 	readTextFile("tags.json", "json", function (text) {
 		let tmp = JSON.parse(text),
 		str = getProbName_u(escape(window.location.href));
@@ -53,12 +54,12 @@ function buildPage(content) {
 			tg = tmp[str];
 	});
 	document.write("<div class=\"mdpagetop\"><a href=\"https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/\"><img src=\"images/logo2.png\" class=\"mdpageicon\"/></a><span class=\"mdpagetop title\">" + getTitle() + "</span>");
-	
+
 	if (tg.length > 0) {
 		for (let i = 0; i < tg.length; i++)
 			tags += "<span class=\"ui tag label\">" + tg[i] + "</span>";
 	} else {
-		tags += "<span style=\"color: white; font-size: 0.8em\">&nbsp;暂无题目标签</span>";
+		tags += "<span style=\"color: #000; font-size: 0.8em\">&nbsp;暂无题目标签</span>";
 	}
 	document.write("<button class=\"ui animated right button\" onclick=\"jumpLink2()\" style=\"right: 0; top: 5px; position: absolute;\"><div class=\"visible content\">原题链接</div><div class=\"hidden content\">" + getProbName_u().replace("_", "") + "</div></button></div></div>");
 	tags = "<div style=\"top: -25px; position: relative;\">" + tags + "</div></div>";
