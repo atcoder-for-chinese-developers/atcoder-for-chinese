@@ -2,44 +2,63 @@
 	<meta charset="UTF-8">
 	<meta name="referrer" content="no-referrer" />
 	<script>
-		function getprbname(){
-			let w=escape(window.location.href);
-			return w.substr(w.indexOf("%3Fpage%3D")+10).split('.')[1];
+		function getprbname() {
+			let w = escape(window.location.href);
+			return w.substr(w.indexOf("%3Fpage%3D") + 10).split('.')[1];
 		}
-		function getprbname_u(){
-			let w=getprbname().toUpperCase();
-			if(w[0]=='A'&&w[2]=='C'&&Number(w.substr(3,3)) > 232)
-				w=w.replace("H","Ex");
-			if(!isNaN(Number(w.split("_")[1])))
-				w=w.split("_")[0]+"_"+String.fromCharCode(Number(w.split("_")[1])+64);
+		function getprbname_u() {
+			let w = getprbname().toUpperCase();
+			if (w[0] == 'A' && w[2] == 'C' && Number(w.substr(3, 3)) > 232)
+				w = w.replace("H", "Ex");
+			if (!isNaN(Number(w.split("_")[1])))
+				w = w.split("_")[0] + "_" + String.fromCharCode(Number(w.split("_")[1]) + 64);
 			return w;
 		}
-		function gettitle(){
-			let t=escape(window.location.href);
-			if(t.indexOf("%3Fpage%3D")==-1)
+		function gettitle() {
+			let t = escape(window.location.href);
+			if (t.indexOf("%3Fpage%3D") == -1)
 				return "AtCoder 中文版";
-			t=t.substr(t.lastIndexOf("%3Fpage%3D")+10);
-			return getprbname_u().replace("_","")+(t[0]=='T'?" 翻译":" 题解");
+			t = t.substr(t.lastIndexOf("%3Fpage%3D") + 10);
+			return getprbname_u().replace("_", "") + (t[0] == 'T' ? " 翻译" : " 题解");
 		}
-		document.write("<title>"+gettitle()+"</title>");
+		document.write("<title>" + gettitle() + "</title>");
 	</script>
-	<link rel="stylesheet" href="src/style.css"/>
+	<link rel="stylesheet" href="src/style.css" />
 	<link rel="shortcut icon" href="images/favicon.ico">
 	<script type="text/javascript" src="src/func.js"></script>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism.min.css" integrity="sha512-/mZ1FHPkg6EKcxo0fKXF51ak6Cr2ocgDi5ytaTBjsQZIH/RNs6GF6+oId/vPe3eJB836T36nXwVh/WBl/cWT4w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.3/katex.min.css" integrity="sha512-6VMVcy7XQNyarhVuiL50FzpgCFKsyTd6YO93aaQEyET+BNaWvj0IgKR86Bf6+AmWczxAcSnL+JGjo+iStgO1gQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A==" crossorigin="anonymous"/>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw==" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/highcharts.min.js" integrity="sha512-AuSt9Vn4P8B4rNTBOOJGGqI89ktzlGugnty4mZa+dR7koM6sJCJVFwtRiM6lIVmFwHOGIdSCyY1l6UcD78CaBA==" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/exporting.min.js" integrity="sha512-r0RhVDm8cW1TRmbiQN1wnfXBRxUkoao6eMPEDs+HpL5QyDdmwKKFTfztgOdtgzDqkYC60C116MWKtkT76F0IAg==" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/export-data.min.js" integrity="sha512-empeVXImIgoDsUiZt8rvDYuIULbNE1s1c51wKGBo0fRn6LU8XT3rA/48WPWfnG1CaonZyIEk4P8qDIdtBOmVHA==" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/accessibility.min.js" integrity="sha512-3v4MQPK+fT3z2i57H073Q3Emgd0TCeq+rvAFeDCd9vZ4VnYmtGU25LI5cni1ryxfHA8KDPg5MMTIqQLfabQlhA==" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism.min.css"
+		integrity="sha512-/mZ1FHPkg6EKcxo0fKXF51ak6Cr2ocgDi5ytaTBjsQZIH/RNs6GF6+oId/vPe3eJB836T36nXwVh/WBl/cWT4w=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.3/katex.min.css"
+		integrity="sha512-6VMVcy7XQNyarhVuiL50FzpgCFKsyTd6YO93aaQEyET+BNaWvj0IgKR86Bf6+AmWczxAcSnL+JGjo+iStgO1gQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css"
+		integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A=="
+		crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+		integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"
+		integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw=="
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/highcharts.min.js"
+		integrity="sha512-AuSt9Vn4P8B4rNTBOOJGGqI89ktzlGugnty4mZa+dR7koM6sJCJVFwtRiM6lIVmFwHOGIdSCyY1l6UcD78CaBA=="
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/exporting.min.js"
+		integrity="sha512-r0RhVDm8cW1TRmbiQN1wnfXBRxUkoao6eMPEDs+HpL5QyDdmwKKFTfztgOdtgzDqkYC60C116MWKtkT76F0IAg=="
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/export-data.min.js"
+		integrity="sha512-empeVXImIgoDsUiZt8rvDYuIULbNE1s1c51wKGBo0fRn6LU8XT3rA/48WPWfnG1CaonZyIEk4P8qDIdtBOmVHA=="
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/accessibility.min.js"
+		integrity="sha512-3v4MQPK+fT3z2i57H073Q3Emgd0TCeq+rvAFeDCd9vZ4VnYmtGU25LI5cni1ryxfHA8KDPg5MMTIqQLfabQlhA=="
+		crossorigin="anonymous"></script>
 </head>
-<body>
+
+<body class="dimmable">
 	<noscript> You need to enable JavaScript to view the page. </noscript>
 	<script>
-		var lnk = escape(window.location.href);
+		let lnk = escape(window.location.href);
 		if (lnk.indexOf("index.html") == -1) {
 			window.location.href = "index.html";
 		} else if (lnk.indexOf("%3Fpage%3D") == -1) {

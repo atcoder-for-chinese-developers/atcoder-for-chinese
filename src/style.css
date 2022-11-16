@@ -1,20 +1,55 @@
-.diff-red      {color: #ff0000;}
-.diff-orange   {color: #ff8000;}
-.diff-yellow   {color: #c0c000;}
-.diff-blue     {color: #0000ff;}
-.diff-cyan     {color: #00c0c0;}
-.diff-green    {color: #008000;}
-.diff-brown    {color: #804000;}
-.diff-grey     {color: #808080;}
-.diff-black    {color: #000000;}
-.link-disabled {display:  none;}
-.link-black    {color: #000000;}
-a:link{
+.diff-red {
+	color: #ff0000;
+}
+
+.diff-orange {
+	color: #ff8000;
+}
+
+.diff-yellow {
+	color: #c0c000;
+}
+
+.diff-blue {
+	color: #0000ff;
+}
+
+.diff-cyan {
+	color: #00c0c0;
+}
+
+.diff-green {
+	color: #008000;
+}
+
+.diff-brown {
+	color: #804000;
+}
+
+.diff-grey {
+	color: #808080;
+}
+
+.diff-black {
+	color: #000000;
+}
+
+.link-disabled {
+	display: none;
+}
+
+.link-black {
+	color: #000000;
+}
+
+a:link {
 	text-decoration: none;
 }
-a:visited{
+
+a:visited {
 	text-decoration: none;
 }
+
 .difficulty-circle {
 	display: inline-block;
 	border-radius: 50%;
@@ -24,18 +59,22 @@ a:visited{
 	height: 12px;
 	width: 12px;
 }
+
 .bronze-circle {
 	border-color: rgb(150, 92, 44);
 	background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));
 }
+
 .silver-circle {
 	border-color: rgb(128, 128, 128);
 	background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));
 }
+
 .gold-circle {
 	border-color: rgb(255, 215, 0);
 	background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));
 }
+
 .diff-unavailable {
 	display: inline-block;
 	border-radius: 10rem;
@@ -49,17 +88,19 @@ a:visited{
 	line-height: 1;
 	background-color: #17a2b8
 }
+
 .mdpage {
 	width: 70em;
 	display: block;
 	max-width: 70em;
 	font-size: 1.2em;
 	background: #fff;
-    margin: auto auto;
+	margin: auto auto;
 	box-sizing: inherit;
-    padding: 100px 45px 25px;
-    box-shadow: 0px 0px 10px 5px #888;
+	padding: 100px 45px 25px;
+	box-shadow: 0px 0px 10px 5px #888;
 }
+
 .mdpagetop {
 	top: 0px;
 	width: 100%;
@@ -70,27 +111,33 @@ a:visited{
 	overflow: visible !important;
 	font-size: 14px !important;
 }
+
 .mdpageicon {
 	max-width: 87px;
 	margin-left: 5px;
 	margin-right: 5px;
 	filter: invert(100%);
 }
+
 .mdpagetop.title {
 	top: -15px;
 	color: #fff;
 	padding: 10px 10px;
 	position: relative;
 }
+
 .mdpage h1 {
 	font-size: 63px;
 }
+
 .mdpage h2 {
 	font-size: 30px;
 }
+
 .mdpage h3 {
 	font-size: 24px;
 }
+
 .mdpage code {
 	color: #c7254e;
 	border-radius: 3px;

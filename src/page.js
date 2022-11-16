@@ -45,11 +45,9 @@ function tagToggle() {
 }
 
 function buildPage(content) {
-	let tg = [],
-	tags = "<button class=\"ui grey label\" onclick=\"tagToggle()\">切换标签显示</button><div id=\"tags\" style=\"position: relative; display: none\">";
+	let tg = [], tags = "<button class=\"ui grey label\" onclick=\"tagToggle()\">切换标签显示</button><div id=\"tags\" style=\"position: relative; display: none\">";
 	readTextFile("tags.json", "json", function (text) {
-		let tmp = JSON.parse(text),
-		str = getProbName_u(escape(window.location.href));
+		let tmp = JSON.parse(text), str = getProbName_u(escape(window.location.href));
 		if (str in tmp)
 			tg = tmp[str];
 	});
@@ -67,10 +65,7 @@ function buildPage(content) {
 };
 
 !function () {
-	let lnk = escape(window.location.href),
-	pos = lnk.indexOf("%3Fpage%3D") + 10,
-	name = lnk.substr(pos),
-	content = "";
+	let lnk = escape(window.location.href), pos = lnk.indexOf("%3Fpage%3D") + 10, name = lnk.substr(pos);
 	if (name[0] == 'T') {
 		name = name.substr(1);
 		console.log("translation page");
@@ -96,5 +91,4 @@ function buildPage(content) {
 			}
 		});
 	}
-}
-();
+}();

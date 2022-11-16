@@ -11,15 +11,7 @@ function readTextFile(file, ext, callback) {
 function Base64() {
 	_keyStr = "Csa56TWEOMFkpGH2cmb4Xi8vzYJo3efghldnSwDjNx9PVrI1uKBtRAZQ0qL7yU/+=";
 	this.encode = function (input) {
-		var output = "";
-		var chr1,
-		chr2,
-		chr3,
-		enc1,
-		enc2,
-		enc3,
-		enc4;
-		var i = 0;
+		let output = "", chr1, chr2, chr3, enc1, enc2, enc3, enc4, i = 0;
 		input = _utf8_encode(input);
 		while (i < input.length) {
 			chr1 = input.charCodeAt(i++);
@@ -34,24 +26,12 @@ function Base64() {
 			} else if (isNaN(chr3)) {
 				enc4 = 64;
 			}
-			output = output +
-				_keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
-				_keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+			output = output + _keyStr.charAt(enc1) + _keyStr.charAt(enc2) + _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
 		}
 		return output;
 	}
-
-	// public method for decoding
 	this.decode = function (input) {
-		var output = "";
-		var chr1,
-		chr2,
-		chr3;
-		var enc1,
-		enc2,
-		enc3,
-		enc4;
-		var i = 0;
+		let output = "", chr1, chr2, chr3, enc1, enc2, enc3, enc4, i = 0;
 		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 		while (i < input.length) {
 			enc1 = _keyStr.indexOf(input.charAt(i++));
@@ -72,13 +52,11 @@ function Base64() {
 		output = _utf8_decode(output);
 		return output;
 	}
-
-	// private method for UTF-8 encoding
 	_utf8_encode = function (string) {
 		string = string.replace(/\r\n/g, "\n");
-		var utftext = "";
-		for (var n = 0; n < string.length; n++) {
-			var c = string.charCodeAt(n);
+		let utftext = "";
+		for (let n = 0; n < string.length; n++) {
+			let c = string.charCodeAt(n);
 			if (c < 128) {
 				utftext += String.fromCharCode(c);
 			} else if ((c > 127) && (c < 2048)) {
@@ -93,12 +71,8 @@ function Base64() {
 		}
 		return utftext;
 	}
-
-	// private method for UTF-8 decoding
 	_utf8_decode = function (utftext) {
-		var string = "";
-		var i = 0;
-		var c = c1 = c2 = 0;
+		let string = "", i = 0, c = c1 = c2 = 0;
 		while (i < utftext.length) {
 			c = utftext.charCodeAt(i);
 			if (c < 128) {
@@ -164,7 +138,7 @@ function dateToString(t) {
 		if (/(y+)/.test(fmt)) {
 			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
 		}
-		for (var k in o) {
+		for (let k in o) {
 			if (new RegExp("(" + k + ")").test(fmt)) {
 				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 			}
@@ -182,158 +156,137 @@ function getpercent() {
 	return Math.max((Math.min(end, cur) - beg) / (end - beg), 0.0)
 }
 function refreshtime() {
-	let cur = new Date(),
-	tst = (Number(beg) - Number(cur)) / 1000.,
-	rem = (Number(end) - Number(cur)) / 1000.;
+	let cur = new Date(), tst = (Number(beg) - Number(cur)) / 1000., rem = (Number(end) - Number(cur)) / 1000.;
 	if (tst > 0)
 		rem = tst;
-	let da = Math.floor(rem / 86400),
-	ho = Math.floor(rem % 86400 / 3600),
-	mi = Math.floor(rem % 3600 / 60),
-	se = rem % 60;
+	let da = Math.floor(rem / 86400), ho = Math.floor(rem % 86400 / 3600), mi = Math.floor(rem % 3600 / 60), se = rem % 60;
 	if (!flgshow && cur > beg)
 		showlist(), flgshow = 1;
-	document.getElementById("remain-time").innerText = cur < beg ? "距离比赛开始 " + ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : "")) : cur > end ? "已结束" :
-		((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : ""));
+	document.getElementById("remain-time").innerText = cur < beg ? "距离比赛开始 " + ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : "")) : cur > end ? "已结束" : ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : ""));
 	$("#timeprog").progress({
 		percent: getpercent() * 100
 	});
 }
 
 function rankfresh(data) {
-	beg = Number(data.st),
-	end = Number(data.ed);
-	var start = new Date(beg),
-	finish = new Date(end);
-	var subs = {};
-
-	var acc = [],
-	ple = [],
-	id = [];
-	for (var i = 0; i < data.players.length; i++)
+	beg = Number(data.st), end = Number(data.ed)
+	let subs = {}, acc = [], ple = [], id = [], hascf = 0
+	for (let i = 0; i < data.players.length; i++)
 		acc.push(0), ple.push(0), id.push(i);
-	var hascf = 0
-		for (var i in data.problems)
-			if (data.problems[i].substr(0, 2) == 'CF')
-				hascf = 1
-					for (var i = 0; i < data.players.length; i++) {
-						let sub,
-						cfsub;
-						readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
-							data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
-							sub = JSON.parse(text);
-						})
-						if (hascf == 1) {
-							readTextFile('https://codeforces.com/api/user.status?handle=' + data.players[i] + '&from=1&count=100', 'json', function (text) {
-								cfsub = JSON.parse(text)
-							})
-							cfsub = cfsub.result
-						}
-						subs[i] = {}
-						subs[i].ac = {}
-						subs[i].pl = {}
-						subs[i].tm = {}
-						subs[i].wj = {}
-						for (var t = 0; t < sub.length; t++) {
-							var c = sub[t]
-								if (Number(c.epoch_second) * 1000 >= end)
-									continue;
-								for (var j = 0; j < data.problems.length; j++)
-									if (c.problem_id == data.problems[j]) {
-										if (c.result == 'AC') {
-											subs[i].wj = 0;
-											if (subs[i].ac[data.problems[j]] != 1)
-												acc[i] += 1;
-											subs[i].ac[data.problems[j]] = 1;
-											subs[i].tm[data.problems[j]] = c.epoch_second;
-											if (subs[i].pl[data.problems[j]] == undefined)
-												subs[i].pl[data.problems[j]] = 0;
-											ple[i] += (c.epoch_second * 1000 - beg) / 1000;
-										} else if (47 < c.result[0] || c.result[0] < 58 || c.result == 'WJ') {
-											subs[i].wj = 1;
-										} else if (c.result != 'CE') {
-											subs[i].wj = 0;
-											if (subs[i].pl[data.problems[j]] == undefined)
-												subs[i].pl[data.problems[j]] = 0;
-											subs[i].pl[data.problems[j]] += 1;
-											ple[i] += 300
-										}
-									}
-						}
-						if (hascf) {
-							for (var t = 0; t < cfsub.length; t++) {
-								var c = cfsub[t];
-								if (Number(c.creationTimeSeconds) * 1000 >= end)
-									continue;
-								for (var j = 0; j < data.problems.length; j++) {
-									var problem_id = c.problem.contestId + c.problem.index;
-									if (problem_id == data.problems[j].substr(2)) {
-										if (c.verdict == 'OK') {
-											subs[i].wj = 0;
-											if (subs[i].ac[data.problems[j]] != 1)
-												acc[i] += 1;
-											subs[i].ac[data.problems[j]] = 1;
-											subs[i].tm[data.problems[j]] = c.creationTimeSeconds;
-											if (subs[i].pl[data.problems[j]] == undefined)
-												subs[i].pl[data.problems[j]] = 0;
-											ple[i] += (c.creationTimeSeconds * 1000 - beg) / 1000;
-										} else if (c.verdict == 'TESTING') {
-											subs[i].wj = 1;
-										} else if (c.verdict != 'COMPILATION_ERROR') {
-											subs[i].wj = 0;
-											if (subs[i].pl[data.problems[j]] == undefined)
-												subs[i].pl[data.problems[j]] = 0;
-											subs[i].pl[data.problems[j]] += 1;
-											ple[i] += 300
-										}
-									}
-								}
-							}
-						}
-						let w = Date.now();
-						while (Date.now() < w + 500);
+	for (let i in data.problems)
+		if (data.problems[i].substr(0, 2) == 'CF')
+			hascf = 1
+	for (let i = 0; i < data.players.length; i++) {
+		let sub, cfsub;
+		readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
+			data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
+				sub = JSON.parse(text)
+			})
+		if (hascf == 1) {
+			readTextFile('https://codeforces.com/api/user.status?handle=' + data.players[i] + '&from=1&count=100', 'json', function (text) {
+				cfsub = JSON.parse(text)
+			})
+			cfsub = cfsub.result
+		}
+		subs[i] = {
+			ac: {},
+			pl: {},
+			tm: {},
+			wj: {}
+		}
+		for (let t = 0; t < sub.length; t++) {
+			let c = sub[t]
+			if (Number(c.epoch_second) * 1000 >= end)
+				continue
+			for (var j = 0; j < data.problems.length; j++)
+				if (c.problem_id == data.problems[j]) {
+					if (c.result == 'AC') {
+						subs[i].wj = 0
+						if (subs[i].ac[data.problems[j]] != 1)
+							acc[i] += 1
+						subs[i].ac[data.problems[j]] = 1
+						subs[i].tm[data.problems[j]] = c.epoch_second
+						if (subs[i].pl[data.problems[j]] == undefined)
+							subs[i].pl[data.problems[j]] = 0
+						ple[i] += (c.epoch_second * 1000 - beg) / 1000
+					} else if (47 < c.result[0] || c.result[0] < 58 || c.result == 'WJ') {
+						subs[i].wj = 1
+					} else if (c.result != 'CE') {
+						subs[i].wj = 0
+						if (subs[i].pl[data.problems[j]] == undefined)
+							subs[i].pl[data.problems[j]] = 0
+						subs[i].pl[data.problems[j]] += 1
+						ple[i] += 300
 					}
-					id.sort(function (a, b) {
-						if (acc[a] == acc[b])
-							return ple[a] - ple[b];
-						else
-							return acc[b] - acc[a];
-					});
-		res = "";
-	res += ('<thead><tr>');
-	res += ('<th>选手列表</th><th>罚时</th>')
-	for (var i = 0; i < data.problems.length; i++) {
-		var p = data.problems[i].lastIndexOf('_');
-		var con = data.problems[i].substr(0, p);
+				}
+		}
+		if (hascf) {
+			for (let t = 0; t < cfsub.length; t++) {
+				let c = cfsub[t];
+				if (Number(c.creationTimeSeconds) * 1000 >= end)
+					continue;
+				for (let j = 0; j < data.problems.length; j++) {
+					let problem_id = c.problem.contestId + c.problem.index;
+					if (problem_id == data.problems[j].substr(2)) {
+						if (c.verdict == 'OK') {
+							subs[i].wj = 0;
+							if (subs[i].ac[data.problems[j]] != 1)
+								acc[i] += 1;
+							subs[i].ac[data.problems[j]] = 1;
+							subs[i].tm[data.problems[j]] = c.creationTimeSeconds;
+							if (subs[i].pl[data.problems[j]] == undefined)
+								subs[i].pl[data.problems[j]] = 0;
+							ple[i] += (c.creationTimeSeconds * 1000 - beg) / 1000;
+						} else if (c.verdict == 'TESTING') {
+							subs[i].wj = 1;
+						} else if (c.verdict != 'COMPILATION_ERROR') {
+							subs[i].wj = 0;
+							if (subs[i].pl[data.problems[j]] == undefined)
+								subs[i].pl[data.problems[j]] = 0;
+							subs[i].pl[data.problems[j]] += 1;
+							ple[i] += 300
+						}
+					}
+				}
+			}
+		}
+		let w = Date.now()
+		while (Date.now() < w + 500);
+	}
+	id.sort(function (a, b) {
+		if (acc[a] == acc[b])
+			return ple[a] - ple[b]
+		else
+			return acc[b] - acc[a]
+	})
+	res = '<thead><tr><th>选手列表</th><th>罚时</th>'
+	for (let i = 0; i < data.problems.length; i++) {
+		let p = data.problems[i].lastIndexOf('_'), con = data.problems[i].substr(0, p)
 		while (con.match("_") != null)
-			con = con.replace("_", "-");
+			con = con.replace("_", "-")
 		if (data.problems[i].substr(0, 2) != 'CF')
 			res += ('<th>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + (i + 1) + '</a></th>');
 		else {
-			var c = data.problems[i].substr(2),
-			p,
-			q;
-			var pos = 0;
-			for (var j = 0; j < c.length; j++)
+			let c = data.problems[i].substr(2), p, q, pos = 0;
+			for (let j = 0; j < c.length; j++)
 				if (c[j] >= 'A') {
 					pos = j;
 					break;
 				}
-			p = c.substr(0, pos),
-			q = c.substr(pos);
+			p = c.substr(0, pos), q = c.substr(pos);
 			res += ('<th>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + (i + 1) + '</a></th>');
 		}
 	}
 	res += ('</tr></thead><tbody>');
-	for (var t = 0; t < data.players.length; t++) {
-		var i = id[t];
+	for (let t = 0; t < data.players.length; t++) {
+		let i = id[t];
 		res += ('<tr><td>(' + (t + 1) + ') <a href=\"https://atcoder.jp/users/' + data.players[i] + "\">" + data.players[i] + '</a></td>');
-		var dr = Math.floor(ple[i]),
-		hours = Math.floor(dr / 3600),
-		minu = Math.floor(dr % 3600 / 60),
-		seco = dr % 60;
+		let dr = Math.floor(ple[i]),
+			hours = Math.floor(dr / 3600),
+			minu = Math.floor(dr % 3600 / 60),
+			seco = dr % 60;
 		res += ('<td> ' + ext2(hours) + ':' + ext2(minu) + ':' + ext2(seco) + '</td>');
-		for (var j = 0; j < data.problems.length; j++) {
+		for (let j = 0; j < data.problems.length; j++) {
 			if (subs[i].wj[data.problems[j]] == 1) {
 				res += ("<td class=\"warning\"><i class=\"icon hourglass half\"></i>");
 			} else if (subs[i].ac[data.problems[j]] == 1) {
@@ -343,11 +296,9 @@ function rankfresh(data) {
 			} else
 				res += ('<td>-');
 			if (subs[i].ac[data.problems[j]] == 1) {
-				var dr = Math.floor((Number(subs[i].tm[data.problems[j]]) * 1000 - beg) / 1000);
-				var hours = Math.floor(dr / 3600),
-				minu = Math.floor(dr % 3600 / 60),
-				seco = dr % 60;
-				res += (' ' + ext2(hours) + ':' + ext2(minu) + ':' + ext2(seco));
+				let dr = Math.floor((Number(subs[i].tm[data.problems[j]]) * 1000 - beg) / 1000),
+					h = Math.floor(dr / 3600), m = Math.floor(dr % 3600 / 60), s = dr % 60;
+				res += (' ' + ext2(h) + ':' + ext2(m) + ':' + ext2(s));
 			}
 			if (subs[i].pl[data.problems[j]])
 				res += (' (' + subs[i].pl[data.problems[j]] + ')');
@@ -356,134 +307,120 @@ function rankfresh(data) {
 		res += ('</tr>')
 	}
 	res += ('<tbody>');
-	var posi = document.getElementById('table');
-	posi.innerHTML = res;
-	var noww = new Date();
+	document.getElementById('table').innerHTML = res;
 }
 
 function buildpage() {
-	var s = window.location.href;
-	var trans = new Base64();
+	let s = window.location.href, trans = new Base64();
 	if (s.split('?id=').length == 1) {
 		document.write("<div class=\"ui container\">");
 		document.write("<div class=\"ui input\"><input id=\"inv-code\" style=\"width: 150;\" placeholder=\"输入邀请码\"></input></div>");
-		var p = document.getElementById('inv-code')
-			if (window.localStorage.getItem('inv-code') != undefined)
-				p.value = window.localStorage.getItem('inv-code')
-					document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
+		if (window.localStorage.getItem('inv-code') != undefined)
+			document.getElementById('inv-code').value = window.localStorage.getItem('inv-code')
+		document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
 	} else {
 		while (s.match('%22') != null)
 			s = s.replace('%22', '"');
 		while (s.match('%3D') != null)
 			s = s.replace('%3D', '=');
-		s = s.split('?')[1].substr(3);
-		s = trans.decode(s);
-		var data = JSON.parse(s);
-		beg = Number(data.st),
-		end = Number(data.ed);
-		var start = new Date(beg),
-		finish = new Date(end);
-		beg = Number(data.st),
-		end = Number(data.ed);
-		var start = new Date(beg),
-		finish = new Date(end);
+		s = trans.decode(s.split('?')[1].substr(3));
+		let data = JSON.parse(s);
+		beg = Number(data.st), end = Number(data.ed);
+		let start = new Date(beg), finish = new Date(end);
+		beg = Number(data.st), end = Number(data.ed);
+		start = new Date(beg), finish = new Date(end);
 
-		var subs = {};
-
-		var acc = [],
-		ple = [],
-		id = [];
-		for (var i = 0; i < data.players.length; i++)
+		let len = data.players.length, subs = {}, acc = [], ple = [], id = [], hascf = 0;
+		for (let i = 0; i < len; i++)
 			acc.push(0), ple.push(0), id.push(i);
-		var hascf = 0
-			for (var i in data.problems)
-				if (data.problems[i].substr(0, 2) == 'CF')
-					hascf = 1
-						for (var i = 0; i < data.players.length; i++) {
-							let sub,
-							cfsub;
-							readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
-								data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
-								sub = JSON.parse(text);
-							})
-							if (hascf == 1) {
-								readTextFile('https://codeforces.com/api/user.status?handle=' + data.players[i] + '&from=1&count=100', 'json', function (text) {
-									cfsub = JSON.parse(text)
-								})
-								cfsub = cfsub.result
-							}
-							subs[i] = {}
-							subs[i].ac = {}
-							subs[i].pl = {}
-							subs[i].tm = {}
-							subs[i].wj = {}
-							for (var t = 0; t < sub.length; t++) {
-								var c = sub[t]
-									if (Number(c.epoch_second) * 1000 >= end)
-										continue;
-									for (var j = 0; j < data.problems.length; j++)
-										if (c.problem_id == data.problems[j]) {
-											if (c.result == 'AC') {
-												subs[i].wj = 0;
-												if (subs[i].ac[data.problems[j]] != 1)
-													acc[i] += 1;
-												subs[i].ac[data.problems[j]] = 1;
-												subs[i].tm[data.problems[j]] = c.epoch_second;
-												if (subs[i].pl[data.problems[j]] == undefined)
-													subs[i].pl[data.problems[j]] = 0;
-												ple[i] += (c.epoch_second * 1000 - beg) / 1000;
-											} else if (47 < c.result[0] || c.result[0] < 58 || c.result == 'WJ') {
-												subs[i].wj = 1;
-											} else if (c.result != 'CE') {
-												subs[i].wj = 0;
-												if (subs[i].pl[data.problems[j]] == undefined)
-													subs[i].pl[data.problems[j]] = 0;
-												subs[i].pl[data.problems[j]] += 1;
-												ple[i] += 300
-											}
-										}
-							}
-							if (hascf) {
-								for (var t = 0; t < cfsub.length; t++) {
-									var c = cfsub[t];
-									if (Number(c.creationTimeSeconds) * 1000 >= end)
-										continue;
-									for (var j = 0; j < data.problems.length; j++) {
-										var problem_id = c.problem.contestId + c.problem.index;
-										if (problem_id == data.problems[j].substr(2)) {
-											if (c.verdict == 'OK') {
-												subs[i].wj = 0;
-												if (subs[i].ac[data.problems[j]] != 1)
-													acc[i] += 1;
-												subs[i].ac[data.problems[j]] = 1;
-												subs[i].tm[data.problems[j]] = c.creationTimeSeconds;
-												if (subs[i].pl[data.problems[j]] == undefined)
-													subs[i].pl[data.problems[j]] = 0;
-												ple[i] += (c.creationTimeSeconds * 1000 - beg) / 1000;
-											} else if (c.verdict == 'TESTING') {
-												subs[i].wj = 1;
-											} else if (c.verdict != 'COMPILATION_ERROR') {
-												subs[i].wj = 0;
-												if (subs[i].pl[data.problems[j]] == undefined)
-													subs[i].pl[data.problems[j]] = 0;
-												subs[i].pl[data.problems[j]] += 1;
-												ple[i] += 300
-											}
-										}
-									}
-								}
-							}
-							let w = Date.now();
-							while (Date.now() < w + 500);
+		for (let i in data.problems)
+			if (data.problems[i].substr(0, 2) == 'CF')
+				hascf = 1
+		for (let i = 0; i < len; i++) {
+			let sub, cfsub;
+			readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
+				data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
+					sub = JSON.parse(text);
+				})
+			if (hascf == 1) {
+				readTextFile('https://codeforces.com/api/user.status?handle=' + data.players[i] + '&from=1&count=100', 'json', function (text) {
+					cfsub = JSON.parse(text)
+				})
+				cfsub = cfsub.result
+			}
+			subs[i] = {
+				ac: {},
+				pl: {},
+				tm: {},
+				wj: {}
+			}
+			for (let t = 0; t < sub.length; t++) {
+				let c = sub[t]
+				if (Number(c.epoch_second) * 1000 >= end)
+					continue;
+				for (let j = 0; j < data.problems.length; j++)
+					if (c.problem_id == data.problems[j]) {
+						if (c.result == 'AC') {
+							subs[i].wj = 0;
+							if (subs[i].ac[data.problems[j]] != 1)
+								acc[i] += 1;
+							subs[i].ac[data.problems[j]] = 1;
+							subs[i].tm[data.problems[j]] = c.epoch_second;
+							if (subs[i].pl[data.problems[j]] == undefined)
+								subs[i].pl[data.problems[j]] = 0;
+							ple[i] += (c.epoch_second * 1000 - beg) / 1000;
+						} else if (47 < c.result[0] || c.result[0] < 58 || c.result == 'WJ') {
+							subs[i].wj = 1;
+						} else if (c.result != 'CE') {
+							subs[i].wj = 0;
+							if (subs[i].pl[data.problems[j]] == undefined)
+								subs[i].pl[data.problems[j]] = 0;
+							subs[i].pl[data.problems[j]] += 1;
+							ple[i] += 300
 						}
-						id.sort(function (a, b) {
-							if (acc[a] == acc[b])
-								return ple[a] - ple[b];
-							else
-								return acc[b] - acc[a];
-						});
+					}
+			}
+			if (hascf) {
+				for (let t = 0; t < cfsub.length; t++) {
+					let c = cfsub[t];
+					if (Number(c.creationTimeSeconds) * 1000 >= end)
+						continue;
+					for (let j = 0; j < data.problems.length; j++) {
+						let problem_id = c.problem.contestId + c.problem.index;
+						if (problem_id == data.problems[j].substr(2)) {
+							if (c.verdict == 'OK') {
+								subs[i].wj = 0;
+								if (subs[i].ac[data.problems[j]] != 1)
+									acc[i] += 1;
+								subs[i].ac[data.problems[j]] = 1;
+								subs[i].tm[data.problems[j]] = c.creationTimeSeconds;
+								if (subs[i].pl[data.problems[j]] == undefined)
+									subs[i].pl[data.problems[j]] = 0;
+								ple[i] += (c.creationTimeSeconds * 1000 - beg) / 1000;
+							} else if (c.verdict == 'TESTING') {
+								subs[i].wj = 1;
+							} else if (c.verdict != 'COMPILATION_ERROR') {
+								subs[i].wj = 0;
+								if (subs[i].pl[data.problems[j]] == undefined)
+									subs[i].pl[data.problems[j]] = 0;
+								subs[i].pl[data.problems[j]] += 1;
+								ple[i] += 300
+							}
+						}
+					}
+				}
+			}
+			let w = Date.now();
+			while (Date.now() < w + 500);
+		}
+		id.sort(function (a, b) {
+			if (acc[a] == acc[b])
+				return ple[a] - ple[b];
+			else
+				return acc[b] - acc[a];
+		});
 
-			document.write("<p></p><div><h1 style=\"display: inline;\">" + data['title'] + "</h1><i class=\"ui home link icon\" style=\"font-size: 1.5em; float: right;\" onclick=\"jumplink1()\"></i></div>");
+		document.write("<p></p><div><h1 style=\"display: inline;\">" + data['title'] + "</h1><i class=\"ui home link icon\" style=\"font-size: 1.5em; float: right;\" onclick=\"jumplink1()\"></i></div>");
 		document.write("<div class=\"ui divided selection list\">");
 		document.write('<a class=\"item\"><div class=\"ui red horizontal label\">开始时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(start) + '</p>');
 		document.write('<a class=\"item\"><div class=\"ui green horizontal label\">结束时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(finish) + '</p>');
@@ -496,31 +433,21 @@ function buildpage() {
 		document.write("<table class=\"ui celled table\" id=\"list\">");
 		document.write("<thead><tr><th>题目编号</th><th>题目标题</th></tr></thead><tbody>");
 		for (let i in data.problems) {
-			var p = data.problems[i].lastIndexOf('_');
-			var con = data.problems[i].substr(0, p);
-			// feature temporality disabled
-			// <<<<<<< HEAD:cont.js
+			let p = data.problems[i].lastIndexOf('_'), con = data.problems[i].substr(0, p);
 			while (con.match("_") != null)
 				con = con.replace("_", "-");
 			if (data.problems[i].substr(0, 2) != 'CF')
 				document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
 			else {
-				var c = data.problems[i].substr(2),
-				p,
-				q;
-				var pos = 0;
-				for (var j = 0; j < c.length; j++)
+				let c = data.problems[i].substr(2), p, q, pos = 0;
+				for (let j = 0; j < c.length; j++)
 					if (c[j] >= 'A') {
 						pos = j;
 						break;
 					}
-				p = c.substr(0, pos),
-				q = c.substr(pos);
+				p = c.substr(0, pos), q = c.substr(pos);
 				document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + c + '</a></td></tr>');
 			}
-			// =======
-			//			document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
-			// >>>>>>> psz2007-with-github-actions:src/cont.js
 		}
 		document.write("</tbody></table>");
 		document.write('<table class="ui fixed celled table" id="table">');
