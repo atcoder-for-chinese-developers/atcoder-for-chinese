@@ -797,7 +797,7 @@ function isinarray(x, a) {
 
 function setfilter() {
 	document.getElementById("rndprob").innerHTML = "";
-	let dl = document.getElementById("diflb").value, dr = document.getElementById("difrb").value, utg = $(".ui.dropdown").dropdown("get value"), flgor = $(".ui.checkbox").checkbox("is checked");
+	let dl = document.getElementById("diflb").value, dr = document.getElementById("difrb").value, utg = $(".ui.dropdown").dropdown("get value"), flgor = $("#tag-combined-or").checkbox("is checked");
 	dl = dl == "" || isNaN(Number(dl)) ? -10000 : Number(dl);
 	dr = dr == "" || isNaN(Number(dr)) ? 10000 : Number(dr);
 	utg = utg == '' ? 0 : utg.split(",");
@@ -873,7 +873,7 @@ function writelist(taglist) {
 		transition: "drop",
 		allowAdditions: 1
 	});
-	document.write("&nbsp;&nbsp;<div class=\"ui checkbox\"><input type=\"checkbox\" name=\"example\"><label>按或合并标签</label></div>&nbsp;&nbsp;");
+	document.write("&nbsp;&nbsp;<div class=\"ui checkbox\" id=\"tag-combined-or\"><input type=\"checkbox\" name=\"example\"><label>按或合并标签</label></div>&nbsp;&nbsp;");
 	document.write("<button class=\"ui violet basic button\" onclick=\"setfilter()\">筛选</button>");
 	document.write("<button class=\"ui green basic button\" onclick=\"clrfilter()\" style=\"display: inline-block;\">重置</button>");
 	document.write("<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">随机跳题</button>");
@@ -934,9 +934,20 @@ function showcreatepage() {
 function checknum(i) {
 	return i == "" || isNaN(Number(i));
 }
-function printinvitecode() {
+function printInviteCode() {
 	let res = "", trans = new Base64();
-	res += '{"title":"' + document.getElementById("get-title").value + '","st":';
+	res += '{"title":"' + document.getElementById("get-title").value + '","mode":';
+	if ($("#cont-type-prac").checkbox("is checked")) {
+		res += '"practice"';
+	} else if ($("#cont-type-icpc").checkbox("is checked")) {
+		res += '"ICPC"';
+	} else if ($("#cont-type-atc").checkbox("is checked")) {
+		res += '"atcoder"';
+	} else {
+		alert("未选择比赛类型");
+		return;
+	}
+	res += ',"st":';
 	let ye = document.getElementById("get-start-ye").value,
 		mo = document.getElementById("get-start-mo").value,
 		da = document.getElementById("get-start-da").value,
@@ -977,14 +988,26 @@ function printinvitecode() {
 		return;
 	}
 	res += '"' + Number(time) + '","problems":[';
-	let prblist = document.getElementById("get-problems").value.split(' ');
+	let prblist = document.getElementById("get-problems").value.split(' '), scr = [];
 	if (document.getElementById("get-problems").value == "") {
 		alert("没有题目");
 		return;
 	}
 	for (let i in prblist) {
-		if (prblist[i] != "")
-			res += '"' + prblist[i] + '",';
+		let prb = prblist[i], t = 1;
+		if(prb == "")
+			continue;
+		if (prb.indexOf("(") != -1) {
+			t = prb.split('(')[1].split(')')[0];
+			prb = prb.split('(')[0];
+			if (isNaN(Number(t))) {
+				alert("分数配置错误");
+				return;
+			}
+			t = Number(t);
+		}
+		res += '"' + prb + '",';
+		scr.push(t);
 	}
 	res = res.substr(0, res.length - 1);
 	res += '],"players":[';
@@ -997,7 +1020,12 @@ function printinvitecode() {
 		if (plylist[i] != "")
 			res += '"' + plylist[i] + '",';
 	}
-	res = res.substr(0, res.length - 1) + "]}";
+	res = res.substr(0, res.length - 1) + '],"score":[';
+	for (let i in scr) {
+		if (i > 0) res += ",";
+		res += scr[i].toString();
+	}
+	res += "]}";
 	document.getElementById("print-code").value = trans.encode(res);
 	copyToClipboard(trans.encode(res));
 }
@@ -1013,27 +1041,43 @@ function buildcontestpage() {
 	document.write("</div><div id=\"create-page\">");
 	document.write("<h4 class=\"ui header\">设置比赛标题</h4>");
 	document.write("<div class=\"ui fluid input\"><input id=\"get-title\" placeholder=\"比赛标题\"></input></div>");
+	document.write("<h4 class=\"ui header\">设置比赛类型</h4>");
+	document.write("<div class=\"ui form\"><div class=\"inline fields\"><div class=\"field\"><div class=\"ui radio checkbox\" id=\"cont-type-prac\"><input type=\"radio\" name=\"contest-type\"><label>练习赛<i class=\"ui question circle icon helper\" id=\"getPracticeContestInfo\"></i></label></div></div><div class=\"field\"><div class=\"ui radio checkbox\" id=\"cont-type-icpc\"><input type=\"radio\" name=\"contest-type\"><label>ICPC 赛制<i class=\"ui question circle icon helper\" id=\"getICPCContestInfo\"></i></label></div></div><div class=\"field\"><div class=\"ui radio checkbox\" id=\"cont-type-atc\"><input type=\"radio\" name=\"contest-type\"><label>AtCoder 赛制<i class=\"ui question circle icon helper\" id=\"getAtcoderContestInfo\"></i></label></div></div></div></div><div class=\"ui fluid popup top center transition hidden\" id=\"practiceContestInfo\">题目不加权，没有罚时</div><div class=\"ui fluid popup top center transition hidden\" id=\"ICPCContestInfo\">题目不加权，罚时加和，每次不通过提交罚时为 5 分钟（CE 不计罚时）</div><div class=\"ui fluid popup top center transition hidden\" id=\"atcoderContestInfo\">题目可以设置为加权，罚时取各题通过时间最大值，每次不通过提交罚时额外加 5 分钟（CE 不计罚时）</div>");
 	document.write("<h4 class=\"ui header\">设置开始时间</h4><div style=\"display: inline;\">");
 	document.write("<div class=\"ui right labeled fluid input\"><input id=\"get-start-ye\" value=\"" + (tm.getYear() + 1900) + "\"></input><div class=\"ui label\">年</div><input id=\"get-start-mo\" value=\"" + (tm.getMonth() + 1) + "\"></input><div class=\"ui label\">月</div><input id=\"get-start-da\" value=\"" + tm.getDate() + "\"></input><div class=\"ui label\">日</div><input id=\"get-start-ho\" value=\"" + tm.getHours() + "\"></input><div class=\"ui label\">时</div><input id=\"get-start-mi\" value=\"" + tm.getMinutes() + "\"></input><div class=\"ui label\">分</div><input id=\"get-start-se\" value=\"" + tm.getSeconds() + "\"></input><div class=\"ui label\">秒</div></div></div>");
 	document.write("<h4 class=\"ui header\">设置结束时间</h4><p>");
 	document.write("<div class=\"ui right labeled fluid input\"><input id=\"get-finish-ye\" placeholder=\"年\" value=\"" + (tm.getYear() + 1900) + "\"></input><div class=\"ui label\">年</div><input id=\"get-finish-mo\" placeholder=\"月\" value=\"" + (tm.getMonth() + 1) + "\"></input><div class=\"ui label\">月</div><input id=\"get-finish-da\" placeholder=\"日\" value=\"" + tm.getDate() + "\"></input><div class=\"ui label\">日</div><input id=\"get-finish-ho\" placeholder=\"时\" value=\"" + tm.getHours() + "\"></input><div class=\"ui label\">时</div><input id=\"get-finish-mi\" placeholder=\"分\" value=\"" + tm.getMinutes() + "\"></input><div class=\"ui label\">分</div><input id=\"get-finish-se\" placeholder=\"秒\" value=\"" + tm.getSeconds() + "\"></input><div class=\"ui label\">秒</div></div></p>");
-	document.write("<h4 class=\"ui header\">参赛选手<i class=\"ui question circle icon\" style=\"font-size: 10px!important; top: -8px; position: relative;\" id=\"getInfo\" data-content=\"如果需要使用 CodeForces 账号，请使用 '<AT账号>(<CF账号>)'（去掉引号）的格式，如：'houzhiyuan(houzhiyuan123)'\"></i></h4>");
-	$("#getInfo").popup({
+	document.write("<h4 class=\"ui header\">参赛选手<i class=\"ui question circle icon helper\" id=\"getAccountInfo\"></i></h4><div class=\"ui popup top left transition hidden\" id=\"accountInfo\">如果需要使用 CodeForces 账号，请使用 <code>&lt;AT账号&gt;(&lt;CF账号&gt;)</code> 的格式，如：<code>houzhiyuan(houzhiyuan123)</code></div>");
+	$('#getAccountInfo').popup({
+		popup: $("#accountInfo"),
+		on: "hover"
+	});
+	$("#getPracticeContestInfo").popup({
+		popup: $("#practiceContestInfo"),
+		on: "hover"
+	});
+	$("#getICPCContestInfo").popup({
+		popup: $("#ICPCContestInfo"),
+		on: "hover"
+	});
+	$("#getAtcoderContestInfo").popup({
+		popup: $("#atcoderContestInfo"),
 		on: "hover"
 	});
 	document.write("<div class=\"ui fluid input\"><input id=\"get-players\" placeholder=\"以半角空格分隔\"></input></div>");
 	document.write("<h4 class=\"ui header\">比赛题目</h4>");
 	document.write("<div class=\"ui accordion\" id=\"id-sample\"><div class=\"title\"><i class=\"dropdown icon\"></i>格式说明</div><div class=\"content\">");
 	document.write("<p>请填写题目链接内的 AtCoder 格式标识符（<code>atcoder.jp/<比赛标识符>/tasks/<题目标识符></code>），例如下：</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a> 的标识符为 abc255_h</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a> 的标识符为 arc103_b</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a> 的标识符为 zone2021_f</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/code-festival-2017-qualc/tasks/code_festival_2017_qualc_f\">CF17QualcF</a> 的标识符为 code_festival_2017_qualc_f</p>")
-	document.write("<p>同时支持 CodeForces 题目，格式为 'CFXXXI'（去掉引号），如 CF1A</div></div><p></p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a> 的标识符为 abc255_h；</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a> 的标识符为 arc103_b；</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a> 的标识符为 zone2021_f；</p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/code-festival-2017-qualc/tasks/code_festival_2017_qualc_f\">CF17QualcF</a> 的标识符为 code_festival_2017_qualc_f。</p>")
+	document.write("<p>同时支持 CodeForces 题目，格式为 'CFXXXI'（去掉引号），如 CF1A。</p>")
+	document.write("<p>在 AtCoder 赛制下可以为题目赋不同的权，格式为 <code><题目ID>(<分数>)</code> 的格式，如 <code>abc277_h(600)</code>。权默认为 1。</p></div></div><p></p>");
 	$("#id-sample").accordion();
 	document.write("<div class=\"ui fluid input\"><input id=\"get-problems\" placeholder=\"以半角空格分隔\"></input></div>");
 	document.write("<h4 class=\"ui header\">生成邀请码</h4>");
-	document.write("<div class=\"ui fluid input\"><input id=\"print-code\" placeholder=\"邀请码\"></input><button class=\"ui primary button\" onclick=\"printinvitecode()\" id=\"getCode\" data-content=\"邀请码已复制\">获取邀请码</button></div>");
+	document.write("<div class=\"ui fluid input\"><input id=\"print-code\" placeholder=\"邀请码\"></input><button class=\"ui primary button\" onclick=\"printInviteCode()\" id=\"getCode\" data-content=\"邀请码已复制\">获取邀请码</button></div>");
 	$("#getCode").popup({
 		on: "click"
 	});

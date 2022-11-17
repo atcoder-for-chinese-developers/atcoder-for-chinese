@@ -51,13 +51,13 @@ a:visited {
 }
 
 .difficulty-circle {
-	display: inline-block;
-	border-radius: 50%;
-	border-style: solid;
+	width: 12px;
+	height: 12px;
 	border-width: 1px;
 	margin-right: 5px;
-	height: 12px;
-	width: 12px;
+	border-radius: 50%;
+	border-style: solid;
+	display: inline-block;
 }
 
 .difficulty-circle.large {
@@ -81,16 +81,16 @@ a:visited {
 }
 
 .diff-unavailable {
-	display: inline-block;
-	border-radius: 10rem;
-	margin-right: 5px;
-	font-size: 5px;
-	font-weight: 700;
 	color: #fff;
-	padding: 0.25em 0.4em;
-	padding-left: .6em;
-	padding-right: .6em;
+	font-size: 5px;
 	line-height: 1;
+	font-weight: 700;
+	margin-right: 5px;
+	padding-left: .6em;
+	border-radius: 10rem;
+	padding-right: .6em;
+	display: inline-block;
+	padding: 0.25em 0.4em;
 	background-color: #17a2b8
 }
 
@@ -113,8 +113,8 @@ a:visited {
 	padding: 0px;
 	position: fixed;
 	background: #222222;
-	overflow: visible !important;
 	font-size: 14px !important;
+	overflow: visible !important;
 }
 
 .mdpageicon {
@@ -147,4 +147,10 @@ a:visited {
 	color: #c7254e;
 	border-radius: 3px;
 	background-color: #f9f2f4;
+}
+
+.ui.question.circle.icon.helper {
+	top: -8px;
+	position: relative;
+	font-size: 10px!important;
 }
