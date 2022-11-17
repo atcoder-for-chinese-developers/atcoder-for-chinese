@@ -105,7 +105,7 @@ function ext2(con) {
 function redr() {
 	if (window.localStorage.getItem('inv-code') == undefined)
 		window.localStorage.setItem('inv-code', document.getElementById("inv-code").value);
-	window.location.href = "?" + escape(document.getElementById("inv-code").value);
+	window.location.href = "?id=" + escape(document.getElementById("inv-code").value);
 }
 function closeall() {
 	document.getElementById("list").setAttribute("style", "display: none;");
@@ -170,9 +170,9 @@ function refreshtime() {
 
 function rankfresh(data) {
 	beg = Number(data.st), end = Number(data.ed)
-	let subs = {}, acc = [], ple = [], id = [], hascf = 0
+	let subs = {}, acc = [], ple = [], id = [], hascf = 0, extp = []
 	for (let i = 0; i < data.players.length; i++)
-		acc.push(0), ple.push(0), id.push(i);
+		acc.push(0), ple.push(0), id.push(i), extp.push(0);
 	for (let i in data.problems)
 		if (data.problems[i].substr(0, 2) == 'CF')
 			hascf = 1
@@ -209,13 +209,16 @@ function rankfresh(data) {
 				if (c.problem_id == data.problems[j]) {
 					if (c.result == 'AC') {
 						subs[i].wj = 0
-						if (subs[i].ac[data.problems[j]] != 1)
-							acc[i] += 1
+						if (subs[i].ac[data.problems[j]] != 1) {
+							if (data.mod == 'atcoder') acc[i] += data.score[j];
+							else acc[i] += 1;
+						}
 						subs[i].ac[data.problems[j]] = 1
 						subs[i].tm[data.problems[j]] = c.epoch_second
 						if (subs[i].pl[data.problems[j]] == undefined)
 							subs[i].pl[data.problems[j]] = 0
-						ple[i] += (c.epoch_second * 1000 - beg) / 1000
+						if (data.mod == undefined || data.mod == "ICPC") ple[i] += (c.epoch_second * 1000 - beg) / 1000
+						else if (data.mod == "atcoder") ple[i] = Math.max(ple[i], (c.epoch_second * 1000 - beg) / 1000);
 					} else if (47 < c.result[0] || c.result[0] < 58 || c.result == 'WJ') {
 						subs[i].wj = 1
 					} else if (c.result != 'CE') {
@@ -223,7 +226,7 @@ function rankfresh(data) {
 						if (subs[i].pl[data.problems[j]] == undefined)
 							subs[i].pl[data.problems[j]] = 0
 						subs[i].pl[data.problems[j]] += 1
-						ple[i] += 300
+						if (subs[i].ac[data.problems[j]]) extp[i] += 300;
 					}
 				}
 		}
@@ -237,13 +240,16 @@ function rankfresh(data) {
 					if (problem_id == data.problems[j].substr(2)) {
 						if (c.verdict == 'OK') {
 							subs[i].wj = 0;
-							if (subs[i].ac[data.problems[j]] != 1)
-								acc[i] += 1;
+							if (subs[i].ac[data.problems[j]] != 1) {
+								if (data.mod == 'atcoder') acc[i] += data.score[j];
+								else acc[i] += 1;
+							}
 							subs[i].ac[data.problems[j]] = 1;
 							subs[i].tm[data.problems[j]] = c.creationTimeSeconds;
 							if (subs[i].pl[data.problems[j]] == undefined)
 								subs[i].pl[data.problems[j]] = 0;
-							ple[i] += (c.creationTimeSeconds * 1000 - beg) / 1000;
+							if (data.mod == undefined || data.mod == "ICPC") ple[i] += (c.creationTimeSeconds * 1000 - beg) / 1000
+							else if (data.mod == "atcoder") ple[i] = Math.max(ple[i], (c.creationTimeSeconds * 1000 - beg) / 1000);
 						} else if (c.verdict == 'TESTING') {
 							subs[i].wj = 1;
 						} else if (c.verdict != 'COMPILATION_ERROR') {
@@ -251,7 +257,7 @@ function rankfresh(data) {
 							if (subs[i].pl[data.problems[j]] == undefined)
 								subs[i].pl[data.problems[j]] = 0;
 							subs[i].pl[data.problems[j]] += 1;
-							ple[i] += 300
+							if (subs[i].ac[data.problems[j]]) extp[i] += 300;
 						}
 					}
 				}
@@ -260,13 +266,19 @@ function rankfresh(data) {
 		let w = Date.now()
 		while (Date.now() < w + 1000);
 	}
+	function getp(x) { return ple[x] + extp[x]; }
 	id.sort(function (a, b) {
-		if (acc[a] == acc[b])
-			return ple[a] - ple[b]
+		if (acc[a] == acc[b]) {
+			return getp(a) - getp(b);
+		}
 		else
 			return acc[b] - acc[a]
 	})
-	res = '<thead><tr><th>选手列表</th><th>罚时</th>'
+	res = '<thead><tr><th>选手列表</th>'
+	if (data.mod == 'atcoder') res += '<th>分数</th>'
+	else res += '<th>过题数</th>'
+	if (data.mod == undefined || data.mod != "practice")
+		res += '<th>罚时</th>'
 	for (let i = 0; i < data.problems.length; i++) {
 		let p = data.problems[i].lastIndexOf('_'), con = data.problems[i].substr(0, p)
 		while (con.match("_") != null)
@@ -288,11 +300,12 @@ function rankfresh(data) {
 	for (let t = 0; t < data.players.length; t++) {
 		let i = id[t];
 		res += ('<tr><td>(' + (t + 1) + ') <a href=\"https://atcoder.jp/users/' + data.players[i] + "\">" + data.players[i] + '</a></td>');
-		let dr = Math.floor(ple[i]),
-			hours = Math.floor(dr / 3600),
+		let dr = Math.floor(getp(i));
+		let	hours = Math.floor(dr / 3600),
 			minu = Math.floor(dr % 3600 / 60),
 			seco = dr % 60;
-		res += ('<td> ' + ext2(hours) + ':' + ext2(minu) + ':' + ext2(seco) + '</td>');
+		res += '<td> ' + acc[i] + '</td>'
+		if (data.mod == undefined || data.mod != "practice") res += ('<td> ' + ext2(hours) + ':' + ext2(minu) + ':' + ext2(seco) + '</td>');
 		for (let j = 0; j < data.problems.length; j++) {
 			if (subs[i].wj[data.problems[j]] == 1) {
 				res += ("<td class=\"warning\"><i class=\"icon hourglass half\"></i>");
@@ -336,105 +349,7 @@ function buildpage() {
 		let start = new Date(beg), finish = new Date(end);
 		beg = Number(data.st), end = Number(data.ed);
 		start = new Date(beg), finish = new Date(end);
-
-		let cfid = []
-		for (var i in data.players) {
-			var li = data.players[i].split('(')
-			if (li.length == 2)
-				data.players[i] = li[0], cfid.push(li[1].substr(0, li[1].length - 1));
-			else cfid.push(data.players[i])
-		}
 		
-		let len = data.players.length, subs = {}, acc = [], ple = [], id = [], hascf = 0;
-		for (let i = 0; i < len; i++)
-			acc.push(0), ple.push(0), id.push(i);
-		for (let i in data.problems)
-			if (data.problems[i].substr(0, 2) == 'CF')
-				hascf = 1
-		for (let i = 0; i < len; i++) {
-			let sub, cfsub;
-			readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
-				data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
-					sub = JSON.parse(text);
-				})
-			if (hascf == 1) {
-				readTextFile('https://codeforces.com/api/user.status?handle=' + cfid[i] + '&from=1&count=100', 'json', function (text) {
-					cfsub = JSON.parse(text)
-				})
-				cfsub = cfsub.result
-			}
-			subs[i] = {
-				ac: {},
-				pl: {},
-				tm: {},
-				wj: {}
-			}
-			for (let t = 0; t < sub.length; t++) {
-				let c = sub[t]
-				if (Number(c.epoch_second) * 1000 >= end)
-					continue;
-				for (let j = 0; j < data.problems.length; j++)
-					if (c.problem_id == data.problems[j]) {
-						if (c.result == 'AC') {
-							subs[i].wj = 0;
-							if (subs[i].ac[data.problems[j]] != 1)
-								acc[i] += 1;
-							subs[i].ac[data.problems[j]] = 1;
-							subs[i].tm[data.problems[j]] = c.epoch_second;
-							if (subs[i].pl[data.problems[j]] == undefined)
-								subs[i].pl[data.problems[j]] = 0;
-							ple[i] += (c.epoch_second * 1000 - beg) / 1000;
-						} else if (47 < c.result[0] || c.result[0] < 58 || c.result == 'WJ') {
-							subs[i].wj = 1;
-						} else if (c.result != 'CE') {
-							subs[i].wj = 0;
-							if (subs[i].pl[data.problems[j]] == undefined)
-								subs[i].pl[data.problems[j]] = 0;
-							subs[i].pl[data.problems[j]] += 1;
-							ple[i] += 300
-						}
-					}
-			}
-			if (hascf) {
-				for (let t = 0; t < cfsub.length; t++) {
-					let c = cfsub[t];
-					if (Number(c.creationTimeSeconds) * 1000 >= end)
-						continue;
-					for (let j = 0; j < data.problems.length; j++) {
-						let problem_id = c.problem.contestId + c.problem.index;
-						if (problem_id == data.problems[j].substr(2)) {
-							if (c.verdict == 'OK') {
-								subs[i].wj = 0;
-								if (subs[i].ac[data.problems[j]] != 1)
-									acc[i] += 1;
-								subs[i].ac[data.problems[j]] = 1;
-								subs[i].tm[data.problems[j]] = c.creationTimeSeconds;
-								if (subs[i].pl[data.problems[j]] == undefined)
-									subs[i].pl[data.problems[j]] = 0;
-								ple[i] += (c.creationTimeSeconds * 1000 - beg) / 1000;
-							} else if (c.verdict == 'TESTING') {
-								subs[i].wj = 1;
-							} else if (c.verdict != 'COMPILATION_ERROR') {
-								subs[i].wj = 0;
-								if (subs[i].pl[data.problems[j]] == undefined)
-									subs[i].pl[data.problems[j]] = 0;
-								subs[i].pl[data.problems[j]] += 1;
-								ple[i] += 300
-							}
-						}
-					}
-				}
-			}
-			let w = Date.now();
-			while (Date.now() < w + 500);
-		}
-		id.sort(function (a, b) {
-			if (acc[a] == acc[b])
-				return ple[a] - ple[b];
-			else
-				return acc[b] - acc[a];
-		});
-
 		document.write("<p></p><div><h1 style=\"display: inline;\">" + data['title'] + "</h1><i class=\"ui home link icon\" style=\"font-size: 1.5em; float: right;\" onclick=\"jumplink1()\"></i></div>");
 		document.write("<div class=\"ui divided selection list\">");
 		document.write('<a class=\"item\"><div class=\"ui red horizontal label\">开始时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(start) + '</p>');
@@ -446,13 +361,17 @@ function buildpage() {
 		document.write("<a class=\"item\" onclick=\"showtable()\">排行榜</a></div>");
 
 		document.write("<table class=\"ui celled table\" id=\"list\">");
-		document.write("<thead><tr><th>题目编号</th><th>题目标题</th></tr></thead><tbody>");
+		document.write("<thead><tr><th>题目编号</th>");
+		if (data.mod == "atcoder") document.write("<th  class=\"collapsing\">题目分数</th>");
+		document.write("<th>题目标题</th></tr></thead><tbody>");
 		for (let i in data.problems) {
 			let p = data.problems[i].lastIndexOf('_'), con = data.problems[i].substr(0, p);
 			while (con.match("_") != null)
 				con = con.replace("_", "-");
+			let ext = ""
+			if (data.mod == 'atcoder') ext = '<td>' + data.score[i] + '</td>';
 			if (data.problems[i].substr(0, 2) != 'CF')
-				document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
+				document.write('<tr><td>' + (Number(i) + 1) + '</td>' + ext + '<td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
 			else {
 				let c = data.problems[i].substr(2), p, q, pos = 0;
 				for (let j = 0; j < c.length; j++)
@@ -461,7 +380,7 @@ function buildpage() {
 						break;
 					}
 				p = c.substr(0, pos), q = c.substr(pos);
-				document.write('<tr><td>' + (Number(i) + 1) + '</td><td>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + c + '</a></td></tr>');
+				document.write('<tr><td>' + (Number(i) + 1) + '</td>' + ext + '<td>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + c + '</a></td></tr>');
 			}
 		}
 		document.write("</tbody></table>");
