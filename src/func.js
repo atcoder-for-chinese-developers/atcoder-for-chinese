@@ -847,8 +847,10 @@ function getrandprob() {
 	p = Math.floor(Math.random() * cnt);
 	for (let i in problist) {
 		if (isd1[i] && isd2[i]) {
-			if (!p--)
+			if (!p--){
 				document.getElementById("rndprob").innerHTML = document.getElementById(i + "-col").innerHTML;
+				document.getElementById("rndprob").setAttribute("style", document.getElementById(i + "-col").getAttribute("style"));
+			}
 		}
 	}
 }
