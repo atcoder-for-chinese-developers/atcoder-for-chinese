@@ -678,7 +678,7 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 	console.log(cnt, cnte, cnts, cntt);
 }
 
-let isd1 = [], isd2 = [], presel = -1;
+let isd1 = {}, isd2 = {}, pcol = {}, presel = -1;
 
 function refreshchart() {
 	let ctg = new Array(44), cnt = new Array(44);
@@ -746,39 +746,44 @@ function refreshchart() {
 		]
 	});
 }
+function refreshList(){
+	for (let i in problist) {
+		document.getElementById(i + "-col").setAttribute("style", (isd1[i] && isd2[i] ? "display: auto; " : "display: none; ") + "background-color: " + pcol[i]);
+	}
+}
 
 function listtoggleabc() {
 	let flg = document.getElementById("list-abc-btn").getAttribute("class") == "ui toggle button";
 	document.getElementById("list-abc-btn").setAttribute("class", flg ? "ui toggle button active" : "ui toggle button");
 	for (let i in problist) {
-		if (i.substr(0, 3) == "ABC") {
+		if (i.substr(0, 3) == "abc") {
 			isd1[i] = flg;
-			document.getElementById(i + "-col").setAttribute("style", isd1[i] && isd2[i] ? "" : "display: none;");
 		}
 	}
 	refreshchart();
+	refreshList();
 }
 function listtogglearc() {
 	let flg = document.getElementById("list-arc-btn").getAttribute("class") == "ui toggle button";
 	document.getElementById("list-arc-btn").setAttribute("class", flg ? "ui toggle button active" : "ui toggle button");
 	for (let i in problist) {
-		if (i.substr(0, 3) == "ARC") {
+		if (i.substr(0, 3) == "arc") {
 			isd1[i] = flg;
-			document.getElementById(i + "-col").setAttribute("style", isd1[i] && isd2[i] ? "" : "display: none;");
 		}
 	}
 	refreshchart();
+	refreshList();
 }
 function listtoggleagc() {
 	let flg = document.getElementById("list-agc-btn").getAttribute("class") == "ui toggle button";
 	document.getElementById("list-agc-btn").setAttribute("class", flg ? "ui toggle button active" : "ui toggle button");
 	for (let i in problist) {
-		if (i.substr(0, 3) == "AGC") {
+		if (i.substr(0, 3) == "agc") {
 			isd1[i] = flg;
-			document.getElementById(i + "-col").setAttribute("style", isd1[i] && isd2[i] ? "" : "display: none;");
 		}
 	}
 	refreshchart();
+	refreshList();
 }
 
 function isinarray(x, a) {
@@ -810,9 +815,9 @@ function setfilter() {
 			}
 		}
 		isd2[i] = flg;
-		document.getElementById(i + "-col").setAttribute("style", isd1[i] && isd2[i] ? "" : "display: none;");
 	}
 	refreshchart();
+	refreshList();
 }
 
 function clrfilter() {
@@ -833,14 +838,15 @@ function getrandprob() {
 	document.getElementById("rndprob").innerHTML = "";
 	let cnt = 0, p;
 	for (let i in problist) {
-		if (document.getElementById(i + "-col").getAttribute("style") == "")
+		if (isd1[i] && isd2[i]) {
 			cnt++;
+		}
 	}
 	if (!cnt)
 		return;
 	p = Math.floor(Math.random() * cnt);
 	for (let i in problist) {
-		if (document.getElementById(i + "-col").getAttribute("style") == "") {
+		if (isd1[i] && isd2[i]) {
 			if (!p--)
 				document.getElementById("rndprob").innerHTML = document.getElementById(i + "-col").innerHTML;
 		}
@@ -873,7 +879,9 @@ function writelist(taglist) {
 	document.write("<table class=\"ui fixed sortable celled table segment\">");
 	document.write("<thead><tr><th>编号</th><th>标题</th><th>链接</th><th>难度</th><th>标签</th></thead><tbody>");
 	for (let i in problist) {
-		isd1[i] = isd2[i] = 1;
+		isd1[i] = 1;
+		isd2[i] = 1;
+		pcol[i] = "#fff";
 		document.write("<tr id=\"" + i + "-col\">");
 		document.write("<td>" + problist[i].org_a + "</td>");
 		document.write("<td>" + problist[i].title + "</td>");
@@ -925,8 +933,7 @@ function checknum(i) {
 	return i == "" || isNaN(Number(i));
 }
 function printinvitecode() {
-	let res = "",
-		trans = new Base64();
+	let res = "", trans = new Base64();
 	res += '{"title":"' + document.getElementById("get-title").value + '","st":';
 	let ye = document.getElementById("get-start-ye").value,
 		mo = document.getElementById("get-start-mo").value,
@@ -1037,8 +1044,7 @@ function importUser() {
 		let cellName = curProb[i] + "-cell-" + {abc: 1, arc: 2, agc: 3}[curProb[i].substr(0,3)], colName = curProb[i] + "-col";
 		document.getElementById(cellName).setAttribute("class", prbStat[i] == "AC" ? "positive" : "negative");
 		document.getElementById(cellName).setAttribute("style", prbStat[i] == "AC" ? "background-color: #c3e6cb!important" : "background-color: #ffeeba!important");
-		document.getElementById(colName).setAttribute("class", "");
-		document.getElementById(colName).setAttribute("style", "");
+		pcol[colName] = "#fff";
 	}
 	let prbStat = {}, usr = document.getElementById("user-name").value, lst = 0,
 		cookie = window.localStorage.getItem("prob-stat-" + usr);
@@ -1085,11 +1091,11 @@ function importUser() {
 			let cellName = i + "-cell-" + {abc: 1, arc: 2, agc: 3}[i.substr(0,3)], colName = i + "-col";
 			document.getElementById(cellName).setAttribute("class", prbStat[i] == "AC" ? "positive" : "negative");
 			document.getElementById(cellName).setAttribute("style", prbStat[i] == "AC" ? "background-color: #c3e6cb!important" : "background-color: #ffeeba!important");
-			document.getElementById(colName).setAttribute("class", prbStat[i] == "AC" ? "positive" : "negative");
-			document.getElementById(colName).setAttribute("style", prbStat[i] == "AC" ? "background-color: #c3e6cb!important" : "background-color: #ffeeba!important");
+			pcol[i] = prbStat[i] == "AC" ? "#c3e6cb" : "#ffeeba";
 			curProb.unshift(i);
 		}
 	}
+	refreshList();
 }
 
 function buildw() {
