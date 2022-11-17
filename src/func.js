@@ -1042,14 +1042,14 @@ function buildcontestpage() {
 }
 let curProb = [];
 function importUser() {
-	for (let i in curProb) {
-		let cellName = curProb[i] + "-cell-" + {abc: 1, arc: 2, agc: 3}[curProb[i].substr(0,3)], colName = curProb[i] + "-col";
-		document.getElementById(cellName).setAttribute("class", prbStat[i] == "AC" ? "positive" : "negative");
-		document.getElementById(cellName).setAttribute("style", prbStat[i] == "AC" ? "background-color: #c3e6cb!important" : "background-color: #ffeeba!important");
-		pcol[colName] = "#fff";
-	}
 	let prbStat = {}, usr = document.getElementById("user-name").value, lst = 0,
-		cookie = window.localStorage.getItem("prob-stat-" + usr);
+		cookie = window.localStorage.getItem("prob-stat-" + usr), usrNotFnd = 0;
+	for (let i in curProb) {
+		let cellName = curProb[i] + "-cell-" + {abc: 1, arc: 2, agc: 3}[curProb[i].substr(0,3)];
+		document.getElementById(cellName).setAttribute("class", "");
+		document.getElementById(cellName).setAttribute("style", "background-color: #fff!important");
+		pcol[curProb[i]] = "#fff";
+	}
 	if (cookie != undefined) {
 		cookie = JSON.parse(cookie);
 		prbStat = cookie.value;
@@ -1060,6 +1060,10 @@ function importUser() {
 			if (sta == "200") {
 				let sub = JSON.parse(txt);
 				if (sub == 0){
+					if (i == 0) {
+						usrNotFnd = 1;
+						alert("未找到用户或者用户没有提交");
+					}
 					i = -1;
 					return;
 				}
@@ -1083,10 +1087,12 @@ function importUser() {
 		let w = Date.now()
 		while (Date.now() < w + 1000);
 	}
-	window.localStorage.setItem("prob-stat-" + usr, JSON.stringify({
-		lastFetchTime: lst,
-		value: prbStat
-	}));
+	if (!usrNotFnd) {
+		window.localStorage.setItem("prob-stat-" + usr, JSON.stringify({
+			lastFetchTime: lst,
+			value: prbStat
+		}));
+	}
 	curProb = [];
 	for (let i in prbStat) {
 		if (i.substr(0,3) == "abc" || i.substr(0,3) == "arc" || i.substr(0,3) == "agc") {
