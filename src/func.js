@@ -936,7 +936,7 @@ function checknum(i) {
 }
 function printInviteCode() {
 	let res = "", trans = new Base64();
-	res += '{"title":"' + document.getElementById("get-title").value + '","mode":';
+	res += '{"title":"' + document.getElementById("get-title").value + '","mod":';
 	if ($("#cont-type-prac").checkbox("is checked")) {
 		res += '"practice"';
 	} else if ($("#cont-type-icpc").checkbox("is checked")) {
