@@ -258,7 +258,7 @@ function rankfresh(data) {
 			}
 		}
 		let w = Date.now()
-		while (Date.now() < w + 500);
+		while (Date.now() < w + 1000);
 	}
 	id.sort(function (a, b) {
 		if (acc[a] == acc[b])
