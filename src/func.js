@@ -1008,7 +1008,10 @@ function buildcontestpage() {
 	document.write("<div class=\"ui right labeled fluid input\"><input id=\"get-start-ye\" value=\"" + (tm.getYear() + 1900) + "\"></input><div class=\"ui label\">年</div><input id=\"get-start-mo\" value=\"" + (tm.getMonth() + 1) + "\"></input><div class=\"ui label\">月</div><input id=\"get-start-da\" value=\"" + tm.getDate() + "\"></input><div class=\"ui label\">日</div><input id=\"get-start-ho\" value=\"" + tm.getHours() + "\"></input><div class=\"ui label\">时</div><input id=\"get-start-mi\" value=\"" + tm.getMinutes() + "\"></input><div class=\"ui label\">分</div><input id=\"get-start-se\" value=\"" + tm.getSeconds() + "\"></input><div class=\"ui label\">秒</div></div></div>");
 	document.write("<h4 class=\"ui header\">设置结束时间</h4><p>");
 	document.write("<div class=\"ui right labeled fluid input\"><input id=\"get-finish-ye\" placeholder=\"年\" value=\"" + (tm.getYear() + 1900) + "\"></input><div class=\"ui label\">年</div><input id=\"get-finish-mo\" placeholder=\"月\" value=\"" + (tm.getMonth() + 1) + "\"></input><div class=\"ui label\">月</div><input id=\"get-finish-da\" placeholder=\"日\" value=\"" + tm.getDate() + "\"></input><div class=\"ui label\">日</div><input id=\"get-finish-ho\" placeholder=\"时\" value=\"" + tm.getHours() + "\"></input><div class=\"ui label\">时</div><input id=\"get-finish-mi\" placeholder=\"分\" value=\"" + tm.getMinutes() + "\"></input><div class=\"ui label\">分</div><input id=\"get-finish-se\" placeholder=\"秒\" value=\"" + tm.getSeconds() + "\"></input><div class=\"ui label\">秒</div></div></p>");
-	document.write("<h4 class=\"ui header\">参赛选手</h4>");
+	document.write("<h4 class=\"ui header\">参赛选手<i class=\"ui question circle icon\" style=\"font-size: 10px!important; top: -8px; position: relative;\" id=\"getInfo\" data-content=\"如果需要使用 CodeForces 账号，请使用 '<AT账号>(<CF账号>)'（去掉引号）的格式，如：'houzhiyuan(houzhiyuan123)'\"></i></h4>");
+	$("#getInfo").popup({
+		on: "hover"
+	});
 	document.write("<div class=\"ui fluid input\"><input id=\"get-players\" placeholder=\"以半角空格分隔\"></input></div>");
 	document.write("<h4 class=\"ui header\">比赛题目</h4>");
 	document.write("<div class=\"ui accordion\" id=\"id-sample\"><div class=\"title\"><i class=\"dropdown icon\"></i>格式说明</div><div class=\"content\">");
@@ -1016,11 +1019,12 @@ function buildcontestpage() {
 	document.write("<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a> 的标识符为 abc255_h</p>");
 	document.write("<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a> 的标识符为 arc103_b</p>");
 	document.write("<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a> 的标识符为 zone2021_f</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/code-festival-2017-qualc/tasks/code_festival_2017_qualc_f\">CF17QualcF</a> 的标识符为 code_festival_2017_qualc_f</p></div></div><p></p>");
+	document.write("<p><a href=\"https://atcoder.jp/contests/code-festival-2017-qualc/tasks/code_festival_2017_qualc_f\">CF17QualcF</a> 的标识符为 code_festival_2017_qualc_f</p>")
+	document.write("<p>同时支持 CodeForces 题目，格式为 'CFXXXI'（去掉引号），如 CF1A</div></div><p></p>");
 	$("#id-sample").accordion();
 	document.write("<div class=\"ui fluid input\"><input id=\"get-problems\" placeholder=\"以半角空格分隔\"></input></div>");
 	document.write("<h4 class=\"ui header\">生成邀请码</h4>");
-	document.write("<div class=\"ui fluid input\"><input id=\"print-code\" placeholder=\"邀请码\"></input><button class=\"ui primary button\" onclick=\"printinvitecode()\" id=\"getCode\" data-title=\"\" data-content=\"邀请码已复制\">获取邀请码</button></div>");
+	document.write("<div class=\"ui fluid input\"><input id=\"print-code\" placeholder=\"邀请码\"></input><button class=\"ui primary button\" onclick=\"printinvitecode()\" id=\"getCode\" data-content=\"邀请码已复制\">获取邀请码</button></div>");
 	$("#getCode").popup({
 		on: "click"
 	});
