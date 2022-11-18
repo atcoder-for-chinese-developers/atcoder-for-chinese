@@ -245,7 +245,7 @@ function getColor(k) {
 		};
 	}
 }
-let problist = [], abccnt = 0, arccnt = 0, agccnt = 0, rawd, tralist, sollist, tags, prbs, taglist;
+let problist = [], contlist = [], abccnt = 0, arccnt = 0, agccnt = 0, rawd, tralist, sollist, tags, prbs, taglist;
 function formatDate(s) {
 	if (s == "")
 		return "";
@@ -1107,6 +1107,37 @@ function buildcontestpage() {
 	showjoinpage();
 }
 let curProb = [];
+function getStatPriority(stat) {
+	if (stat == "AC in contest")
+		return 4;
+	if (stat == "AC")
+		return 3;
+	if (stat == "UA in contest")
+		return 2;
+	if (stat == "UA")
+		return 1;
+	return 0;
+}
+function getStatColor(stat) {
+	if (stat == "AC in contest")
+		return "#9ad59e";
+	if (stat == "AC")
+		return "#c3e6cb";
+	if (stat == "UA in contest")
+		return "#fd9";
+	if (stat == "UA")
+		return "#ffeeba";
+	return "#fff";
+}
+function getStatClass(stat) {
+	if (stat == undefined)
+		return "";
+	if (stat.substr(0,2) == "AC")
+		return "positive";
+	if (stat.substr(0,2) == "UA")
+		return "negative";
+	return "";
+}
 function importUser() {
 	let prbStat = {}, usrList = document.getElementById("user-name").value.split(" ");
 	for (let i in curProb) {
@@ -1138,13 +1169,10 @@ function importUser() {
 						return;
 					}
 					for (let j in sub) {
-						if (sub[j].result == "AC") {
-							usrPrbStat[sub[j].problem_id] = "AC";
-							usrPrbStat[sub[j].problem_id] = "AC";
-						} else if (prbStat[sub[j].problem_id] != "AC") {
-							usrPrbStat[sub[j].problem_id] = "UA";
-							usrPrbStat[sub[j].problem_id] = "AC";
-						}
+						let isInContest = contlist[sub[j].contest_id].startTime <= sub[j].epoch_second && sub[j].epoch_second <= contlist[sub[j].contest_id].endTime,
+							subStat = (sub[j].result == "AC" ? "AC" : "UA") + (isInContest ? " in contest" : "");
+						if (getStatPriority(usrPrbStat[sub[j].problem_id]) < getStatPriority(subStat))
+							usrPrbStat[sub[j].problem_id] = subStat;
 						lst = i = sub[j].epoch_second + 1;
 					}
 				} else {
@@ -1166,20 +1194,18 @@ function importUser() {
 			}));
 		}
 		for (let i in usrPrbStat) {
-			if (prbStat[i] == undefined) {
+			if (getStatPriority(prbStat[i]) < getStatPriority(usrPrbStat[i])){
 				prbStat[i] = usrPrbStat[i];
-			} else if (prbStat[i] == "WA" && usrPrbStat[i] == "AC"){
-				prbStat[i] = "AC";
 			}
 		}
 	}
 	curProb = [];
 	for (let i in prbStat) {
 		if (i.substr(0, 3) == "abc" || i.substr(0, 3) == "arc" || i.substr(0, 3) == "agc") {
-			let cellName = i + "-cell-" + { abc: 1, arc: 2, agc: 3 }[i.substr(0, 3)], colName = i + "-col";
-			document.getElementById(cellName).setAttribute("class", prbStat[i] == "AC" ? "positive" : "negative");
-			document.getElementById(cellName).setAttribute("style", prbStat[i] == "AC" ? "background-color: #c3e6cb!important" : "background-color: #ffeeba!important");
-			pcol[i] = prbStat[i] == "AC" ? "#c3e6cb" : "#ffeeba";
+			let cellName = i + "-cell-" + { abc: 1, arc: 2, agc: 3 }[i.substr(0, 3)];
+			document.getElementById(cellName).setAttribute("class", getStatClass(prbStat[i]));
+			document.getElementById(cellName).setAttribute("style", "background-color: " + getStatColor(prbStat[i]) + "!important");
+			pcol[i] = getStatColor(prbStat[i]);
 			curProb.unshift(i);
 		}
 	}
@@ -1207,6 +1233,16 @@ function buildw() {
 	});
 	readTextFile("https://kenkoooo.com/atcoder/resources/problems.json", "json", function (text) {
 		prbs = JSON.parse(text);
+	});
+	readTextFile("https://kenkoooo.com/atcoder/resources/contests.json", "json", function (text) {
+		let cons = JSON.parse(text);
+		for (let i in cons) {
+			let cur = cons[i];
+			contlist[cur.id] = {
+				startTime: Number(cur["start_epoch_second"]),
+				endTime: Number(cur["start_epoch_second"]) + Number(cur["duration_second"])
+			};
+		}
 	});
 	readTextFile("https://atcoder-for-chinese-developers.github.io/translations/list.json", "json", function (text) {
 		tralist = JSON.parse(text).data;
