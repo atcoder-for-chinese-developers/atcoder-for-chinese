@@ -245,7 +245,7 @@ function getColor(k) {
 		};
 	}
 }
-let problist = [], rawd, tralist, sollist, tags, prbs, taglist;
+let problist = [], abccnt = 0, arccnt = 0, agccnt = 0, rawd, tralist, sollist, tags, prbs, taglist;
 function formatDate(s) {
 	if (s == "")
 		return "";
@@ -294,7 +294,7 @@ function showProbModal(cid, pid, title, op) {
 }
 
 function writeabc(rawd, tags, list_tre, list_sol, prbs) {
-	let Lim = 8, abccnt = 0, mx = 1005, y = new Array(mx), siz = new Array(mx), CCC = new Array(mx), Val = new Array(mx), RG = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
+	let Lim = 8, mx = 1005, y = new Array(mx), siz = new Array(mx), CCC = new Array(mx), Val = new Array(mx), RG = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
 		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], abctitle = new Array(mx);
 	while (getabcname(abccnt + 1, 1) in rawd)
 		abccnt++;
@@ -378,7 +378,7 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 				traLink = problist[getabcname(i, j)].prob_a, cnte++;
 			if (Ava_sol[i][j] != 0)
 				solLink = problist[getabcname(i, j)].solu_a, cnts++;
-			document.write("<td id='" + getabcname(i,j) + "-cell-1'><a href=\"https://atcoder.jp/contests/abc" + t + "/tasks/" + getabcname(i, j) + "\" " + y[i][j] + ">");
+			document.write("<td id='" + getabcname(i, j) + "-cell-1'><a href=\"https://atcoder.jp/contests/abc" + t + "/tasks/" + getabcname(i, j) + "\" " + y[i][j] + ">");
 			if (x[i][j] < 3200) {
 				document.write("<ta href=\"\" title=\"" + CCC[i][j] + "\"><span class=\"difficulty-circle\" style=\"border-color: " + RG[i][j] + "; background: linear-gradient(to top, " + RG[i][j] + " " + Val[i][j] + "%, rgba(0, 0, 0, 0) " + Val[i][j] + "%) border-box;\"></span></ta>");
 			} else if (x[i][j] < 3600) {
@@ -424,7 +424,7 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 }
 
 function writearc(rawd, tags, list_tre, list_sol, prbs) {
-	let Lim = 7, arccnt = 0, mx = 1005, y = new Array(mx), siz = new Array(mx), CCC = new Array(mx), Val = new Array(mx), RG = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
+	let Lim = 7, mx = 1005, y = new Array(mx), siz = new Array(mx), CCC = new Array(mx), Val = new Array(mx), RG = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
 		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], arctitle = new Array(mx);
 	while (getarcname(arccnt + 1, 1) in rawd)
 		arccnt++;
@@ -552,7 +552,7 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 }
 
 function writeagc(rawd, tags, list_tre, list_sol, prbs) {
-	let Lim = 7, agccnt = 0, mx = 1005, y = new Array(mx), siz = new Array(mx), CCC = new Array(mx), Val = new Array(mx), RG = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
+	let Lim = 7, mx = 1005, y = new Array(mx), siz = new Array(mx), CCC = new Array(mx), Val = new Array(mx), RG = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
 		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], agctitle = [];
 	while (agccnt == 41 || getagcname(agccnt + 1, 1) in rawd)
 		agccnt++;
@@ -746,9 +746,32 @@ function refreshchart() {
 		]
 	});
 }
-function refreshList(){
+function refreshList() {
 	for (let i in problist) {
 		document.getElementById(i + "-col").setAttribute("style", (isd1[i] && isd2[i] ? "display: auto; " : "display: none; ") + "background-color: " + pcol[i]);
+	}
+	for (let i = 1; i <= abccnt; i++) {
+		let flg = 1;
+		for (let j = 0; j < getabccnt(i); j++)
+			flg &= document.getElementById(getabcname(i, j) + "-cell-1").getAttribute("class") == "positive";
+		document.getElementById("abc" + ext3(i) + "-cell").setAttribute("class", flg ? "positive" : "");
+		document.getElementById("abc" + ext3(i) + "-cell").setAttribute("style", flg ? "background-color: #c3e6cb!important" : "");
+	}
+	for (let i = 1; i <= arccnt; i++) {
+		let flg = 1;
+		for (let j = 0; j < getarccnt(i); j++)
+			flg &= document.getElementById(getarcname(i, j) + "-cell-2").getAttribute("class") == "positive";
+		document.getElementById("arc" + ext3(i) + "-cell").setAttribute("class", flg ? "positive" : "");
+		document.getElementById("arc" + ext3(i) + "-cell").setAttribute("style", flg ? "background-color: #c3e6cb!important" : "");
+	}
+	for (let i = 1; i <= agccnt; i++) {
+		if (i == 42)
+			continue;
+		let flg = 1;
+		for (let j = 0; j < getagccnt(i); j++)
+			flg &= document.getElementById(getagcname(i, j) + "-cell-3").getAttribute("class") == "positive";
+		document.getElementById("agc" + ext3(i) + "-cell").setAttribute("class", flg ? "positive" : "");
+		document.getElementById("agc" + ext3(i) + "-cell").setAttribute("style", flg ? "background-color: #c3e6cb!important" : "");
 	}
 }
 
@@ -847,7 +870,7 @@ function getrandprob() {
 	p = Math.floor(Math.random() * cnt);
 	for (let i in problist) {
 		if (isd1[i] && isd2[i]) {
-			if (!p--){
+			if (!p--) {
 				document.getElementById("rndprob").innerHTML = document.getElementById(i + "-col").innerHTML;
 				document.getElementById("rndprob").setAttribute("style", document.getElementById(i + "-col").getAttribute("style"));
 			}
@@ -995,7 +1018,7 @@ function printInviteCode() {
 	}
 	for (let i in prblist) {
 		let prb = prblist[i], t = 1;
-		if(prb == "")
+		if (prb == "")
 			continue;
 		if (prb.indexOf("(") != -1) {
 			t = prb.split('(')[1].split(')')[0];
@@ -1031,7 +1054,6 @@ function printInviteCode() {
 }
 function buildcontestpage() {
 	document.write("<div id=\"cont-page\">");
-	// document.write("<p align=\"center\" style=\"font-style: italic;\">注意：该功能仍在施工，不保证没有锅；此处仍未开发完成，老版本的邀请码可能失效。</p>");
 	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"showjoinpage()\">参加</a><a class=\"item\" onclick=\"showcreatepage()\">创建</a></div>");
 	document.write("<div id=\"join-page\">");
 	document.write("<div class=\"ui fluid input\"><input id=\"rev-code\" placeholder=\"输入邀请码\"></input><button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button></div>");
@@ -1086,61 +1108,75 @@ function buildcontestpage() {
 }
 let curProb = [];
 function importUser() {
-	let prbStat = {}, usr = document.getElementById("user-name").value, lst = 0,
-		cookie = window.localStorage.getItem("prob-stat-" + usr), usrNotFnd = 0;
+	let prbStat = {}, usrList = document.getElementById("user-name").value.split(" ");
 	for (let i in curProb) {
-		let cellName = curProb[i] + "-cell-" + {abc: 1, arc: 2, agc: 3}[curProb[i].substr(0,3)];
+		let cellName = curProb[i] + "-cell-" + { abc: 1, arc: 2, agc: 3 }[curProb[i].substr(0, 3)];
 		document.getElementById(cellName).setAttribute("class", "");
 		document.getElementById(cellName).setAttribute("style", "background-color: #fff!important");
 		pcol[curProb[i]] = "#fff";
 	}
-	if (cookie != undefined) {
-		cookie = JSON.parse(cookie);
-		prbStat = cookie.value;
-		lst = cookie.lastFetchTime;
-	}
-	for (let i = lst; i != -1; ) {
-		readTextFile("https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=" + usr + "&from_second=" + i.toString(), "json", function(txt, sta){
-			if (sta == "200") {
-				let sub = JSON.parse(txt);
-				if (sub == 0){
-					if (i == 0) {
-						usrNotFnd = 1;
-						alert("未找到用户或者用户没有提交");
+	refreshList();
+	for (let i in usrList) {
+		let usr = usrList[i], cookie = window.localStorage.getItem("prob-stat-" + usr), lst = 0, usrNotFnd = 0, usrPrbStat = {};
+		if (usr == "")
+			continue;
+		if (cookie != undefined) {
+			cookie = JSON.parse(cookie);
+			usrPrbStat = cookie.value;
+			lst = cookie.lastFetchTime;
+		}
+		for (let i = lst; i != -1;) {
+			readTextFile("https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=" + usr + "&from_second=" + i.toString(), "json", function (txt, sta) {
+				if (sta == "200") {
+					let sub = JSON.parse(txt);
+					if (sub == 0) {
+						if (i == 0) {
+							usrNotFnd = 1;
+							alert("未找到用户或者用户没有提交");
+						}
+						i = -1;
+						return;
 					}
+					for (let j in sub) {
+						if (sub[j].result == "AC") {
+							usrPrbStat[sub[j].problem_id] = "AC";
+							usrPrbStat[sub[j].problem_id] = "AC";
+						} else if (prbStat[sub[j].problem_id] != "AC") {
+							usrPrbStat[sub[j].problem_id] = "UA";
+							usrPrbStat[sub[j].problem_id] = "AC";
+						}
+						lst = i = sub[j].epoch_second + 1;
+					}
+				} else {
+					alert("导入用户提交失败，请重试");
 					i = -1;
 					return;
 				}
-				for (let j in sub) {
-					if (sub[j].result == "AC") {
-						prbStat[sub[j].problem_id] = "AC";
-					} else if (prbStat[sub[j].problem_id] != "AC") {
-						prbStat[sub[j].problem_id] = "UA";
-					}
-					lst = i = sub[j].epoch_second + 1;
-				}
-			} else {
-				alert("导入用户提交失败，请重试");
-				i = -1;
-				return;
+			});
+			if (i == -1) {
+				break;
 			}
-		});
-		if (i == -1) {
-			break;
+			let w = Date.now();
+			while (Date.now() < w + 1000);
 		}
-		let w = Date.now()
-		while (Date.now() < w + 1000);
-	}
-	if (!usrNotFnd) {
-		window.localStorage.setItem("prob-stat-" + usr, JSON.stringify({
-			lastFetchTime: lst,
-			value: prbStat
-		}));
+		if (!usrNotFnd) {
+			window.localStorage.setItem("prob-stat-" + usr, JSON.stringify({
+				lastFetchTime: lst,
+				value: usrPrbStat
+			}));
+		}
+		for (let i in usrPrbStat) {
+			if (prbStat[i] == undefined) {
+				prbStat[i] = usrPrbStat[i];
+			} else if (prbStat[i] == "WA" && usrPrbStat[i] == "AC"){
+				prbStat[i] = "AC";
+			}
+		}
 	}
 	curProb = [];
 	for (let i in prbStat) {
-		if (i.substr(0,3) == "abc" || i.substr(0,3) == "arc" || i.substr(0,3) == "agc") {
-			let cellName = i + "-cell-" + {abc: 1, arc: 2, agc: 3}[i.substr(0,3)], colName = i + "-col";
+		if (i.substr(0, 3) == "abc" || i.substr(0, 3) == "arc" || i.substr(0, 3) == "agc") {
+			let cellName = i + "-cell-" + { abc: 1, arc: 2, agc: 3 }[i.substr(0, 3)], colName = i + "-col";
 			document.getElementById(cellName).setAttribute("class", prbStat[i] == "AC" ? "positive" : "negative");
 			document.getElementById(cellName).setAttribute("style", prbStat[i] == "AC" ? "background-color: #c3e6cb!important" : "background-color: #ffeeba!important");
 			pcol[i] = prbStat[i] == "AC" ? "#c3e6cb" : "#ffeeba";
@@ -1189,7 +1225,7 @@ function buildw() {
 	readTextFile("src/tag-list.json", "json", function (text) {
 		taglist = JSON.parse(text);
 	});
-	document.write("<div class=\"ui pointing menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"listtoggle()\">筛选</a><a class=\"item\" onclick=\"contesttoggle()\">比赛</a><div class=\"right menu\"><div class=\"item\"><div class=\"ui transparent icon input\"><input type=\"text\" id=\"user-name\" placeholder=\"导入用户\"><i class=\"search link icon\" onclick=\"importUser()\"></i></div></div></div></div>");
+	document.write("<div class=\"ui pointing menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"listtoggle()\">筛选</a><a class=\"item\" onclick=\"contesttoggle()\">比赛</a><div class=\"right menu\"><div class=\"item\"><div class=\"ui transparent icon input\"><input type=\"text\" id=\"user-name\" placeholder=\"导入用户，多个用户用半角空格隔开\" style=\"width: 260px\"><i class=\"search link icon\" onclick=\"importUser()\"></i></div></div></div></div>");
 	$("#user-name").keydown(function (e) {
 		if (event.keyCode == 13) {
 			importUser();
