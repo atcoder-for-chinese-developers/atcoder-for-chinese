@@ -1140,6 +1140,7 @@ function getStatClass(stat) {
 }
 function importUser() {
 	let prbStat = {}, usrList = document.getElementById("user-name").value.split(" ");
+	window.localStorage.setItem("default-user-list", document.getElementById("user-name").value);
 	for (let i in curProb) {
 		let cellName = curProb[i] + "-cell-" + { abc: 1, arc: 2, agc: 3 }[curProb[i].substr(0, 3)];
 		document.getElementById(cellName).setAttribute("class", "");
@@ -1267,7 +1268,6 @@ function buildw() {
 			importUser();
 		}
 	});
-
 	writeabc(rawd, tags, tralist, sollist, prbs);
 	writearc(rawd, tags, tralist, sollist, prbs);
 	writeagc(rawd, tags, tralist, sollist, prbs);
@@ -1309,4 +1309,6 @@ function buildw() {
 	document.write("<div id=\"page-end\" style=\"display: inline;\"></div>");
 	abctabletoggle();
 	window.onclick();
+	document.getElementById("user-name").value = window.localStorage.getItem("default-user-list");
+	importUser();
 }
