@@ -143,26 +143,46 @@ function dateToString(t) {
 				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 			}
 		}
-		return fmt;
+		return fmt
 	}
-	let cur = new Date(t).format("yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒");
-	return cur.toString();
+	let cur = new Date(t).format("yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒")
+	return cur.toString()
+}
+function timeToString(t) {
+	Date.prototype.format = function (fmt) {
+		let o = {
+			"y+": this.getYear() > 70 ? (this.getYear() - 70) + " 年" : "",
+			"M+": this.getUTCMonth() > 0 ? this.getUTCMonth() + " 月" : "",
+			"d+": this.getUTCDate() > 1 ? (this.getUTCDate() - 1) + " 天" : "",
+			"h+": this.getUTCHours() > 0 ? this.getUTCHours() + " 小时" : "",
+			"m+": this.getUTCMinutes() > 0 ? this.getUTCMinutes() + " 分钟" : "",
+			"s+": this.getUTCSeconds() > 0 ? this.getUTCSeconds() + " 秒" : "",
+		};
+		for (let k in o) {
+			if (new RegExp("(" + k + ")").test(fmt)) {
+				fmt = fmt.replace(RegExp.$1, o[k]);
+			}
+		}
+		return fmt
+	}
+	let cur = new Date(t).format("y M d h m s")
+	return cur.toString()
 }
 function jumplink1() {
-	window.open("https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/");
+	window.open("https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/")
 }
 function getpercent() {
-	let cur = new Date();
+	let cur = new Date()
 	return Math.max((Math.min(end, cur) - beg) / (end - beg), 0.0)
 }
 function refreshtime() {
-	let cur = new Date(), tst = (Number(beg) - Number(cur)) / 1000., rem = (Number(end) - Number(cur)) / 1000.;
+	let cur = new Date(), tst = (Number(beg) - Number(cur)) / 1000., rem = (Number(end) - Number(cur)) / 1000.
 	if (tst > 0)
-		rem = tst;
-	let da = Math.floor(rem / 86400), ho = Math.floor(rem % 86400 / 3600), mi = Math.floor(rem % 3600 / 60), se = rem % 60;
+		rem = tst
+	let da = Math.floor(rem / 86400), ho = Math.floor(rem % 86400 / 3600), mi = Math.floor(rem % 3600 / 60), se = rem % 60
 	if (!flgshow && cur > beg)
-		showlist(), flgshow = 1;
-	document.getElementById("remain-time").innerText = cur < beg ? "距离比赛开始 " + ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : "")) : cur > end ? "已结束" : ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : ""));
+		showlist(), flgshow = 1
+	document.getElementById("remain-time").innerText = cur < beg ? "距离比赛开始 " + ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : "")) : cur > end ? "已结束" : ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : ""))
 	$("#timeprog").progress({
 		percent: getpercent() * 100
 	});
@@ -172,7 +192,7 @@ function rankfresh(data) {
 	beg = Number(data.st), end = Number(data.ed)
 	let subs = {}, acc = [], ple = [], id = [], hascf = 0, extp = []
 	for (let i = 0; i < data.players.length; i++)
-		acc.push(0), ple.push(0), id.push(i), extp.push(0);
+		acc.push(0), ple.push(0), id.push(i), extp.push(0)
 	for (let i in data.problems)
 		if (data.problems[i].substr(0, 2) == 'CF')
 			hascf = 1
@@ -354,6 +374,7 @@ function buildpage() {
 		document.write("<div class=\"ui divided selection list\">");
 		document.write('<a class=\"item\"><div class=\"ui red horizontal label\">开始时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(start) + '</p>');
 		document.write('<a class=\"item\"><div class=\"ui green horizontal label\">结束时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(finish) + '</p>');
+		document.write('<a class=\"item\"><div class=\"ui yellow horizontal label\">持续时间</div><p style=\"color: #000; display: inline-block\">' + timeToString(new Date(Number(finish) - Number(start))) + '</p>');
 		document.write('<a class=\"item\"><div class=\"ui blue horizontal label\">倒计时</div><p style=\"color: #000; display: inline-block\" id=\"remain-time\"></p></div>');
 		document.write("<div class=\"ui top attached indicating progress\" id=\"timeprog\"><div class=\"bar\"></div></div>")
 		document.write("<div class=\"ui menu\">");

@@ -1,7 +1,7 @@
-function readTextFile(file, ext, callback) {
+function readTextFile(file, ext, callback, isLocked = false) {
 	let xhr = new XMLHttpRequest();
 	xhr.overrideMimeType("application/" + ext);
-	xhr.open("GET", file, false);
+	xhr.open("GET", file, isLocked);
 	xhr.onreadystatechange = function () {
 		if (xhr.readyState === 4)
 			callback(xhr.responseText, xhr.status);
@@ -273,21 +273,44 @@ function formatDate(s) {
 	return t.toString();
 }
 function showProbModal(cid, pid, title, op) {
-	let list = (op ? sollist : tralist)[cid][pid], content = "<div class=\"ui segment\"><H2 class=\"ui medium block top attached header\">" + title + "</h2>";
+	let list = (op ? sollist : tralist)[cid][pid], content = "\
+		<div class=\"ui segment\">\
+			<H2 class=\"ui medium block top attached header\">" + title + "</h2>";
 	if (list == 0) {
-		content += "<div class=\"ui placeholder attached segment\"><div class=\"ui icon header\"><i aria-hidden=\"true\" class=\"hdd outline icon\ \"></i>没有内容</div></div>";
+		content += "\
+			<div class=\"ui placeholder attached segment\">\
+				<div class=\"ui icon header\">\
+					<i aria-hidden=\"true\" class=\"hdd outline icon\"></i>\
+					没有内容\
+				</div>\
+			</div>\
+		</div>";
 	} else {
-		content += "<div class=\"ui attached segment\"><table class=\"ui single line table fixed\"> <thead><tr><th>标题</th><th>作者</th><th>创建时间</th><th>最后修改时间</th></tr></thead><tbody>";
+		content += "\
+			<div class=\"ui attached segment\">\
+				<table class=\"ui single line table fixed\">\
+					<thead>\
+						<tr>\
+							<th>标题</th>\
+							<th>作者</th>\
+							<th>创建时间</th>\
+							<th>最后修改时间</th>\
+						</tr>\
+					</thead>\
+					<tbody>";
 		for (let i in list) {
 			let cur = list[i];
-			content += "<tr>";
-			content += "<td><a href=\"?page=" + (op ? "S" : "T") + cid + "." + pid + "." + i + "\">" + cur.title + "</a></td>";
-			content += "<td>" + cur.author + "</td>";
-			content += "<td>" + formatDate(cur.created) + "</td>";
-			content += "<td>" + formatDate(cur.lastCommit.date) + "</td>";
-			content += "</tr>";
+			content += "<tr>\
+							<td><a href=\"?page=" + (op ? "S" : "T") + cid + "." + pid + "." + i + "\">" + cur.title + "</a></td>\
+							<td>" + cur.author + "</td>\
+							<td>" + formatDate(cur.created) + "</td>\
+							<td>" + formatDate(cur.lastCommit.date) + "</td>\
+						</tr>";
 		}
-		content += "</tbody></table></div></div>";
+		content += "</tbody>\
+				</table>\
+			</div>\
+		</div>";
 	}
 	document.getElementById("show-prob-list").innerHTML = content;
 	$("#show-prob-list").modal("show");
@@ -364,9 +387,23 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 			y[i][j] = "class=\"diff-" + c.name + "\"";
 		}
 	}
-	document.write("<div id=\"abc-table\">");
-	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
-	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H/Ex</th></thead><tbody>");
+	document.write("\
+		<div id=\"abc-table\">\
+			<table class=\"ui fixed celled definition table segment\">\
+				<thead class=\"full-width\">\
+					<tr>\
+						<th>比赛</th>\
+						<th>A</th>\
+						<th>B</th>\
+						<th>C</th>\
+						<th>D</th>\
+						<th>E</th>\
+						<th>F</th>\
+						<th>G</th>\
+						<th>H/Ex</th>\
+					</tr>\
+				</thead>\
+			<tbody>");
 	for (let i = abccnt; i; i--) {
 		let t = ext3(i);
 		document.write('<tr><td id="abc' + t + '-cell"' + "><a href=\"https://atcoder.jp/contests/abc" + t + "\">ABC" + t + "</a></td>");
@@ -408,9 +445,26 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 	}
 	document.write("</tbody></table>");
 	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-abc\"><div class=\"bar\"></div><div class=\"label\">" + eper + "% 题面已完成</div></div></p>");
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-abc\"><div class=\"bar\"></div><div class=\"label\">" + sper + "% 题解已完成</div></div></p>");
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-abc\"><div class=\"bar\"></div><div class=\"label\">" + tper + "% 标签已完成</div></div></p></div>");
+	document.write("\
+		<p align=\"center\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-abc\">\
+				<div class=\"bar\"></div>\
+				<div class=\"label\">" + eper + "% 题面已完成</div>\
+			</div>\
+		</p>\
+		<p align=\"center\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-abc\">\
+				<div class=\"bar\"></div>\
+				<div class=\"label\">" + sper + "% 题解已完成</div>\
+			</div>\
+		</p>\
+		<p align=\"center\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-abc\">\
+				<div class=\"bar\"></div>\
+				<div class=\"label\">" + tper + "% 标签已完成</div>\
+			</div>\
+		</p>\
+	</div>");
 	$('#progress-tre-abc').progress({
 		percent: cnte / cnt * 100
 	});
@@ -489,9 +543,22 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 			y[i][j] = "class=\"diff-" + c.name + "\"";
 		}
 	}
-	document.write("<div id=\"arc-table\">");
-	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
-	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>F2</th></thead><tbody>");
+	document.write("\
+		<div id=\"arc-table\">\
+			<table class=\"ui fixed celled definition table segment\">\
+				<thead class=\"full-width\">\
+					<tr>\
+						<th>比赛</th>\
+						<th>A</th>\
+						<th>B</th>\
+						<th>C</th>\
+						<th>D</th>\
+						<th>E</th>\
+						<th>F</th>\
+						<th>F2</th>\
+					</tr>\
+				</thead>\
+				<tbody>");
 	for (let i = arccnt; i >= 1; i--) {
 		let t = ext3(i), w = 57 < i && i < 104 ? 2 : 0;
 		document.write("<tr><td id=\"arc" + t + "-cell\"><a href=\"https://atcoder.jp/contests/arc" + t + "\">ARC" + t + "</a></td>");
@@ -536,9 +603,26 @@ function writearc(rawd, tags, list_tre, list_sol, prbs) {
 	document.write("</tbody></table>");
 
 	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-arc\"><div class=\"bar\"></div><div class=\"label\">" + eper + "% 题面已完成</div></div></p>");
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-arc\"><div class=\"bar\"></div><div class=\"label\">" + sper + "% 题解已完成</div></div></p>");
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-arc\"><div class=\"bar\"></div><div class=\"label\">" + tper + "% 标签已完成</div></div></p></div>");
+	document.write("\
+		<p align=\"center\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-arc\">\
+				<div class=\"bar\"></div>\
+				<div class=\"label\">" + eper + "% 题面已完成</div>\
+			</div>\
+		</p>\
+		<p align=\"center\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-arc\">\
+				<div class=\"bar\"></div>\
+				<div class=\"label\">" + sper + "% 题解已完成</div>\
+			</div>\
+		</p>\
+		<p align=\"center\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-arc\">\
+				<div class=\"bar\"></div>\
+				<div class=\"label\">" + tper + "% 标签已完成</div>\
+			</div>\
+		</p>\
+	</div>");
 	$('#progress-tre-arc').progress({
 		percent: cnte / cnt * 100
 	});
@@ -616,9 +700,22 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 			y[i][j] = "class=\"diff-" + c.name + "\"";
 		}
 	}
-	document.write("<div id=\"agc-table\">");
-	document.write("<table class=\"ui fixed celled definition table segment\" style=\"width:100%;max-width=90%\">");
-	document.write("<thead class=\"full-width\"><tr><th>比赛</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>F2</th></thead><tbody>");
+	document.write("\
+		<div id=\"agc-table\">\
+			<table class=\"ui fixed celled definition table segment\">\
+				<thead class=\"full-width\">\
+					<tr>\
+						<th>比赛</th>\
+						<th>A</th>\
+						<th>B</th>\
+						<th>C</th>\
+						<th>D</th>\
+						<th>E</th>\
+						<th>F</th>\
+						<th>F2</th>\
+					</tr>\
+				</thead>\
+			<tbody>");
 	for (let i = agccnt; i; i--) {
 		if (i == 42)
 			continue;
@@ -663,9 +760,26 @@ function writeagc(rawd, tags, list_tre, list_sol, prbs) {
 	}
 	document.write("</tbody></table>");
 	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-agc\"><div class=\"bar\"></div><div class=\"label\">" + eper + "% 题面已完成</div></div></p>");
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-agc\"><div class=\"bar\"></div><div class=\"label\">" + sper + "% 题解已完成</div></div></p>");
-	document.write("<p align=\"center\"><div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-agc\"><div class=\"bar\"></div><div class=\"label\">" + tper + "% 标签已完成</div></div></p></div>");
+	document.write("\
+		<p align=\"center\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-agc\">\
+				<div class=\"bar\"></div>\
+				<div class=\"label\">" + eper + "% 题面已完成</div>\
+			</div>\
+		</p>\
+		<p align=\"center\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-agc\">\
+				<div class=\"bar\"></div>\
+				<div class=\"label\">" + sper + "% 题解已完成</div>\
+			</div>\
+		</p>\
+		<p align=\"center\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-agc\">\
+				<div class=\"bar\"></div>\
+				<div class=\"label\">" + tper + "% 标签已完成</div>\
+			</div>\
+		</p>\
+	</div>");
 	$('#progress-tre-agc').progress({
 		percent: cnte / cnt * 100
 	});
@@ -879,34 +993,78 @@ function getrandprob() {
 }
 
 function writelist(taglist) {
-	document.write("<div id=\"prob-list\">");
-	document.write("<figure class=\"highcharts-figure\"><div id=\"container\" style=\"height:300px\"></div><p class=\"highcharts-description\"></p></figure>");
-	document.write("<p><button class=\"ui toggle button active\" id=\"list-abc-btn\" onclick=\"listtoggleabc()\">显示 ABC</button>");
-	document.write("<button class=\"ui toggle button active\" id=\"list-arc-btn\" onclick=\"listtogglearc()\">显示 ARC</button>");
-	document.write("<button class=\"ui toggle button active\" id=\"list-agc-btn\" onclick=\"listtoggleagc()\">显示 AGC</button></p>");
-	document.write("<div class=\"ui input\"><input id=\"diflb\" style=\"width: 150;\" placeholder=\"筛选难度下界\"></input></div>");
-	document.write("<div class=\"ui input\"><input id=\"difrb\" style=\"width: 150;\" placeholder=\"筛选难度上界\"></input></div>");
-	document.write("<div id=\"get-tag\" class=\"ui selection multiple search dropdown\">\<input type=\"hidden\" name=\"intag\"/>\<div class=\"default text\">单击此处筛选题目标签</div>\<div class=\"menu\">");
+	document.write("\
+	<div id=\"prob-list\">\
+		<figure class=\"highcharts-figure\">\
+			<div id=\"container\" style=\"height:300px\"></div>\
+			<p class=\"highcharts-description\"></p>\
+		</figure>\
+		<p>\
+			<button class=\"ui toggle button active\" id=\"list-abc-btn\" onclick=\"listtoggleabc()\">\
+				显示 ABC\
+			</button>\
+			<button class=\"ui toggle button active\" id=\"list-arc-btn\" onclick=\"listtogglearc()\">\
+				显示 ARC\
+			</button>\
+			<button class=\"ui toggle button active\" id=\"list-agc-btn\" onclick=\"listtoggleagc()\">\
+				显示 AGC\
+			</button>\
+		</p>\
+		<div class=\"ui input\">\
+			<input id=\"diflb\" style=\"width: 150;\" placeholder=\"筛选难度下界\"/>\
+		</div>\
+		<div class=\"ui input\">\
+			<input id=\"difrb\" style=\"width: 150;\" placeholder=\"筛选难度上界\"/>\
+		</div>\
+		<div id=\"get-tag\" class=\"ui selection multiple search dropdown\">\
+			<input type=\"hidden\" name=\"intag\"/>\
+				<div class=\"default text\">\
+					单击此处筛选题目标签\
+				</div>\
+			<div class=\"menu\">");
 	for (let i in taglist) {
 		document.write("<div class=\"item\" data-value=\"" + taglist[i] + "\">" + taglist[i] + "</div>")
 	}
-	document.write("</div></div>");
-	$(".ui.dropdown").dropdown({
-		on: "hover",
-		transition: "drop",
-		allowAdditions: 1
-	});
-	document.write("&nbsp;&nbsp;<div class=\"ui checkbox\" id=\"tag-combined-or\"><input type=\"checkbox\" name=\"example\"><label>按或合并标签</label></div>&nbsp;&nbsp;");
-	document.write("<button class=\"ui violet basic button\" onclick=\"setfilter()\">筛选</button>");
-	document.write("<button class=\"ui green basic button\" onclick=\"clrfilter()\" style=\"display: inline-block;\">重置</button>");
-	document.write("<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">随机跳题</button>");
-	document.write("<p></p><table class=\"ui fixed celled table segment\"><tbody><tr id=\"rndprob\"></tr></tbody></table>");
-	document.write("<table class=\"ui fixed sortable celled table segment\">");
-	document.write("<thead><tr><th>编号</th><th>标题</th><th>链接</th><th>难度</th><th>标签</th></thead><tbody>");
+	document.write("\
+			</div>\
+		</div>\
+		&nbsp;&nbsp;\
+		<div class=\"ui checkbox\" id=\"tag-combined-or\">\
+			<input type=\"checkbox\" name=\"example\">\
+				<label>\
+					按或合并标签\
+				</label>\
+			</div>\
+			&nbsp;&nbsp;\
+			<button class=\"ui violet basic button\" onclick=\"setfilter()\">\
+				筛选\
+			</button>\
+			<button class=\"ui green basic button\" onclick=\"clrfilter()\" style=\"display: inline-block;\">\
+				重置\
+			</button>\
+			<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">\
+				随机跳题\
+			</button>\
+			<p></p>\
+			<table class=\"ui fixed celled table segment\">\
+				<tbody>\
+					<tr id=\"rndprob\">\
+					</tr>\
+				</tbody>\
+			</table>\
+			<table class=\"ui fixed sortable celled table segment\">\
+				<thead>\
+					<tr>\
+						<th>编号</th>\
+						<th>标题</th>\
+						<th>链接</th>\
+						<th>难度</th>\
+						<th>标签</th>\
+					</tr>\
+				</thead>\
+				<tbody>");
 	for (let i in problist) {
-		isd1[i] = 1;
-		isd2[i] = 1;
-		pcol[i] = "#fff";
+		isd1[i] = 1, isd2[i] = 1, pcol[i] = "#fff";
 		document.write("<tr id=\"" + i + "-col\">");
 		document.write("<td>" + problist[i].org_a + "</td>");
 		document.write("<td>" + problist[i].title + "</td>");
@@ -921,7 +1079,15 @@ function writelist(taglist) {
 		}
 		document.write("</td></tr>");
 	}
-	document.write("</tbody></table></div>");
+	document.write("\
+				</tbody>\
+			</table>\
+		</div>");
+	$(".ui.dropdown").dropdown({
+		on: "hover",
+		transition: "drop",
+		allowAdditions: 1
+	});
 	refreshchart();
 }
 
@@ -939,6 +1105,13 @@ function jumptobottom() {
 }
 
 function redr() {
+	let trans = new Base64(), invCode = document.getElementById("rev-code").value;
+	try {
+		JSON.parse(trans.decode(invCode));
+	} catch {
+		alert("邀请码有误");
+		return;
+	}
 	window.localStorage.setItem('inv-code', document.getElementById("rev-code").value);
 	window.location.href = "contest.html?id=" + escape(document.getElementById("rev-code").value);
 }
@@ -954,9 +1127,6 @@ function showcreatepage() {
 	closecontestpage();
 	document.getElementById("create-page").setAttribute("style", "display: block;");
 }
-function checknum(i) {
-	return i == "" || isNaN(Number(i));
-}
 function printInviteCode() {
 	let res = "", trans = new Base64();
 	res += '{"title":"' + document.getElementById("get-title").value + '","mod":';
@@ -971,46 +1141,26 @@ function printInviteCode() {
 		return;
 	}
 	res += ',"st":';
-	let ye = document.getElementById("get-start-ye").value,
-		mo = document.getElementById("get-start-mo").value,
-		da = document.getElementById("get-start-da").value,
-		ho = document.getElementById("get-start-ho").value,
-		mi = document.getElementById("get-start-mi").value,
-		se = document.getElementById("get-start-se").value,
-		time = new Date(), st = 0, ed = 0;
-	if (checknum(ye) || checknum(mo) || checknum(da) || checknum(ho) || checknum(mi) || checknum(se)) {
+	let dat = document.getElementById("get-start-date").value,
+		tim = document.getElementById("get-start-time").value,
+		time = new Date(dat + " " + tim), st = Number(time), ed;
+	if (dat == "" || tim == "") {
 		alert("开始时间不合法");
 		return;
 	}
-	time.setYear(ye);
-	time.setMonth(mo - 1);
-	time.setDate(da);
-	time.setHours(ho);
-	time.setMinutes(mi);
-	time.setSeconds(se), st = Number(time);
-	res += '"' + Number(time) + '","ed":';
-	ye = document.getElementById("get-finish-ye").value;
-	mo = document.getElementById("get-finish-mo").value;
-	da = document.getElementById("get-finish-da").value;
-	ho = document.getElementById("get-finish-ho").value;
-	mi = document.getElementById("get-finish-mi").value;
-	se = document.getElementById("get-finish-se").value;
-	time = new Date();
-	if (checknum(ye) || checknum(mo) || checknum(da) || checknum(ho) || checknum(mi) || checknum(se)) {
+	res += '"' + st + '","ed":';
+	dat = document.getElementById("get-finish-date").value;
+	tim = document.getElementById("get-finish-time").value;
+	time = new Date(dat + " " + tim), ed = Number(time);
+	if (dat == "" || tim == "") {
 		alert("结束时间不合法");
 		return;
 	}
-	time.setYear(ye);
-	time.setMonth(mo - 1);
-	time.setDate(da);
-	time.setHours(ho);
-	time.setMinutes(mi);
-	time.setSeconds(se), ed = Number(time);
-	if (st > ed) {
+	if (st >= ed) {
 		alert("开始时间在结束时间前");
 		return;
 	}
-	res += '"' + Number(time) + '","problems":[';
+	res += '"' + ed + '","problems":[';
 	let prblist = document.getElementById("get-problems").value.split(' '), scr = [];
 	if (document.getElementById("get-problems").value == "") {
 		alert("没有题目");
@@ -1052,24 +1202,146 @@ function printInviteCode() {
 	document.getElementById("print-code").value = trans.encode(res);
 	copyToClipboard(trans.encode(res));
 }
+function g2(w) {
+	return Math.floor(w / 10).toString() + (w % 10).toString();
+}
 function buildcontestpage() {
-	document.write("<div id=\"cont-page\">");
-	document.write("<div class=\"ui secondary menu\"><a class=\"item\" onclick=\"showjoinpage()\">参加</a><a class=\"item\" onclick=\"showcreatepage()\">创建</a></div>");
-	document.write("<div id=\"join-page\">");
-	document.write("<div class=\"ui fluid input\"><input id=\"rev-code\" placeholder=\"输入邀请码\"></input><button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button></div>");
-	let p = document.getElementById('rev-code'), tm = new Date();
+	let stTime = new Date(), edTime = new Date(Number(stTime) + 7200000),
+		startDate = stTime.getFullYear() + "-" + g2(stTime.getMonth()) + "-" + g2(stTime.getDate()),
+		startTime = g2(stTime.getHours()) + ":" + g2(stTime.getMinutes()),
+		finishDate = edTime.getFullYear() + "-" + g2(edTime.getMonth()) + "-" + g2(edTime.getDate()),
+		finishTime = g2(edTime.getHours()) + ":" + g2(edTime.getMinutes());
+	document.write("\
+	<div id=\"cont-page\">\
+		<div class=\"ui secondary menu\">\
+			<a class=\"item\" onclick=\"showjoinpage()\">\
+				参加\
+			</a>\
+			<a class=\"item\" onclick=\"showcreatepage()\">\
+				创建\
+			</a>\
+		</div>\
+		<div id=\"join-page\">\
+			<div class=\"ui fluid input\">\
+				<input id=\"rev-code\" placeholder=\"输入邀请码\"/>\
+				<button class=\"ui button\" onclick=\"redr()\">\
+					跳转到比赛界面\
+				</button>\
+			</div>\
+		</div>\
+		<div id=\"create-page\">\
+			<h4 class=\"ui header\">\
+				设置比赛标题\
+			</h4>\
+			<div class=\"ui fluid input\">\
+				<input id=\"get-title\" placeholder=\"比赛标题\"/>\
+			</div>\
+			<h4 class=\"ui header\">\
+				设置比赛类型\
+			</h4>\
+			<div class=\"ui form\">\
+				<div class=\"three fields\">\
+					<div class=\"field\">\
+						<div class=\"ui radio checkbox\" id=\"cont-type-prac\">\
+							<input type=\"radio\" name=\"contest-type\"/>\
+							<label>\
+								练习赛\
+								<i class=\"ui question circle icon helper\" id=\"getPracticeContestInfo\"></i>\
+							</label>\
+						</div>\
+					</div>\
+					<div class=\"field\">\
+						<div class=\"ui radio checkbox\" id=\"cont-type-icpc\">\
+							<input type=\"radio\" name=\"contest-type\"/>\
+							<label>\
+								ICPC 赛制\
+								<i class=\"ui question circle icon helper\" id=\"getICPCContestInfo\"></i>\
+							</label>\
+						</div>\
+					</div>\
+					<div class=\"field\">\
+						<div class=\"ui radio checkbox\" id=\"cont-type-atc\">\
+							<input type=\"radio\" name=\"contest-type\"/>\
+							<label>\
+								AtCoder 赛制\
+								<i class=\"ui question circle icon helper\" id=\"getAtcoderContestInfo\"></i>\
+							</label>\
+						</div>\
+					</div>\
+				</div>\
+			</div>\
+			<div class=\"ui popup top center transition hidden\" id=\"practiceContestInfo\" style=\"width: 170px !important\">\
+				题目不加权，没有罚时\
+			</div>\
+			<div class=\"ui popup top center transition hidden\" id=\"ICPCContestInfo\" style=\"width: 210px !important\">\
+				题目不加权，罚时加和，每次不通过提交罚时为 5 分钟（CE 不计罚时）\
+			</div>\
+			<div class=\"ui popup top center transition hidden\" id=\"atcoderContestInfo\" style=\"width: 250px !important\">\
+				题目可以设置为加权，罚时取各题通过时间最大值，每次不通过提交罚时额外加 5 分钟（CE 不计罚时）\
+			</div>\
+			<h4 class=\"ui header\">\
+				设置开始时间\
+			</h4>\
+			<p></p>\
+			<div class=\"ui fluid input\">\
+				<input id=\"get-start-date\" type=\"date\" value=\"" + startDate + "\">\
+				<input id=\"get-start-time\" type=\"time\" value=\"" + startTime + "\">\
+			</div>\
+			<h4 class=\"ui header\">\
+				设置结束时间\
+			</h4>\
+			<p></p>\
+			<div class=\"ui fluid input\">\
+				<input id=\"get-finish-date\" type=\"date\" value=\"" + finishDate + "\">\
+				<input id=\"get-finish-time\" type=\"time\" value=\"" + finishTime + "\">\
+			</div>\
+			<h4 class=\"ui header\">\
+				参赛选手\
+				<i class=\"ui question circle icon helper\" id=\"getAccountInfo\"></i>\
+			</h4>\
+			<div class=\"ui popup top left transition hidden\" id=\"accountInfo\" style=\"width: 260px !important\">\
+				如果需要使用 CodeForces 账号，请使用 <code>&lt;AT账号&gt;(&lt;CF账号&gt;)</code> 的格式，如：<code>houzhiyuan(houzhiyuan123)</code>\
+			</div>\
+			<div class=\"ui fluid input\">\
+				<input id=\"get-players\" placeholder=\"以半角空格分隔\"/>\
+			</div>\
+			<h4 class=\"ui header\">\
+				比赛题目\
+			</h4>\
+			<div class=\"ui accordion\" id=\"id-sample\">\
+				<div class=\"title\">\
+					<i class=\"dropdown icon\"></i>\
+					格式说明\
+				</div>\
+				<div class=\"content\">\
+					<p>请填写题目链接内的 AtCoder 格式标识符（<code>atcoder.jp/<比赛标识符>/tasks/<题目标识符></code>），例如下：</p>\
+					<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a> 的标识符为 abc255_h；</p>\
+					<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a> 的标识符为 arc103_b；</p>\
+					<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a> 的标识符为 zone2021_f；</p>\
+					<p><a href=\"https://atcoder.jp/contests/code-festival-2017-qualc/tasks/code_festival_2017_qualc_f\">CF17QualcF</a> 的标识符为 code_festival_2017_qualc_f。</p>\
+					<p>同时支持 CodeForces 题目，格式为 'CFXXXI'（去掉引号），如 CF1A。</p>\
+					<p>在 AtCoder 赛制下可以为题目赋不同的权，格式为 <code><题目ID>(<分数>)</code> 的格式，如 <code>abc277_h(600)</code>。权默认为 1。</p>\
+				</div>\
+			</div>\
+			<p></p>\
+			<div class=\"ui fluid input\">\
+				<input id=\"get-problems\" placeholder=\"以半角空格分隔\"/>\
+			</div>\
+			<h4 class=\"ui header\">\
+				生成邀请码\
+			</h4>\
+			<div class=\"ui fluid input\">\
+				<input id=\"print-code\" placeholder=\"邀请码\"/>\
+				<button class=\"ui primary button\" onclick=\"printInviteCode()\" id=\"getCode\">\
+					获取邀请码\
+				</button>\
+			</div>\
+		</div>\
+	</div>");
+	let p = document.getElementById('rev-code');
 	if (window.localStorage.getItem('inv-code') != undefined)
 		p.value = window.localStorage.getItem('inv-code');
-	document.write("</div><div id=\"create-page\">");
-	document.write("<h4 class=\"ui header\">设置比赛标题</h4>");
-	document.write("<div class=\"ui fluid input\"><input id=\"get-title\" placeholder=\"比赛标题\"></input></div>");
-	document.write("<h4 class=\"ui header\">设置比赛类型</h4>");
-	document.write("<div class=\"ui form\"><div class=\"three fields\"><div class=\"field\"><div class=\"ui radio checkbox\" id=\"cont-type-prac\"><input type=\"radio\" name=\"contest-type\"><label>练习赛<i class=\"ui question circle icon helper\" id=\"getPracticeContestInfo\"></i></label></div></div><div class=\"field\"><div class=\"ui radio checkbox\" id=\"cont-type-icpc\"><input type=\"radio\" name=\"contest-type\"><label>ICPC 赛制<i class=\"ui question circle icon helper\" id=\"getICPCContestInfo\"></i></label></div></div><div class=\"field\"><div class=\"ui radio checkbox\" id=\"cont-type-atc\"><input type=\"radio\" name=\"contest-type\"><label>AtCoder 赛制<i class=\"ui question circle icon helper\" id=\"getAtcoderContestInfo\"></i></label></div></div></div></div><div class=\"ui popup top center transition hidden\" id=\"practiceContestInfo\" style=\"width: 170px !important\">题目不加权，没有罚时</div><div class=\"ui popup top center transition hidden\" id=\"ICPCContestInfo\" style=\"width: 210px !important\">题目不加权，罚时加和，每次不通过提交罚时为 5 分钟（CE 不计罚时）</div><div class=\"ui popup top center transition hidden\" id=\"atcoderContestInfo\" style=\"width: 250px !important\">题目可以设置为加权，罚时取各题通过时间最大值，每次不通过提交罚时额外加 5 分钟（CE 不计罚时）</div>");
-	document.write("<h4 class=\"ui header\">设置开始时间</h4><div style=\"display: inline;\">");
-	document.write("<div class=\"ui right labeled fluid input\"><input id=\"get-start-ye\" value=\"" + (tm.getYear() + 1900) + "\"></input><div class=\"ui label\">年</div><input id=\"get-start-mo\" value=\"" + (tm.getMonth() + 1) + "\"></input><div class=\"ui label\">月</div><input id=\"get-start-da\" value=\"" + tm.getDate() + "\"></input><div class=\"ui label\">日</div><input id=\"get-start-ho\" value=\"" + tm.getHours() + "\"></input><div class=\"ui label\">时</div><input id=\"get-start-mi\" value=\"" + tm.getMinutes() + "\"></input><div class=\"ui label\">分</div><input id=\"get-start-se\" value=\"" + tm.getSeconds() + "\"></input><div class=\"ui label\">秒</div></div></div>");
-	document.write("<h4 class=\"ui header\">设置结束时间</h4><p>");
-	document.write("<div class=\"ui right labeled fluid input\"><input id=\"get-finish-ye\" placeholder=\"年\" value=\"" + (tm.getYear() + 1900) + "\"></input><div class=\"ui label\">年</div><input id=\"get-finish-mo\" placeholder=\"月\" value=\"" + (tm.getMonth() + 1) + "\"></input><div class=\"ui label\">月</div><input id=\"get-finish-da\" placeholder=\"日\" value=\"" + tm.getDate() + "\"></input><div class=\"ui label\">日</div><input id=\"get-finish-ho\" placeholder=\"时\" value=\"" + tm.getHours() + "\"></input><div class=\"ui label\">时</div><input id=\"get-finish-mi\" placeholder=\"分\" value=\"" + tm.getMinutes() + "\"></input><div class=\"ui label\">分</div><input id=\"get-finish-se\" placeholder=\"秒\" value=\"" + tm.getSeconds() + "\"></input><div class=\"ui label\">秒</div></div></p>");
-	document.write("<h4 class=\"ui header\">参赛选手<i class=\"ui question circle icon helper\" id=\"getAccountInfo\"></i></h4><div class=\"ui popup top left transition hidden\" id=\"accountInfo\" style=\"width: 260px !important\">如果需要使用 CodeForces 账号，请使用 <code>&lt;AT账号&gt;(&lt;CF账号&gt;)</code> 的格式，如：<code>houzhiyuan(houzhiyuan123)</code></div>");
+	$("#id-sample").accordion();
 	$('#getAccountInfo').popup({
 		popup: $("#accountInfo"),
 		on: "hover"
@@ -1086,24 +1358,10 @@ function buildcontestpage() {
 		popup: $("#atcoderContestInfo"),
 		on: "hover"
 	});
-	document.write("<div class=\"ui fluid input\"><input id=\"get-players\" placeholder=\"以半角空格分隔\"></input></div>");
-	document.write("<h4 class=\"ui header\">比赛题目</h4>");
-	document.write("<div class=\"ui accordion\" id=\"id-sample\"><div class=\"title\"><i class=\"dropdown icon\"></i>格式说明</div><div class=\"content\">");
-	document.write("<p>请填写题目链接内的 AtCoder 格式标识符（<code>atcoder.jp/<比赛标识符>/tasks/<题目标识符></code>），例如下：</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a> 的标识符为 abc255_h；</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a> 的标识符为 arc103_b；</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a> 的标识符为 zone2021_f；</p>");
-	document.write("<p><a href=\"https://atcoder.jp/contests/code-festival-2017-qualc/tasks/code_festival_2017_qualc_f\">CF17QualcF</a> 的标识符为 code_festival_2017_qualc_f。</p>")
-	document.write("<p>同时支持 CodeForces 题目，格式为 'CFXXXI'（去掉引号），如 CF1A。</p>")
-	document.write("<p>在 AtCoder 赛制下可以为题目赋不同的权，格式为 <code><题目ID>(<分数>)</code> 的格式，如 <code>abc277_h(600)</code>。权默认为 1。</p></div></div><p></p>");
-	$("#id-sample").accordion();
-	document.write("<div class=\"ui fluid input\"><input id=\"get-problems\" placeholder=\"以半角空格分隔\"></input></div>");
-	document.write("<h4 class=\"ui header\">生成邀请码</h4>");
-	document.write("<div class=\"ui fluid input\"><input id=\"print-code\" placeholder=\"邀请码\"></input><button class=\"ui primary button\" onclick=\"printInviteCode()\" id=\"getCode\" data-content=\"邀请码已复制\">获取邀请码</button></div>");
 	$("#getCode").popup({
+		content: "邀请码已复制到剪贴板",
 		on: "click"
 	});
-	document.write("</div></div>");
 	showjoinpage();
 }
 let curProb = [];
@@ -1214,11 +1472,29 @@ function importUser() {
 }
 
 function buildw() {
-	document.write("<div id=\"page-top\" class=\"display: inline;\"></div>");
-	document.write("<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; right: 50; top: 50;\" id=\"button-top\"><i style=\"font-size: 1em;\" class=\"arrow up icon\"></i><p style=\"font-size: 10px; display: inline-block;\">&nbsp;到顶部</p></button>");
-	document.write("<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; right: 50; bottom: 80;\" id=\"button-end\"><i style=\"font-size: 1em;\" class=\"arrow down icon\"></i><p style=\"font-size: 10px; display: inline-block;\">&nbsp;到底部</p></button>");
-	document.write("<div class=\"ui large basic modal\" id=\"show-prob-list\"></div>");
-	document.write("<h1><p align=\"center\">AtCoder 中文版</p></h1>");
+	document.write("\
+	<div id=\"page-top\" class=\"display: inline;\"></div>\
+	<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; right: 50; top: 50;\" id=\"button-top\">\
+		<i style=\"font-size: 1em;\" class=\"arrow up icon\">\
+		</i>\
+		<p style=\"font-size: 10px; display: inline-block;\">\
+			&nbsp;到顶部\
+		</p>\
+	</button>\
+	<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; right: 50; bottom: 80;\" id=\"button-end\">\
+		<i style=\"font-size: 1em;\" class=\"arrow down icon\">\
+		</i>\
+		<p style=\"font-size: 10px; display: inline-block;\">\
+			&nbsp;到底部\
+		</p>\
+	</button>\
+	<div class=\"ui large basic modal\" id=\"show-prob-list\">\
+	</div>\
+	<h1>\
+		<p align=\"center\">\
+			AtCoder 中文版\
+		</p>\
+	</h1>");
 	window.onscroll = function () {
 		let cur = $(document).scrollTop(), h = document.documentElement.clientHeight;
 		document.getElementById("button-top").setAttribute("style", cur - $("#page-top").offset().top < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
@@ -1262,7 +1538,32 @@ function buildw() {
 	readTextFile("src/tag-list.json", "json", function (text) {
 		taglist = JSON.parse(text);
 	});
-	document.write("<div class=\"ui pointing menu\"><a class=\"item\" onclick=\"abctabletoggle()\">ABC</a><a class=\"item\" onclick=\"arctabletoggle()\">ARC</a><a class=\"item\" onclick=\"agctabletoggle()\">AGC</a><a class=\"item\" onclick=\"listtoggle()\">筛选</a><a class=\"item\" onclick=\"contesttoggle()\">比赛</a><div class=\"right menu\"><div class=\"item\"><div class=\"ui transparent icon input\"><input type=\"text\" id=\"user-name\" placeholder=\"导入用户，多个用户用半角空格隔开\" style=\"width: 260px\"><i class=\"search link icon\" onclick=\"importUser()\"></i></div></div></div></div>");
+	document.write("\
+	<div class=\"ui pointing menu\">\
+		<a class=\"item\" onclick=\"abctabletoggle()\">\
+			ABC\
+		</a>\
+		<a class=\"item\" onclick=\"arctabletoggle()\">\
+			ARC\
+		</a>\
+		<a class=\"item\" onclick=\"agctabletoggle()\">\
+			AGC\
+		</a>\
+		<a class=\"item\" onclick=\"listtoggle()\">\
+			筛选\
+		</a>\
+		<a class=\"item\" onclick=\"contesttoggle()\">\
+			比赛\
+		</a>\
+		<div class=\"right menu\">\
+			<div class=\"item\">\
+				<div class=\"ui transparent icon input\">\
+					<input type=\"text\" id=\"user-name\" placeholder=\"导入用户，多个用户用半角空格隔开\" style=\"width: 260px\"/>\
+					<i class=\"search link icon\" onclick=\"importUser()\"></i>\
+				</div>\
+			</div>\
+		</div>\
+	</div>");
 	$("#user-name").keydown(function (e) {
 		if (event.keyCode == 13) {
 			importUser();
@@ -1274,39 +1575,40 @@ function buildw() {
 	writelist(taglist);
 	buildcontestpage();
 
-	document.write("<div class=\"ui vertical footer segment\">\
-			<div class=\"ui center aligned container\">\
-				<div class=\"ui section divider\"></div>\
-					<div class=\"ui buttons\">\
-						<script>\
-							function jumplink1(){\
-								window.open(\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\");\
-							}\
-							function jumplink2(){\
-								window.open(\"https://atcoder.jp/\");\
-							}\
-							function jumplink3(){\
-								window.open(\"https://kenkoooo.com/atcoder/#/table/\");\
-							}\
-							function jumplink4(){\
-								window.open(\"https://semantic-ui.com/\");\
-							}\
-							function jumplink5(){\
-								window.open(\"https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B\");\
-							}\
-						</script>\
-						<button class=\"ui basic button\" onclick=\"jumplink1()\"><img src=\"images/logo1.png\"      class=\"ui centered mini image\"/></button>\
-						<button class=\"ui basic button\" onclick=\"jumplink2()\"><img src=\"images/atcoder.png\"    class=\"ui centered mini image\"/></button>\
-						<button class=\"ui basic button\" onclick=\"jumplink3()\"><img src=\"images/kenkoooo.png\"   class=\"ui centered mini image\"/></button>\
-						<button class=\"ui basic button\" onclick=\"jumplink4()\"><img src=\"images/semantic.png\"   class=\"ui centered mini image\"/></button>\
-						<button class=\"ui basic button\" onclick=\"jumplink5()\"><img src=\"images/greasyfork.png\" class=\"ui centered mini image\"/></button>\
-					</div>\
-					<p align=\"center\">\
-						Powered by <a href=\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\">AtCoder for Chinese Develop Team</a>.\
-					</p>\
-			</div>\
-		</div>");
-	document.write("<div id=\"page-end\" style=\"display: inline;\"></div>");
+	document.write("\
+	<div class=\"ui vertical footer segment\">\
+		<div class=\"ui center aligned container\">\
+			<div class=\"ui section divider\"></div>\
+				<div class=\"ui buttons\">\
+					<script>\
+						function jumplink1(){\
+							window.open(\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\");\
+						}\
+						function jumplink2(){\
+							window.open(\"https://atcoder.jp/\");\
+						}\
+						function jumplink3(){\
+							window.open(\"https://kenkoooo.com/atcoder/#/table/\");\
+						}\
+						function jumplink4(){\
+							window.open(\"https://semantic-ui.com/\");\
+						}\
+						function jumplink5(){\
+							window.open(\"https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B\");\
+						}\
+					</script>\
+					<button class=\"ui basic button\" onclick=\"jumplink1()\"><img src=\"images/logo1.png\"      class=\"ui centered mini image\"/></button>\
+					<button class=\"ui basic button\" onclick=\"jumplink2()\"><img src=\"images/atcoder.png\"    class=\"ui centered mini image\"/></button>\
+					<button class=\"ui basic button\" onclick=\"jumplink3()\"><img src=\"images/kenkoooo.png\"   class=\"ui centered mini image\"/></button>\
+					<button class=\"ui basic button\" onclick=\"jumplink4()\"><img src=\"images/semantic.png\"   class=\"ui centered mini image\"/></button>\
+					<button class=\"ui basic button\" onclick=\"jumplink5()\"><img src=\"images/greasyfork.png\" class=\"ui centered mini image\"/></button>\
+				</div>\
+				<p align=\"center\">\
+					Powered by <a href=\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\">AtCoder for Chinese Develop Team</a>.\
+				</p>\
+		</div>\
+	</div>\
+	<div id=\"page-end\" style=\"display: inline;\"></div>");
 	abctabletoggle();
 	window.onclick();
 	document.getElementById("user-name").value = window.localStorage.getItem("default-user-list");
