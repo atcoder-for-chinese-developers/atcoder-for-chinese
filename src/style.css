@@ -82,10 +82,10 @@ a:visited {
 
 .diff-unavailable {
 	color: #fff;
-	font-size: 5px;
 	line-height: 1;
 	font-weight: 700;
-	margin-right: 5px;
+	font-size: .6em;
+	margin-right: .6em;
 	padding-left: .6em;
 	border-radius: 10rem;
 	padding-right: .6em;
