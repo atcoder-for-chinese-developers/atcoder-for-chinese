@@ -1339,9 +1339,9 @@ function getStatColor(stat) {
 function getStatClass(stat) {
 	if (stat == undefined)
 		return "";
-	if (stat.substr(0,2) == "AC")
+	if (stat.substr(0, 2) == "AC")
 		return "positive";
-	if (stat.substr(0,2) == "UA")
+	if (stat.substr(0, 2) == "UA")
 		return "negative";
 	return "";
 }
@@ -1402,7 +1402,7 @@ function importUser() {
 			}));
 		}
 		for (let i in usrPrbStat) {
-			if (getStatPriority(prbStat[i]) < getStatPriority(usrPrbStat[i])){
+			if (getStatPriority(prbStat[i]) < getStatPriority(usrPrbStat[i])) {
 				prbStat[i] = usrPrbStat[i];
 			}
 		}
