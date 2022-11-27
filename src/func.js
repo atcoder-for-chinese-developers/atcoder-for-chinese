@@ -115,7 +115,7 @@ function ext3(con) {
 	return (Math.floor(con / 100)).toString() + (Math.floor(con % 100 / 10)).toString() + (con % 10).toString();
 }
 function transdiff(d) {
-	return Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
+	return d === null ? 100000 : Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
 }
 let abctoarc = new Array(233);
 function getabcname(con, id) {
@@ -176,17 +176,8 @@ function contesttoggle() {
 	closealltables();
 	document.getElementById("cont-page").setAttribute("style", "display: block;");
 }
-function abctagtoggle(i, j) {
-	document.getElementById("tag-" + getabcname(i, j)).setAttribute("style",
-		document.getElementById("tag-" + getabcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
-}
-function arctagtoggle(i, j) {
-	document.getElementById("tag-" + getarcname(i, j)).setAttribute("style",
-		document.getElementById("tag-" + getarcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
-}
-function agctagtoggle(i, j) {
-	document.getElementById("tag-" + getagcname(i, j)).setAttribute("style",
-		document.getElementById("tag-" + getagcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
+function tagToggle(id) {
+	document.getElementById("tag-" + id).setAttribute("style", document.getElementById("tag-" + id).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
 }
 function getColor(k) {
 	if (k == 100000) {
@@ -259,7 +250,7 @@ function getDiffCirc(d){
 		return "<ta href=\"\" title=\"难度：暂未评定\"><span class=\"diff-unavailable\">?</span></ta>";
 	}
 }
-let problist = [], contlist = [], abccnt = 0, arccnt = 0, agccnt = 0, rawd, tralist, sollist, tags, prbs, taglist;
+let problist = [], contlist = [], abccnt = 0, arccnt = 0, agccnt = 0, rawd, traList, solList, tags, prbs, taglist;
 function formatDate(s, fmt = "yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒") {
 	if (s == "")
 		return "";
@@ -287,7 +278,7 @@ function formatDate(s, fmt = "yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒") {
 	return t.toString();
 }
 function showProbModal(cid, pid, title, op) {
-	let list = (op ? sollist : tralist)[cid][pid], content = "\
+	let list = (op ? solList : traList)[cid][pid], content = "\
 		<div class=\"ui segment\">\
 			<H2 class=\"ui medium block top attached header\">" + title + "</h2>";
 	if (list == 0) {
@@ -330,114 +321,83 @@ function showProbModal(cid, pid, title, op) {
 	$("#show-prob-list").modal("show");
 }
 
-function writeabc(rawd, tags, list_tre, list_sol, prbs) {
-	let Lim = 8, mx = 1005, y = new Array(mx), siz = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
-		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], abctitle = new Array(mx);
-	while (getabcname(abccnt + 1, 1) in rawd)
-		abccnt++;
-	for (let i = 1; i <= abccnt; i++)
-		Ava_tre[i] = new Array(10);
-	for (let i = 1; i <= abccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_tre[i][j] = [];
-	for (let i = 1; i <= abccnt; i++)
-		Ava_sol[i] = new Array(10);
-	for (let i = 1; i <= abccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_sol[i][j] = [];
-	for (let i = 1; i <= abccnt; i++)
-		if (("abc" + ext3(i)) in list_tre)
-			for (let j = 0; j < getabccnt(i); j++)
-				if (getabcname(i, j) in list_tre["abc" + ext3(i)])
-					Ava_tre[i][j] = list_tre["abc" + ext3(i)][getabcname(i, j)];
-	for (let i = 1; i <= abccnt; i++)
-		if (("abc" + ext3(i)) in list_sol)
-			for (let j = 0; j < getabccnt(i); j++)
-				if (getabcname(i, j) in list_sol["abc" + ext3(i)])
-					Ava_sol[i][j] = list_sol["abc" + ext3(i)][getabcname(i, j)];
-	for (let i = 1, ri = 58; i <= abccnt; i++) {
-		x[i] = new Array(getabccnt(i));
-		tg[i] = new Array(getabccnt(i));
-		abctitle[i] = new Array(getabccnt(i));
-		cnt += x[i].length;
-		let flg = 0;
-		for (let j = 0; j < getabccnt(i); j++) {
-			if (i < 42 || i > 125 || j < 2 || getabcname(i, j) in rawd)
-				x[i][j] = !(getabcname(i, j) in rawd) || !("difficulty" in rawd[getabcname(i, j)]) ? 100000 : transdiff(rawd[getabcname(i, j)].difficulty, 0);
-			else
-				x[i][j] = !("difficulty" in rawd[getarcname(ri, j - 2)]) ? 100000 : transdiff(rawd[getarcname(ri, j - 2)].difficulty, 0), flg = 1, abctoarc[i] = ri;
-		}
-		ri += flg;
+function buildTable(name, data, prbIdx) {
+	let c = prbIdx.length, mx = 1010, cnt = 0, cnte = 0, cnts = 0, cntt = 0;
+	let cont = [], tbl = [], idxList = prbIdx;
+	for (let i in idxList) {
+		idxList[i] = prbIdx[i].split("/");
 	}
-	for (let i = 1; i <= abccnt; i++)
-		for (let j = 0; j < getabccnt(i); j++)
-			nametoid[getabcname(i, j)] = [i, j];
-	for (let i in prbs)
-		if (prbs[i].id in nametoid)
-			abctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
-	for (let i = 1; i <= abccnt; i++)
-		for (let j = 0; j < getabccnt(i); j++) {
-			tg[i][j] = tags[getabcname_u(i, j)];
-			problist[getabcname(i, j)] = {
-				"tag": tg[i][j],
-				"diff": x[i][j],
-				"title": abctitle[i][j],
-				"org_a": "<a href=\"https://atcoder.jp/contests/abc" + ext3(i) + "/tasks/" + getabcname(i, j) + "\">" + getabcname_u(i, j) + "</a>",
-				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
-			};
+	for (let i in data) {
+		cont.push(data[i]);
+	}
+	cont.sort((a, b) => b.start_epoch_second - a.start_epoch_second);
+	for (let i in cont) {
+		let prb = new Array(c);
+		for (let j = 0; j < c; j++) 
+			prb[j] = "<td></td>";
+		for (let j in cont[i].problems) {
+			let idx = cont[i].problems[j].problem_index, p = prbIdx.findIndex((t) => t.find((a) => a == idx) != undefined),
+				cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id + "_" + idx;
+			prb[p] = 
+				"<td id=\"cell-" + pid + "-" + name + "\">\
+					<a href=\"https://atcoder.jp/contests/" + cont[i].id + "/tasks/" + pid + "\" class=\"diff-" + getColor(dif).name + "\">" +
+						"<ta href=\"javascript:void(0)\" title=\"难度：" + (dif == 100000 ? "暂未评定" : dif.toString()) + "\"" +
+							getDiffCirc(dif) + idx + "&nbsp;" +
+						"</ta>" +
+					"</a>";
+			if ((cont[i].id in traList) && (pid in traList[cid])) {
+				prb[p] +=
+					"<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;";
+			}
+			if ((cont[i].id in solList) && (pid in solList[cid])) {
+				prb[p] +=
+					"<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题解\", 1)'>题解</a>&nbsp;&nbsp;";
+			}
+			if (uname in tags) {
+				let tgLst = tags[uname];
+				prb[p] +=
+					"<div onclick=\"tagToggle(" + pid + "-" + name + ")\" style=\"position: relative; right: -5;\">" +
+						"<a class=\"floating ui circular right label\" style=\"background-color: #50d0d0!important\">" + 
+							tgLst.length +
+						"</a>" + 
+					"</div>" + "<div id=\"tag-" + pid + "-" + name + "\"";
+				for (let t in tgLst) {
+					prb[p] +=
+						"<p class=\"ui tag label\">" + tgLst[t] + "</p>";
+				}
+				prb[p] +=
+					"</div>";
+			}
 		}
-	for (let i = abccnt; i >= 1; i--) {
-		siz[i] = getabccnt(i);
-		y[i] = new Array(siz[i]);
-		for (let j = 0; j < siz[i]; j++)
-			y[i][j] = "class=\"diff-" + getColor(x[i][j]).name + "\"";
+		tbl.push(prb);
 	}
 	document.write("\
-		<div id=\"abc-table\">\
+		<div id=\"" + name + "-table\">\
 			<table class=\"ui fixed celled definition table segment\">\
 				<thead class=\"full-width\">\
 					<tr>\
-						<th>比赛</th>\
-						<th>A</th>\
-						<th>B</th>\
-						<th>C</th>\
-						<th>D</th>\
-						<th>E</th>\
-						<th>F</th>\
-						<th>G</th>\
-						<th>H/Ex</th>\
-					</tr>\
+						<th>比赛</th>");
+	for (let i = 0; i < c; i++)
+		document.write("<th>" + prbIdx[i] + "</th>");
+	document.write("</tr>\
 				</thead>\
 			<tbody>");
-	for (let i = abccnt; i; i--) {
-		let t = ext3(i);
-		document.write('<tr><td id="abc' + t + '-cell"' + "><a href=\"https://atcoder.jp/contests/abc" + t + "\">ABC" + t + "</a></td>");
-		for (let j = 0; j < siz[i]; j++) {
-			let uC = String.fromCharCode(j + 65), traLink = "", solLink = "";
-			if (j == 7 && i > 232)
-				uC = "Ex";
-			if (Ava_tre[i][j] != 0)
-				traLink = problist[getabcname(i, j)].prob_a, cnte++;
-			if (Ava_sol[i][j] != 0)
-				solLink = problist[getabcname(i, j)].solu_a, cnts++;
-			document.write("<td id='" + getabcname(i, j) + "-cell-1'><a href=\"https://atcoder.jp/contests/abc" + t + "/tasks/" + getabcname(i, j) + "\" " + y[i][j] + ">" + getDiffCirc(x[i][j]) + uC + " </a>" + traLink + solLink);
-			if (tg[i][j] != undefined)
-				document.write("<div onclick=\"abctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
-			document.write("<div id=\"tag-" + getabcname(i, j) + "\" style=\"display: none;\">");
-			if (tg[i][j] != undefined) {
-				cntt++;
-				for (let t = 0; t < tg[i][j].length; t++) {
-					document.write("<p class=\"ui tag label\">" + tg[i][j][t] + "</p>");
-				}
-			}
-			document.write("</div></td>");
+	for (let i in cont) {
+		let cid = cont[i].id;
+		document.write("\
+				<tr>\
+					<td id=\"" + cid + "-cell\">\
+						<a href=\"https://atcoder.jp/contests" + cid + "\">" + cid.toUpperCase() + "</a>\
+					</td>");
+		for (let j in tbl[i]) {
+			document.write(tbl[i][j]);
 		}
-		for (let j = siz[i]; j < Lim; j++)
-			document.write("<td> </td>");
-		document.write("</tr>");
+		document.write("\
+				</tr>");
 	}
-	document.write("</tbody></table>");
+	document.write("\
+			</tbody>\
+		</table>");
 	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
 	document.write("\
 		<p align=\"center\">\
@@ -471,280 +431,421 @@ function writeabc(rawd, tags, list_tre, list_sol, prbs) {
 	console.log(cnt, cnte, cnts, cntt);
 }
 
-function writearc(rawd, tags, list_tre, list_sol, prbs) {
-	let Lim = 7, mx = 1005, y = new Array(mx), siz = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
-		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], arctitle = new Array(mx);
-	while (getarcname(arccnt + 1, 1) in rawd)
-		arccnt++;
-	for (let i = 1; i <= arccnt; i++)
-		Ava_tre[i] = new Array(10);
-	for (let i = 1; i <= arccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_tre[i][j] = [];
-	for (let i = 1; i <= arccnt; i++)
-		Ava_sol[i] = new Array(10);
-	for (let i = 1; i <= arccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_sol[i][j] = [];
-	for (let i = 1; i <= arccnt; i++)
-		if (("arc" + ext3(i)) in list_tre)
-			for (let j = 0; j < getarccnt(i); j++)
-				if (getarcname(i, j) in list_tre["arc" + ext3(i)])
-					Ava_tre[i][j] = list_tre["arc" + ext3(i)][getarcname(i, j)];
-	for (let i = 1; i <= arccnt; i++)
-		if (("arc" + ext3(i)) in list_sol)
-			for (let j = 0; j < getarccnt(i); j++)
-				if (getarcname(i, j) in list_sol["arc" + ext3(i)])
-					Ava_sol[i][j] = list_sol["arc" + ext3(i)][getarcname(i, j)];
+// function writeabc(rawd, tags, list_tre, list_sol, prbs) {
+// 	let Lim = 8, mx = 1005, y = new Array(mx), siz = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
+// 		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], abctitle = new Array(mx);
+// 	while (getabcname(abccnt + 1, 1) in rawd)
+// 		abccnt++;
+// 	for (let i = 1; i <= abccnt; i++)
+// 		Ava_tre[i] = new Array(10);
+// 	for (let i = 1; i <= abccnt; i++)
+// 		for (let j = 0; j <= 10; j++)
+// 			Ava_tre[i][j] = [];
+// 	for (let i = 1; i <= abccnt; i++)
+// 		Ava_sol[i] = new Array(10);
+// 	for (let i = 1; i <= abccnt; i++)
+// 		for (let j = 0; j <= 10; j++)
+// 			Ava_sol[i][j] = [];
+// 	for (let i = 1; i <= abccnt; i++)
+// 		if (("abc" + ext3(i)) in list_tre)
+// 			for (let j = 0; j < getabccnt(i); j++)
+// 				if (getabcname(i, j) in list_tre["abc" + ext3(i)])
+// 					Ava_tre[i][j] = list_tre["abc" + ext3(i)][getabcname(i, j)];
+// 	for (let i = 1; i <= abccnt; i++)
+// 		if (("abc" + ext3(i)) in list_sol)
+// 			for (let j = 0; j < getabccnt(i); j++)
+// 				if (getabcname(i, j) in list_sol["abc" + ext3(i)])
+// 					Ava_sol[i][j] = list_sol["abc" + ext3(i)][getabcname(i, j)];
+// 	for (let i = 1, ri = 58; i <= abccnt; i++) {
+// 		x[i] = new Array(getabccnt(i));
+// 		tg[i] = new Array(getabccnt(i));
+// 		abctitle[i] = new Array(getabccnt(i));
+// 		cnt += x[i].length;
+// 		let flg = 0;
+// 		for (let j = 0; j < getabccnt(i); j++) {
+// 			if (i < 42 || i > 125 || j < 2 || getabcname(i, j) in rawd)
+// 				x[i][j] = !(getabcname(i, j) in rawd) || !("difficulty" in rawd[getabcname(i, j)]) ? 100000 : transdiff(rawd[getabcname(i, j)].difficulty, 0);
+// 			else
+// 				x[i][j] = !("difficulty" in rawd[getarcname(ri, j - 2)]) ? 100000 : transdiff(rawd[getarcname(ri, j - 2)].difficulty, 0), flg = 1, abctoarc[i] = ri;
+// 		}
+// 		ri += flg;
+// 	}
+// 	for (let i = 1; i <= abccnt; i++)
+// 		for (let j = 0; j < getabccnt(i); j++)
+// 			nametoid[getabcname(i, j)] = [i, j];
+// 	for (let i in prbs)
+// 		if (prbs[i].id in nametoid)
+// 			abctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
+// 	for (let i = 1; i <= abccnt; i++)
+// 		for (let j = 0; j < getabccnt(i); j++) {
+// 			tg[i][j] = tags[getabcname_u(i, j)];
+// 			problist[getabcname(i, j)] = {
+// 				"tag": tg[i][j],
+// 				"diff": x[i][j],
+// 				"title": abctitle[i][j],
+// 				"org_a": "<a href=\"https://atcoder.jp/contests/abc" + ext3(i) + "/tasks/" + getabcname(i, j) + "\">" + getabcname_u(i, j) + "</a>",
+// 				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;" : "",
+// 				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
+// 			};
+// 		}
+// 	for (let i = abccnt; i >= 1; i--) {
+// 		siz[i] = getabccnt(i);
+// 		y[i] = new Array(siz[i]);
+// 		for (let j = 0; j < siz[i]; j++)
+// 			y[i][j] = "class=\"diff-" + getColor(x[i][j]).name + "\"";
+// 	}
+// 	document.write("\
+// 		<div id=\"abc-table\">\
+// 			<table class=\"ui fixed celled definition table segment\">\
+// 				<thead class=\"full-width\">\
+// 					<tr>\
+// 						<th>比赛</th>\
+// 						<th>A</th>\
+// 						<th>B</th>\
+// 						<th>C</th>\
+// 						<th>D</th>\
+// 						<th>E</th>\
+// 						<th>F</th>\
+// 						<th>G</th>\
+// 						<th>H/Ex</th>\
+// 					</tr>\
+// 				</thead>\
+// 			<tbody>");
+// 	for (let i = abccnt; i; i--) {
+// 		let t = ext3(i);
+// 		document.write('<tr><td id="abc' + t + '-cell"' + "><a href=\"https://atcoder.jp/contests/abc" + t + "\">ABC" + t + "</a></td>");
+// 		for (let j = 0; j < siz[i]; j++) {
+// 			let uC = String.fromCharCode(j + 65), traLink = "", solLink = "";
+// 			if (j == 7 && i > 232)
+// 				uC = "Ex";
+// 			if (Ava_tre[i][j] != 0)
+// 				traLink = problist[getabcname(i, j)].prob_a, cnte++;
+// 			if (Ava_sol[i][j] != 0)
+// 				solLink = problist[getabcname(i, j)].solu_a, cnts++;
+// 			document.write("<td id='" + getabcname(i, j) + "-cell-1'><a href=\"https://atcoder.jp/contests/abc" + t + "/tasks/" + getabcname(i, j) + "\" " + y[i][j] + ">" + getDiffCirc(x[i][j]) + uC + " </a>" + traLink + solLink);
+// 			if (tg[i][j] != undefined)
+// 				document.write("<div onclick=\"abctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
+// 			document.write("<div id=\"tag-" + getabcname(i, j) + "\" style=\"display: none;\">");
+// 			if (tg[i][j] != undefined) {
+// 				cntt++;
+// 				for (let t = 0; t < tg[i][j].length; t++) {
+// 					document.write("<p class=\"ui tag label\">" + tg[i][j][t] + "</p>");
+// 				}
+// 			}
+// 			document.write("</div></td>");
+// 		}
+// 		for (let j = siz[i]; j < Lim; j++)
+// 			document.write("<td> </td>");
+// 		document.write("</tr>");
+// 	}
+// 	document.write("</tbody></table>");
+// 	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
+// 	document.write("\
+// 		<p align=\"center\">\
+// 			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-abc\">\
+// 				<div class=\"bar\"></div>\
+// 				<div class=\"label\">" + eper + "% 题面已完成</div>\
+// 			</div>\
+// 		</p>\
+// 		<p align=\"center\">\
+// 			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-abc\">\
+// 				<div class=\"bar\"></div>\
+// 				<div class=\"label\">" + sper + "% 题解已完成</div>\
+// 			</div>\
+// 		</p>\
+// 		<p align=\"center\">\
+// 			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-abc\">\
+// 				<div class=\"bar\"></div>\
+// 				<div class=\"label\">" + tper + "% 标签已完成</div>\
+// 			</div>\
+// 		</p>\
+// 	</div>");
+// 	$('#progress-tre-abc').progress({
+// 		percent: cnte / cnt * 100
+// 	});
+// 	$('#progress-sol-abc').progress({
+// 		percent: cnts / cnt * 100
+// 	});
+// 	$('#progress-tag-abc').progress({
+// 		percent: cntt / cnt * 100
+// 	});
+// 	console.log(cnt, cnte, cnts, cntt);
+// }
 
-	for (let i = 1; i <= arccnt; i++) {
-		x[i] = new Array(getarccnt(i));
-		tg[i] = new Array(getarccnt(i));
-		arctitle[i] = new Array(getarccnt(i));
-		cnt += x[i].length;
-		for (let j = 0; j < getarccnt(i); j++)
-			x[i][j] = !(getarcname(i, j) in rawd) || !("difficulty" in rawd[getarcname(i, j)]) ? 100000 : transdiff(rawd[getarcname(i, j)].difficulty, 0);
-	}
-	for (let i = 1; i <= arccnt; i++)
-		for (let j = 0; j < getarccnt(i); j++)
-			nametoid[getarcname(i, j)] = [i, j];
-	for (let i in prbs)
-		if (prbs[i].id in nametoid)
-			arctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
-	for (let i = 1; i <= arccnt; i++)
-		for (let j = 57 < i && i < 104 ? 2 : 0; j < getarccnt(i); j++) {
-			tg[i][j] = tags[getarcname_u(i, j)];
-			problist[getarcname(i, j)] = {
-				"tag": tg[i][j],
-				"diff": x[i][j],
-				"title": arctitle[i][j],
-				"org_a": "<a href=\"https://atcoder.jp/contests/arc" + ext3(i) + "/tasks/" + getarcname(i, j) + "\">" + getarcname_u(i, j) + "</a>",
-				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
-			};
-		}
-	for (let i = arccnt; i >= 1; i--) {
-		siz[i] = getarccnt(i);
-		y[i] = new Array(siz[i]);
-		for (let j = 0; j < siz[i]; j++)
-			y[i][j] = "class=\"diff-" + getColor(x[i][j]).name + "\"";
-	}
-	document.write("\
-		<div id=\"arc-table\">\
-			<table class=\"ui fixed celled definition table segment\">\
-				<thead class=\"full-width\">\
-					<tr>\
-						<th>比赛</th>\
-						<th>A</th>\
-						<th>B</th>\
-						<th>C</th>\
-						<th>D</th>\
-						<th>E</th>\
-						<th>F</th>\
-						<th>F2</th>\
-					</tr>\
-				</thead>\
-				<tbody>");
-	for (let i = arccnt; i >= 1; i--) {
-		let t = ext3(i), w = 57 < i && i < 104 ? 2 : 0;
-		document.write("<tr><td id=\"arc" + t + "-cell\"><a href=\"https://atcoder.jp/contests/arc" + t + "\">ARC" + t + "</a></td>");
-		for (let j = 0; j < w; j++)
-			document.write("<td></td>");
-		for (let j = 0; j < siz[i]; j++) {
-			let uC = String.fromCharCode(j + 65), traLink = "", solLink = "";
-			if (i == 120 && j == 6)
-				uC = "F2";
-			if (Ava_tre[i][j] != 0)
-				traLink = problist[getarcname(i, j)].prob_a, cnte++;
-			if (Ava_sol[i][j] != 0)
-				solLink = problist[getarcname(i, j)].solu_a, cnts++;
-			document.write("<td id=\"" + getarcname(i, j) + "-cell-2\"><a href=\"https://atcoder.jp/contests/arc" + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">" + getDiffCirc(x[i][j]) + uC + " </a>" + traLink + solLink);
-			if (tg[i][j] != undefined)
-				document.write("<div onclick=\"arctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
-			document.write("<div id=\"tag-" + getarcname(i, j) + "\" style=\"display: none;\">");
-			if (tg[i][j] != undefined) {
-				cntt++;
-				for (let t = 0; t < tg[i][j].length; t++) {
-					document.write("<p class=\"ui tag label\">" + tg[i][j][t] + "</p>");
-				}
-			}
-			document.write("</td>");
-		}
-		for (let j = siz[i] + w; j < Lim; j++)
-			document.write("<td></td>");
-		document.write("</tr>");
-	}
-	document.write("</tbody></table>");
+// function writearc(rawd, tags, list_tre, list_sol, prbs) {
+// 	let Lim = 7, mx = 1005, y = new Array(mx), siz = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
+// 		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], arctitle = new Array(mx);
+// 	while (getarcname(arccnt + 1, 1) in rawd)
+// 		arccnt++;
+// 	for (let i = 1; i <= arccnt; i++)
+// 		Ava_tre[i] = new Array(10);
+// 	for (let i = 1; i <= arccnt; i++)
+// 		for (let j = 0; j <= 10; j++)
+// 			Ava_tre[i][j] = [];
+// 	for (let i = 1; i <= arccnt; i++)
+// 		Ava_sol[i] = new Array(10);
+// 	for (let i = 1; i <= arccnt; i++)
+// 		for (let j = 0; j <= 10; j++)
+// 			Ava_sol[i][j] = [];
+// 	for (let i = 1; i <= arccnt; i++)
+// 		if (("arc" + ext3(i)) in list_tre)
+// 			for (let j = 0; j < getarccnt(i); j++)
+// 				if (getarcname(i, j) in list_tre["arc" + ext3(i)])
+// 					Ava_tre[i][j] = list_tre["arc" + ext3(i)][getarcname(i, j)];
+// 	for (let i = 1; i <= arccnt; i++)
+// 		if (("arc" + ext3(i)) in list_sol)
+// 			for (let j = 0; j < getarccnt(i); j++)
+// 				if (getarcname(i, j) in list_sol["arc" + ext3(i)])
+// 					Ava_sol[i][j] = list_sol["arc" + ext3(i)][getarcname(i, j)];
 
-	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
-	document.write("\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-arc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + eper + "% 题面已完成</div>\
-			</div>\
-		</p>\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-arc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + sper + "% 题解已完成</div>\
-			</div>\
-		</p>\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-arc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + tper + "% 标签已完成</div>\
-			</div>\
-		</p>\
-	</div>");
-	$('#progress-tre-arc').progress({
-		percent: cnte / cnt * 100
-	});
-	$('#progress-sol-arc').progress({
-		percent: cnts / cnt * 100
-	});
-	$('#progress-tag-arc').progress({
-		percent: cntt / cnt * 100
-	});
-	console.log(cnt, cnte, cnts, cntt);
-}
+// 	for (let i = 1; i <= arccnt; i++) {
+// 		x[i] = new Array(getarccnt(i));
+// 		tg[i] = new Array(getarccnt(i));
+// 		arctitle[i] = new Array(getarccnt(i));
+// 		cnt += x[i].length;
+// 		for (let j = 0; j < getarccnt(i); j++)
+// 			x[i][j] = !(getarcname(i, j) in rawd) || !("difficulty" in rawd[getarcname(i, j)]) ? 100000 : transdiff(rawd[getarcname(i, j)].difficulty, 0);
+// 	}
+// 	for (let i = 1; i <= arccnt; i++)
+// 		for (let j = 0; j < getarccnt(i); j++)
+// 			nametoid[getarcname(i, j)] = [i, j];
+// 	for (let i in prbs)
+// 		if (prbs[i].id in nametoid)
+// 			arctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
+// 	for (let i = 1; i <= arccnt; i++)
+// 		for (let j = 57 < i && i < 104 ? 2 : 0; j < getarccnt(i); j++) {
+// 			tg[i][j] = tags[getarcname_u(i, j)];
+// 			problist[getarcname(i, j)] = {
+// 				"tag": tg[i][j],
+// 				"diff": x[i][j],
+// 				"title": arctitle[i][j],
+// 				"org_a": "<a href=\"https://atcoder.jp/contests/arc" + ext3(i) + "/tasks/" + getarcname(i, j) + "\">" + getarcname_u(i, j) + "</a>",
+// 				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;" : "",
+// 				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
+// 			};
+// 		}
+// 	for (let i = arccnt; i >= 1; i--) {
+// 		siz[i] = getarccnt(i);
+// 		y[i] = new Array(siz[i]);
+// 		for (let j = 0; j < siz[i]; j++)
+// 			y[i][j] = "class=\"diff-" + getColor(x[i][j]).name + "\"";
+// 	}
+// 	document.write("\
+// 		<div id=\"arc-table\">\
+// 			<table class=\"ui fixed celled definition table segment\">\
+// 				<thead class=\"full-width\">\
+// 					<tr>\
+// 						<th>比赛</th>\
+// 						<th>A</th>\
+// 						<th>B</th>\
+// 						<th>C</th>\
+// 						<th>D</th>\
+// 						<th>E</th>\
+// 						<th>F</th>\
+// 						<th>F2</th>\
+// 					</tr>\
+// 				</thead>\
+// 				<tbody>");
+// 	for (let i = arccnt; i >= 1; i--) {
+// 		let t = ext3(i), w = 57 < i && i < 104 ? 2 : 0;
+// 		document.write("<tr><td id=\"arc" + t + "-cell\"><a href=\"https://atcoder.jp/contests/arc" + t + "\">ARC" + t + "</a></td>");
+// 		for (let j = 0; j < w; j++)
+// 			document.write("<td></td>");
+// 		for (let j = 0; j < siz[i]; j++) {
+// 			let uC = String.fromCharCode(j + 65), traLink = "", solLink = "";
+// 			if (i == 120 && j == 6)
+// 				uC = "F2";
+// 			if (Ava_tre[i][j] != 0)
+// 				traLink = problist[getarcname(i, j)].prob_a, cnte++;
+// 			if (Ava_sol[i][j] != 0)
+// 				solLink = problist[getarcname(i, j)].solu_a, cnts++;
+// 			document.write("<td id=\"" + getarcname(i, j) + "-cell-2\"><a href=\"https://atcoder.jp/contests/arc" + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">" + getDiffCirc(x[i][j]) + uC + " </a>" + traLink + solLink);
+// 			if (tg[i][j] != undefined)
+// 				document.write("<div onclick=\"arctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
+// 			document.write("<div id=\"tag-" + getarcname(i, j) + "\" style=\"display: none;\">");
+// 			if (tg[i][j] != undefined) {
+// 				cntt++;
+// 				for (let t = 0; t < tg[i][j].length; t++) {
+// 					document.write("<p class=\"ui tag label\">" + tg[i][j][t] + "</p>");
+// 				}
+// 			}
+// 			document.write("</td>");
+// 		}
+// 		for (let j = siz[i] + w; j < Lim; j++)
+// 			document.write("<td></td>");
+// 		document.write("</tr>");
+// 	}
+// 	document.write("</tbody></table>");
 
-function writeagc(rawd, tags, list_tre, list_sol, prbs) {
-	let Lim = 7, mx = 1005, y = new Array(mx), siz = new Array(mx), CCC = new Array(mx), Val = new Array(mx), RG = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
-		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], agctitle = [];
-	while (agccnt == 41 || getagcname(agccnt + 1, 1) in rawd)
-		agccnt++;
-	for (let i = 1; i <= agccnt; i++)
-		Ava_tre[i] = new Array(10);
-	for (let i = 1; i <= agccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_tre[i][j] = [];
-	for (let i = 1; i <= agccnt; i++)
-		Ava_sol[i] = new Array(10);
-	for (let i = 1; i <= agccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_sol[i][j] = [];
-	for (let i = 1; i <= agccnt; i++)
-		if (("agc" + ext3(i)) in list_tre)
-			for (let j = 0; j < getagccnt(i); j++)
-				if (getagcname(i, j) in list_tre["agc" + ext3(i)])
-					Ava_tre[i][j] = list_tre["agc" + ext3(i)][getagcname(i, j)];
-	for (let i = 1; i <= agccnt; i++)
-		if (("agc" + ext3(i)) in list_sol)
-			for (let j = 0; j < getagccnt(i); j++)
-				if (getagcname(i, j) in list_sol["agc" + ext3(i)])
-					Ava_sol[i][j] = list_sol["agc" + ext3(i)][getagcname(i, j)];
-	for (let i = 1; i <= agccnt; i++) {
-		x[i] = new Array(getarccnt(i));
-		tg[i] = new Array(getarccnt(i));
-		agctitle[i] = new Array(getagccnt(i));
-		cnt += x[i].length;
-		for (let j = 0; j < getagccnt(i); j++)
-			x[i][j] = !(getagcname(i, j) in rawd) || !("difficulty" in rawd[getagcname(i, j)]) ? 100000 : transdiff(rawd[getagcname(i, j)].difficulty, 0);
-	}
-	for (let i = 1; i <= agccnt; i++)
-		for (let j = 0; j < getagccnt(i); j++)
-			nametoid[getagcname(i, j)] = [i, j];
-	for (let i in prbs)
-		if (prbs[i].id in nametoid)
-			agctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
-	for (let i = 1; i <= agccnt; i++)
-		for (let j = 0; j < getagccnt(i); j++) {
-			tg[i][j] = tags[getagcname_u(i, j)];
-			problist[getagcname(i, j)] = {
-				"tag": tg[i][j],
-				"diff": x[i][j],
-				"title": agctitle[i][j],
-				"org_a": "<a href=\"https://atcoder.jp/contests/agc" + ext3(i) + "/tasks/" + getagcname(i, j) + "\">" + getagcname_u(i, j) + "</a>",
-				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>" : "",
-				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
-			};
-		}
-	for (let i = agccnt; i >= 1; i--) {
-		siz[i] = getagccnt(i);
-		y[i] = new Array(siz[i]);
-		for (let j = 0; j < siz[i]; j++)
-			y[i][j] = "class=\"diff-" + getColor(x[i][j]).name + "\"";
-	}
-	document.write("\
-		<div id=\"agc-table\">\
-			<table class=\"ui fixed celled definition table segment\">\
-				<thead class=\"full-width\">\
-					<tr>\
-						<th>比赛</th>\
-						<th>A</th>\
-						<th>B</th>\
-						<th>C</th>\
-						<th>D</th>\
-						<th>E</th>\
-						<th>F</th>\
-						<th>F2</th>\
-					</tr>\
-				</thead>\
-			<tbody>");
-	for (let i = agccnt; i; i--) {
-		if (i == 42)
-			continue;
-		document.write("<tr>");
-		let t = ext3(i);
-		document.write("<td id=\"agc" + t + "-cell\"><a href=\"https://atcoder.jp/contests/agc" + t + "\">AGC" + t + "</a></td>");
-		for (let j = 0; j < siz[i]; j++) {
-			let uC = String.fromCharCode(j + 65), traLink = "", solLink = "";
-			if (i == 28 && j == 6)
-				uC = "F2", lC = "_F2\" ";
-			if (Ava_tre[i][j] != 0)
-				traLink = problist[getagcname(i, j)].prob_a, cnte++;
-			if (Ava_sol[i][j] != 0)
-				solLink = problist[getagcname(i, j)].solu_a, cnts++;
-			document.write("<td id=\"" + getagcname(i, j) + "-cell-3\"><a href=\"https://atcoder.jp/contests/agc" + t + "/tasks/" + getagcname(i, j) + "\" " + y[i][j] + ">" + getDiffCirc(x[i][j]) + uC + " </a>" + traLink + solLink);
-			if (tg[i][j] != undefined)
-				document.write("<div onclick=\"agctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
-			document.write("<div id=\"tag-" + getagcname(i, j) + "\" style=\"display: none;\">");
-			if (tg[i][j] != undefined) {
-				cntt++;
-				for (let t = 0; t < tg[i][j].length; t++) {
-					document.write("<p class=\"ui tag label\">" + tg[i][j][t] + "</p>");
-				}
-			}
-			document.write("</td>");
-		}
-		for (let j = siz[i]; j < Lim; j++)
-			document.write("<td> </td>");
-		document.write("</tr>");
-	}
-	document.write("</tbody></table>");
-	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
-	document.write("\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-agc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + eper + "% 题面已完成</div>\
-			</div>\
-		</p>\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-agc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + sper + "% 题解已完成</div>\
-			</div>\
-		</p>\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-agc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + tper + "% 标签已完成</div>\
-			</div>\
-		</p>\
-	</div>");
-	$('#progress-tre-agc').progress({
-		percent: cnte / cnt * 100
-	});
-	$('#progress-sol-agc').progress({
-		percent: cnts / cnt * 100
-	});
-	$('#progress-tag-agc').progress({
-		percent: cntt / cnt * 100
-	});
-	console.log(cnt, cnte, cnts, cntt);
-}
+// 	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
+// 	document.write("\
+// 		<p align=\"center\">\
+// 			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-arc\">\
+// 				<div class=\"bar\"></div>\
+// 				<div class=\"label\">" + eper + "% 题面已完成</div>\
+// 			</div>\
+// 		</p>\
+// 		<p align=\"center\">\
+// 			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-arc\">\
+// 				<div class=\"bar\"></div>\
+// 				<div class=\"label\">" + sper + "% 题解已完成</div>\
+// 			</div>\
+// 		</p>\
+// 		<p align=\"center\">\
+// 			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-arc\">\
+// 				<div class=\"bar\"></div>\
+// 				<div class=\"label\">" + tper + "% 标签已完成</div>\
+// 			</div>\
+// 		</p>\
+// 	</div>");
+// 	$('#progress-tre-arc').progress({
+// 		percent: cnte / cnt * 100
+// 	});
+// 	$('#progress-sol-arc').progress({
+// 		percent: cnts / cnt * 100
+// 	});
+// 	$('#progress-tag-arc').progress({
+// 		percent: cntt / cnt * 100
+// 	});
+// 	console.log(cnt, cnte, cnts, cntt);
+// }
+
+// function writeagc(rawd, tags, list_tre, list_sol, prbs) {
+// 	let Lim = 7, mx = 1005, y = new Array(mx), siz = new Array(mx), CCC = new Array(mx), Val = new Array(mx), RG = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
+// 		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], agctitle = [];
+// 	while (agccnt == 41 || getagcname(agccnt + 1, 1) in rawd)
+// 		agccnt++;
+// 	for (let i = 1; i <= agccnt; i++)
+// 		Ava_tre[i] = new Array(10);
+// 	for (let i = 1; i <= agccnt; i++)
+// 		for (let j = 0; j <= 10; j++)
+// 			Ava_tre[i][j] = [];
+// 	for (let i = 1; i <= agccnt; i++)
+// 		Ava_sol[i] = new Array(10);
+// 	for (let i = 1; i <= agccnt; i++)
+// 		for (let j = 0; j <= 10; j++)
+// 			Ava_sol[i][j] = [];
+// 	for (let i = 1; i <= agccnt; i++)
+// 		if (("agc" + ext3(i)) in list_tre)
+// 			for (let j = 0; j < getagccnt(i); j++)
+// 				if (getagcname(i, j) in list_tre["agc" + ext3(i)])
+// 					Ava_tre[i][j] = list_tre["agc" + ext3(i)][getagcname(i, j)];
+// 	for (let i = 1; i <= agccnt; i++)
+// 		if (("agc" + ext3(i)) in list_sol)
+// 			for (let j = 0; j < getagccnt(i); j++)
+// 				if (getagcname(i, j) in list_sol["agc" + ext3(i)])
+// 					Ava_sol[i][j] = list_sol["agc" + ext3(i)][getagcname(i, j)];
+// 	for (let i = 1; i <= agccnt; i++) {
+// 		x[i] = new Array(getarccnt(i));
+// 		tg[i] = new Array(getarccnt(i));
+// 		agctitle[i] = new Array(getagccnt(i));
+// 		cnt += x[i].length;
+// 		for (let j = 0; j < getagccnt(i); j++)
+// 			x[i][j] = !(getagcname(i, j) in rawd) || !("difficulty" in rawd[getagcname(i, j)]) ? 100000 : transdiff(rawd[getagcname(i, j)].difficulty, 0);
+// 	}
+// 	for (let i = 1; i <= agccnt; i++)
+// 		for (let j = 0; j < getagccnt(i); j++)
+// 			nametoid[getagcname(i, j)] = [i, j];
+// 	for (let i in prbs)
+// 		if (prbs[i].id in nametoid)
+// 			agctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
+// 	for (let i = 1; i <= agccnt; i++)
+// 		for (let j = 0; j < getagccnt(i); j++) {
+// 			tg[i][j] = tags[getagcname_u(i, j)];
+// 			problist[getagcname(i, j)] = {
+// 				"tag": tg[i][j],
+// 				"diff": x[i][j],
+// 				"title": agctitle[i][j],
+// 				"org_a": "<a href=\"https://atcoder.jp/contests/agc" + ext3(i) + "/tasks/" + getagcname(i, j) + "\">" + getagcname_u(i, j) + "</a>",
+// 				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>" : "",
+// 				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
+// 			};
+// 		}
+// 	for (let i = agccnt; i >= 1; i--) {
+// 		siz[i] = getagccnt(i);
+// 		y[i] = new Array(siz[i]);
+// 		for (let j = 0; j < siz[i]; j++)
+// 			y[i][j] = "class=\"diff-" + getColor(x[i][j]).name + "\"";
+// 	}
+// 	document.write("\
+// 		<div id=\"agc-table\">\
+// 			<table class=\"ui fixed celled definition table segment\">\
+// 				<thead class=\"full-width\">\
+// 					<tr>\
+// 						<th>比赛</th>\
+// 						<th>A</th>\
+// 						<th>B</th>\
+// 						<th>C</th>\
+// 						<th>D</th>\
+// 						<th>E</th>\
+// 						<th>F</th>\
+// 						<th>F2</th>\
+// 					</tr>\
+// 				</thead>\
+// 			<tbody>");
+// 	for (let i = agccnt; i; i--) {
+// 		if (i == 42)
+// 			continue;
+// 		document.write("<tr>");
+// 		let t = ext3(i);
+// 		document.write("<td id=\"agc" + t + "-cell\"><a href=\"https://atcoder.jp/contests/agc" + t + "\">AGC" + t + "</a></td>");
+// 		for (let j = 0; j < siz[i]; j++) {
+// 			let uC = String.fromCharCode(j + 65), traLink = "", solLink = "";
+// 			if (i == 28 && j == 6)
+// 				uC = "F2", lC = "_F2\" ";
+// 			if (Ava_tre[i][j] != 0)
+// 				traLink = problist[getagcname(i, j)].prob_a, cnte++;
+// 			if (Ava_sol[i][j] != 0)
+// 				solLink = problist[getagcname(i, j)].solu_a, cnts++;
+// 			document.write("<td id=\"" + getagcname(i, j) + "-cell-3\"><a href=\"https://atcoder.jp/contests/agc" + t + "/tasks/" + getagcname(i, j) + "\" " + y[i][j] + ">" + getDiffCirc(x[i][j]) + uC + " </a>" + traLink + solLink);
+// 			if (tg[i][j] != undefined)
+// 				document.write("<div onclick=\"agctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
+// 			document.write("<div id=\"tag-" + getagcname(i, j) + "\" style=\"display: none;\">");
+// 			if (tg[i][j] != undefined) {
+// 				cntt++;
+// 				for (let t = 0; t < tg[i][j].length; t++) {
+// 					document.write("<p class=\"ui tag label\">" + tg[i][j][t] + "</p>");
+// 				}
+// 			}
+// 			document.write("</td>");
+// 		}
+// 		for (let j = siz[i]; j < Lim; j++)
+// 			document.write("<td> </td>");
+// 		document.write("</tr>");
+// 	}
+// 	document.write("</tbody></table>");
+// 	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
+// 	document.write("\
+// 		<p align=\"center\">\
+// 			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-agc\">\
+// 				<div class=\"bar\"></div>\
+// 				<div class=\"label\">" + eper + "% 题面已完成</div>\
+// 			</div>\
+// 		</p>\
+// 		<p align=\"center\">\
+// 			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-agc\">\
+// 				<div class=\"bar\"></div>\
+// 				<div class=\"label\">" + sper + "% 题解已完成</div>\
+// 			</div>\
+// 		</p>\
+// 		<p align=\"center\">\
+// 			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-agc\">\
+// 				<div class=\"bar\"></div>\
+// 				<div class=\"label\">" + tper + "% 标签已完成</div>\
+// 			</div>\
+// 		</p>\
+// 	</div>");
+// 	$('#progress-tre-agc').progress({
+// 		percent: cnte / cnt * 100
+// 	});
+// 	$('#progress-sol-agc').progress({
+// 		percent: cnts / cnt * 100
+// 	});
+// 	$('#progress-tag-agc').progress({
+// 		percent: cntt / cnt * 100
+// 	});
+// 	console.log(cnt, cnte, cnts, cntt);
+// }
 
 let isd1 = {}, isd2 = {}, pcol = {}, presel = -1;
 
@@ -1420,6 +1521,10 @@ function importUser() {
 	refreshList();
 }
 
+function shownotyet() {
+	alert("in progress");
+}
+
 function buildw() {
 	document.write("\
 	<div id=\"page-top\" class=\"display: inline;\"></div>\
@@ -1454,27 +1559,29 @@ function buildw() {
 		document.getElementById("button-top").setAttribute("style", cur - $("#page-top").offset().top < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
 		document.getElementById("button-end").setAttribute("style", $("#page-end").offset().top - h - cur < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
 	};
-	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json", "json", function (text) {
-		rawd = JSON.parse(text);
-	});
-	readTextFile("https://kenkoooo.com/atcoder/resources/problems.json", "json", function (text) {
-		prbs = JSON.parse(text);
-	});
-	readTextFile("https://kenkoooo.com/atcoder/resources/contests.json", "json", function (text) {
-		let cons = JSON.parse(text);
-		for (let i in cons) {
-			let cur = cons[i];
-			contlist[cur.id] = {
-				startTime: Number(cur["start_epoch_second"]),
-				endTime: Number(cur["start_epoch_second"]) + Number(cur["duration_second"])
-			};
+	readTextFile("https://atcoder-for-chinese-developers.github.io/spiders/data.json", "json", function (text) {
+		try {
+			rawd = JSON.parse(text);
+			for (let i in rawd) {
+				let ci = rawd[i];
+				for (let j in ci) {
+					let cur = ci[j];
+					contlist[cur.id] = {
+						startTime: Number(cur["start_epoch_second"]),
+						endTime: Number(cur["start_epoch_second"]) + Number(cur["duration_second"])
+					}
+				}
+			}
+		} catch {
+			alert("The spider does not work. Check your network connection or contact with the site owner.");
+			return;
 		}
 	});
 	readTextFile("https://atcoder-for-chinese-developers.github.io/translations/list.json", "json", function (text) {
-		tralist = JSON.parse(text).data;
+		traList = JSON.parse(text).data;
 	});
 	readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/list.json", "json", function (text) {
-		sollist = JSON.parse(text).data;
+		solList = JSON.parse(text).data;
 	});
 	readTextFile("tags.json", "json", function (text) {
 		try {
@@ -1498,7 +1605,10 @@ function buildw() {
 		<a class=\"item\" onclick=\"agctabletoggle()\">\
 			AGC\
 		</a>\
-		<a class=\"item\" onclick=\"listtoggle()\">\
+		<a class=\"item\" onclick=\"shownotyet()\">\
+			Other\
+		</a>\
+		<a class=\"item\" onclick=\"shownotyet()\">\
 			筛选\
 		</a>\
 		<a class=\"item\" onclick=\"contesttoggle()\">\
@@ -1508,19 +1618,21 @@ function buildw() {
 			<div class=\"item\">\
 				<div class=\"ui transparent icon input\">\
 					<input type=\"text\" id=\"user-name\" placeholder=\"导入用户，多个用户用半角空格隔开\" style=\"width: 260px\"/>\
-					<i class=\"search link icon\" onclick=\"importUser()\"></i>\
+					<i class=\"search link icon\" onclick=\"shownotyet()\"></i>\
 				</div>\
 			</div>\
 		</div>\
 	</div>");
 	$("#user-name").keydown(function (e) {
 		if (event.keyCode == 13) {
-			importUser();
+			// importUser();
+			shownotyet();
 		}
 	});
-	writeabc(rawd, tags, tralist, sollist, prbs);
-	writearc(rawd, tags, tralist, sollist, prbs);
-	writeagc(rawd, tags, tralist, sollist, prbs);
+	buildTable("abc", rawd["abc"], ["A", "B", "C", "D", "E", "F", "G", "H/Ex"]);
+	buildTable("arc", rawd["arc"], ["A", "B", "C", "D", "E", "F", "F2"]);
+	buildTable("agc", rawd["agc"], ["A", "B", "C", "D", "E", "F", "F2"]);
+//	buildTable("other", Object.assign(rawd["ahc"], rawd["other"], ["A", "B", "C", "D", "E", "F"]));
 	writelist(taglist);
 	buildcontestpage();
 
