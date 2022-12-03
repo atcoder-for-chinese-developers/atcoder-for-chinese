@@ -333,11 +333,19 @@ function buildTable(name, data, prbIdx) {
 	cont.sort((a, b) => b.start_epoch_second - a.start_epoch_second);
 	for (let i in cont) {
 		let prb = new Array(c);
-		for (let j = 0; j < c; j++) 
+		for (let j = 0; j < c; j++)
 			prb[j] = "<td></td>";
 		for (let j in cont[i].problems) {
 			let idx = cont[i].problems[j].problem_index, p = prbIdx.findIndex((t) => t.find((a) => a == idx) != undefined),
-				cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id + "_" + idx;
+				cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx;
+			cnt++;
+			problist[pid] = {
+				uname: uname,
+ 				tag: tags[uname],
+ 				diff: dif,
+ 				title: cont[i].problems[j].name,
+ 				org_a: "<a href=\"https://atcoder.jp/contests/abc" + ext3(i) + "/tasks/" + pid + "\">" + uname + "</a>"
+ 			};
 			prb[p] = 
 				"<td id=\"cell-" + pid + "-" + name + "\">\
 					<a href=\"https://atcoder.jp/contests/" + cont[i].id + "/tasks/" + pid + "\" class=\"diff-" + getColor(dif).name + "\">" +
@@ -346,27 +354,34 @@ function buildTable(name, data, prbIdx) {
 						"</ta>" +
 					"</a>";
 			if ((cont[i].id in traList) && (pid in traList[cid])) {
-				prb[p] +=
-					"<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;";
+				problist[pid].prob_a = "<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;"
+				prb[p] += problist[pid].prob_a;
+				cnte++;
+			} else {
+				problist[pid].prob_a = "";
 			}
 			if ((cont[i].id in solList) && (pid in solList[cid])) {
-				prb[p] +=
-					"<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题解\", 1)'>题解</a>&nbsp;&nbsp;";
+				problist[pid].solu_a = "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + pid + "\", \"" + uname + "&nbsp;题解\", 1)'>题解</a>";
+				prb[p] += problist[pid].solu_a;
+				cnts++;
+			} else {
+				problist[pid].solu_a = "";
 			}
 			if (uname in tags) {
 				let tgLst = tags[uname];
 				prb[p] +=
-					"<div onclick=\"tagToggle(" + pid + "-" + name + ")\" style=\"position: relative; right: -5;\">" +
-						"<a class=\"floating ui circular right label\" style=\"background-color: #50d0d0!important\">" + 
+					"<div onclick=\"tagToggle('" + pid + "-" + name + "')\" style=\"position: relative; right: -5;\">" +
+						"<a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important\">" + 
 							tgLst.length +
 						"</a>" + 
-					"</div>" + "<div id=\"tag-" + pid + "-" + name + "\"";
+					"</div>" + "<div id=\"tag-" + pid + "-" + name + "\" style=\"display: none;\">";
 				for (let t in tgLst) {
 					prb[p] +=
 						"<p class=\"ui tag label\">" + tgLst[t] + "</p>";
 				}
 				prb[p] +=
 					"</div>";
+				cntt++;
 			}
 		}
 		tbl.push(prb);
@@ -401,31 +416,31 @@ function buildTable(name, data, prbIdx) {
 	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
 	document.write("\
 		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-abc\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-" + name + "\">\
 				<div class=\"bar\"></div>\
 				<div class=\"label\">" + eper + "% 题面已完成</div>\
 			</div>\
 		</p>\
 		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-abc\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-" + name + "\">\
 				<div class=\"bar\"></div>\
 				<div class=\"label\">" + sper + "% 题解已完成</div>\
 			</div>\
 		</p>\
 		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-abc\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-" + name + "\">\
 				<div class=\"bar\"></div>\
 				<div class=\"label\">" + tper + "% 标签已完成</div>\
 			</div>\
 		</p>\
 	</div>");
-	$('#progress-tre-abc').progress({
+	$("#progress-tre-" + name).progress({
 		percent: cnte / cnt * 100
 	});
-	$('#progress-sol-abc').progress({
+	$("#progress-sol-" + name).progress({
 		percent: cnts / cnt * 100
 	});
-	$('#progress-tag-abc').progress({
+	$("#progress-tag-" + name).progress({
 		percent: cntt / cnt * 100
 	});
 	console.log(cnt, cnte, cnts, cntt);
@@ -917,7 +932,7 @@ function refreshchart() {
 }
 function refreshList() {
 	for (let i in problist) {
-		document.getElementById(i + "-col").setAttribute("style", (isd1[i] && isd2[i] ? "display: auto; " : "display: none; ") + "background-color: " + pcol[i]);
+		document.getElementById(i + "-cell").setAttribute("style", (isd1[i] && isd2[i] ? "display: auto; " : "display: none; ") + "background-color: " + pcol[i]);
 	}
 	for (let i = 1; i <= abccnt; i++) {
 		let flg = 1;
@@ -1121,7 +1136,7 @@ function writelist(taglist) {
 	for (let i in problist) {
 		isd1[i] = 1, isd2[i] = 1, pcol[i] = "#fff";
 		document.write("\
-					<tr id=\"" + i + "-col\">\
+					<tr id=\"" + problist[i].uname + "-col\">\
 						<td>" + problist[i].org_a + "</td>\
 						<td>" + getDiffCirc(problist[i].diff) + "<span class=\"diff-" + getColor(problist[i].diff).name + "\">" + problist[i].title + "</span></td>\
 						<td>" + problist[i].prob_a + problist[i].solu_a + "</td>\
@@ -1138,7 +1153,8 @@ function writelist(taglist) {
 	document.write("\
 				</tbody>\
 			</table>\
-		</div>");
+		</div>\
+	</div>");
 	$(".ui.dropdown").dropdown({
 		on: "hover",
 		transition: "drop",
@@ -1608,7 +1624,7 @@ function buildw() {
 		<a class=\"item\" onclick=\"shownotyet()\">\
 			Other\
 		</a>\
-		<a class=\"item\" onclick=\"shownotyet()\">\
+		<a class=\"item\" onclick=\"listtoggle()\">\
 			筛选\
 		</a>\
 		<a class=\"item\" onclick=\"contesttoggle()\">\
@@ -1673,5 +1689,5 @@ function buildw() {
 	abctabletoggle();
 	window.onclick();
 	document.getElementById("user-name").value = window.localStorage.getItem("default-user-list");
-	importUser();
+//	importUser();
 }
