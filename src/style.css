@@ -149,8 +149,40 @@ a:visited {
 	background-color: #f9f2f4;
 }
 
+.mdpage td {
+	border-left: 1px solid rgba(34,36,38,.1);
+    padding: .78571429em .78571429em;
+    text-align: inherit;
+}
+
+.mdpage th {
+	border-left: 1px solid rgba(34,36,38,.1);
+	cursor: auto;
+    background: #f9fafb;
+    text-align: inherit;
+    color: rgba(0,0,0,.87);
+    padding: .92857143em .78571429em;
+    vertical-align: inherit;
+    font-style: none;
+    font-weight: 700;
+    text-transform: none;
+    border-left: none;
+    border-bottom: 1px solid rgba(34,36,38,.1);
+}
+
 .ui.question.circle.icon.helper {
 	top: -8px;
 	position: relative;
 	font-size: 10px!important;
+}
+
+td {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.noelipse {
+	white-space: unset;
+	overflow: visible !important;
 }
