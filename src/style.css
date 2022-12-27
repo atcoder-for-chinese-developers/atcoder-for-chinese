@@ -175,14 +175,3 @@ a:visited {
 	position: relative;
 	font-size: 10px!important;
 }
-
-td {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-.noelipse {
-	white-space: unset;
-	overflow: visible !important;
-}
