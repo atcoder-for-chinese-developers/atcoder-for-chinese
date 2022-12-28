@@ -106,18 +106,39 @@ function Base64() {
 		return string;
 	}
 }
-let problist = [], contlist = [], rawd, traList, solList, tags, prbs, taglist, nameList = [];
+const labels = {
+	"abc": {
+		name: "ABC",
+		index: ["A", "B", "C", "D", "E", "F", "G", "H/Ex"]
+	}, "arc": {
+		name: "ARC",
+		index: ["A", "B", "C", "D", "E", "F", "F2"]
+	}, "agc": {
+		name: "AGC",
+		index: ["A", "B", "C", "D", "E", "F", "F2"]
+	}, "abc_like": {
+		name: "ABC-Like",
+		index: ["A", "B", "C", "D", "E", "F", "G", "H/Ex"]
+	}, "arc_like": {
+		name: "ARC-Like",
+		index: ["A", "B", "C", "D", "E", "F"]
+	}, "agc_like": {
+		name: "AGC-Like",
+		index: ["A", "B", "C", "C1", "C2", "D", "E", "F", "G", "H", "I", "J"]
+	}, "ahc": {
+		name: "AHC"
+	}, "others": {
+		name: "其他"
+	}
+};
+let problist = [], contlist = [], rawd, traList, solList, tags, prbs, tagList, nameList = [], probCell = {}, comboCell = {};
 function transdiff(d) {
 	return d === null ? 100000 : Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
 }
 function closealltables() {
-	document.getElementById("abc-table").setAttribute("style", "display: none;");
-	document.getElementById("arc-table").setAttribute("style", "display: none;");
-	document.getElementById("agc-table").setAttribute("style", "display: none;");
-	document.getElementById("abc_like-table").setAttribute("style", "display: none;");
-	document.getElementById("arc_like-table").setAttribute("style", "display: none;");
-	document.getElementById("agc_like-table").setAttribute("style", "display: none;");
-	document.getElementById("other-lst").setAttribute("style", "display: none;");
+	for (let i in nameList) {
+		document.getElementById(nameList[i].id).setAttribute("style", "display: none;");
+	}
 	document.getElementById("prob-list").setAttribute("style", "display: none;");
 	document.getElementById("cont-page").setAttribute("style", "display: none;");
 }
@@ -269,7 +290,7 @@ function showProbModal(cid, pid, title, op) {
 	$("#show-prob-list").modal("show");
 }
 
-function buildTable(name, data, prbIdx) {
+function buildTable(name, uname, data, prbIdx) {
 	let c = prbIdx.length, cnt = 0, cnte = 0, cnts = 0, cntt = 0, cont = [], tbl = [], idxList = prbIdx;
 	for (let i in idxList) {
 		idxList[i] = prbIdx[i].split("/");
@@ -281,7 +302,9 @@ function buildTable(name, data, prbIdx) {
 	for (let i in cont) {
 		let prb = new Array(c);
 		for (let j = 0; j < c; j++)
-			prb[j] = "<td></td>";
+			prb[j] = {
+				html: "<td></td>"
+			};
 		for (let j in cont[i].problems) {
 			let idx = cont[i].problems[j].problem_index, p = prbIdx.findIndex((t) => t.find((a) => a == idx) != undefined), cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, lnk = "";
 			cnt++;
@@ -296,6 +319,7 @@ function buildTable(name, data, prbIdx) {
 				sol: 0,
 				cid: cid,
 				diff: dif,
+				type: name,
 				uname: uname,
 				tag: tags[uname],
 				time: cont[i].start_epoch_second,
@@ -327,6 +351,14 @@ function buildTable(name, data, prbIdx) {
 					"</div>";
 				cntt++;
 			}
+			if (probCell[pid] == undefined) {
+				probCell[pid] = [];
+			}
+			prb[p] = {
+				html: prb[p],
+				id: "cell-" + pid + "-" + name
+			};
+			probCell[pid].push(prb[p].id);
 		}
 		tbl.push(prb);
 	}
@@ -336,9 +368,10 @@ function buildTable(name, data, prbIdx) {
 				<thead class=\"full-width\">\
 					<tr>\
 						<th>比赛</th>");
-	console.log(prbIdx);
-	for (let i = 0; i < c; i++)
-		document.write("<th>" + prbIdx[i] + "</th>");
+	for (let i = 0; i < c; i++) {
+		document.write("<th id='cell-" + i + "-" + name + "'>" + prbIdx[i] + "</th>");
+		comboCell["cell-" + i + "-" + name] = [];
+	}
 	document.write("</tr>\
 				</thead>\
 			<tbody>");
@@ -346,11 +379,16 @@ function buildTable(name, data, prbIdx) {
 		let cid = cont[i].id;
 		document.write("\
 				<tr>\
-					<td id=\"" + cid + "-cell\">\
+					<td id=\"cell-" + cid + "-" + name + "\">\
 						<a href=\"https://atcoder.jp/contests/" + cid + "\">" + cid.toUpperCase() + "</a>\
 					</td>");
+		comboCell["cell-" + cid + "-" + name] = [];
 		for (let j in tbl[i]) {
-			document.write(tbl[i][j]);
+			document.write(tbl[i][j].html);
+			if (tbl[i][j].html != "<td></td>") {
+				comboCell["cell-" + j + "-" + name].push(tbl[i][j].id);
+				comboCell["cell-" + cid + "-" + name].push(tbl[i][j].id);
+			}
 		}
 		document.write("\
 				</tr>");
@@ -389,10 +427,13 @@ function buildTable(name, data, prbIdx) {
 		percent: tper
 	});
 	console.log(cnt, cnte, cnts, cntt);
-	nameList.push(name);
+	nameList.push({
+		id: name + "-table",
+		name: uname
+	});
 }
 
-function buildContList(name, data) {
+function buildContList(name, uname, data) {
 	let cnt = 0, cnte = 0, cnts = 0, cntt = 0, cont = [], tbl = [];
 	for (let i in data) {
 		cont.push(data[i]);
@@ -404,9 +445,9 @@ function buildContList(name, data) {
 			let idx = cont[i].problems[j].problem_index, cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, lnk = "";
 			cnt++;
 			let cur =
-				"<td id=\"cell-" + pid + "-" + name + "\">\
+				"<td class='elipsed' id=\"cell-" + pid + "-" + name + "\">\
 					<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\" class=\"diff-" + getColor(dif).name + "\">\
-						<ta href=\"javascript:void(0)\" title=\"难度：" + (dif == 100000 ? "暂未评定" : dif.toString()) + "\"" + getDiffCirc(dif) + cont[i].problems[j].title + "&nbsp;\
+						<ta href=\"javascript:void(0)\" title=\"难度：" + (dif == 100000 ? "暂未评定" : dif.toString()) + "\"" + getDiffCirc(dif) + idx + "&nbsp;\
 						</ta>\
 					</a>";
 			if ((cont[i].id in traList) && (pid in traList[cid])) {
@@ -423,6 +464,7 @@ function buildContList(name, data) {
 				cid: cid,
 				diff: dif,
 				lnks: lnk,
+				type: name,
 				uname: uname,
 				tag: tags[uname],
 				time: cont[i].start_epoch_second,
@@ -444,6 +486,14 @@ function buildContList(name, data) {
 					"</div>";
 				cntt++;
 			}
+			if (probCell[pid] == undefined) {
+				probCell[pid] = [];
+			}
+			cur = {
+				html: cur,
+				id: cur == "<td></td>" ? 0 : "cell-" + pid + "-" + name
+			};
+			probCell[pid].push(cur.id);
 			prb.push(cur);
 		}
 		tbl.push(prb);
@@ -454,7 +504,7 @@ function buildContList(name, data) {
 		let cid = cont[i].id;
 		document.write("\
 			<div class=\"ui segment\">\
-				<div class=\"ui top attached large label\" id=\"" + cid + "-cell\">\
+				<div class=\"ui top attached large label\" id=\"cell-" + cid + "\">\
 					<a href=\"https://atcoder.jp/contests/" + cid + "\">" + cont[i].title + "（" + cid.toUpperCase() + "）</a>\
 				</div>\
 				<div style=\"overflow-x: " + (tbl[i].length < 10 ? "hidden" : "scroll") + ";\">\
@@ -462,8 +512,10 @@ function buildContList(name, data) {
 						<table class=\"ui fixed celled table\">\
 							<tbody>\
 								<tr>");
+		comboCell["cell-" + cid] = [];
 		for (let j in tbl[i]) {
-			document.write(tbl[i][j]);
+			document.write(tbl[i][j].html);
+			comboCell["cell-" + cid].push(tbl[i][j].id);
 		}
 		document.write("</tr>\
 							</tbody>\
@@ -503,7 +555,10 @@ function buildContList(name, data) {
 		percent: cntt / cnt * 100
 	});
 	console.log(cnt, cnte, cnts, cntt);
-	nameList.push(name);
+	nameList.push({
+		id: name + "-lst",
+		uname: uname
+	});
 }
 
 let isd1 = {}, isd2 = {}, pcol = {}, presel = -1;
@@ -574,65 +629,63 @@ function refreshchart() {
 		]
 	});
 }
+
+function getStatPriority(stat) {
+	if (stat == "AC in contest")
+		return 4;
+	if (stat == "AC")
+		return 3;
+	if (stat == "UA in contest")
+		return 2;
+	if (stat == "UA")
+		return 1;
+	return 0;
+}
+function getStatColor(stat) {
+	if (stat == "AC in contest")
+		return "#9ad59e";
+	if (stat == "AC")
+		return "#c3e6cb";
+	if (stat == "UA in contest")
+		return "#fd9";
+	if (stat == "UA")
+		return "#ffeeba";
+	return "#fff";
+}
+function getStatClass(stat) {
+	if (stat == undefined)
+		return "";
+	if (stat.slice(0, 2) == "AC")
+		return "positive";
+	if (stat.slice(0, 2) == "UA")
+		return "negative";
+	return "";
+}
 function refreshList() {
 	for (let i in problist) {
-		document.getElementById(i + "-cell").setAttribute("style", (isd1[i] && isd2[i] ? "display: auto; " : "display: none; ") + "background-color: " + pcol[i]);
+		document.getElementById(i + "-col").setAttribute("class", getStatClass(pcol[i]));
+		document.getElementById(i + "-col").setAttribute("style", (isd1[i] && isd2[i] ? "display: auto;" : "display: none;") + "background-color: " + getStatColor(pcol[i]) + "!important");
 	}
-	for (let i = 1; i <= abccnt; i++) {
+	for (let i in probCell)
+		for (let j in probCell[i]) {
+			let name = probCell[i][j];
+			document.getElementById(name).setAttribute("class", getStatClass(pcol[i]));
+			document.getElementById(name).setAttribute("style", "background-color: " + getStatColor(pcol[i]) + "!important");
+		}
+	for (let i in comboCell) {
 		let flg = 1;
-		for (let j = 0; j < getabccnt(i); j++)
-			flg &= document.getElementById(getabcname(i, j) + "-cell-1").getAttribute("class") == "positive";
-		document.getElementById("abc" + ext3(i) + "-cell").setAttribute("class", flg ? "positive" : "");
-		document.getElementById("abc" + ext3(i) + "-cell").setAttribute("style", flg ? "background-color: #c3e6cb!important" : "");
-	}
-	for (let i = 1; i <= arccnt; i++) {
-		let flg = 1;
-		for (let j = 0; j < getarccnt(i); j++)
-			flg &= document.getElementById(getarcname(i, j) + "-cell-2").getAttribute("class") == "positive";
-		document.getElementById("arc" + ext3(i) + "-cell").setAttribute("class", flg ? "positive" : "");
-		document.getElementById("arc" + ext3(i) + "-cell").setAttribute("style", flg ? "background-color: #c3e6cb!important" : "");
-	}
-	for (let i = 1; i <= agccnt; i++) {
-		let flg = 1;
-		for (let j = 0; j < getagccnt(i); j++)
-			flg &= document.getElementById(getagcname(i, j) + "-cell-3").getAttribute("class") == "positive";
-		document.getElementById("agc" + ext3(i) + "-cell").setAttribute("class", flg ? "positive" : "");
-		document.getElementById("agc" + ext3(i) + "-cell").setAttribute("style", flg ? "background-color: #c3e6cb!important" : "");
-	}
-}
-
-function listtoggleabc() {
-	let flg = document.getElementById("list-abc-btn").getAttribute("class") == "ui toggle button";
-	document.getElementById("list-abc-btn").setAttribute("class", flg ? "ui toggle button active" : "ui toggle button");
-	for (let i in problist) {
-		if (i.slice(0, 3) == "abc") {
-			isd1[i] = flg;
+		for (let j in comboCell[i]) {
+			try {
+				flg &= document.getElementById(comboCell[i][j]).getAttribute("style") == "positive";
+			} catch {
+				console.log(comboCell[i][j]);
+			}
+		}
+		if (flg) {
+			document.getElementById(i).setAttribute("class", "positive");
+			document.getElementById(i).setAttribute("color", "background-color: #c3e6cb!important");
 		}
 	}
-	refreshchart();
-	refreshList();
-}
-function listtogglearc() {
-	let flg = document.getElementById("list-arc-btn").getAttribute("class") == "ui toggle button";
-	document.getElementById("list-arc-btn").setAttribute("class", flg ? "ui toggle button active" : "ui toggle button");
-	for (let i in problist) {
-		if (i.slice(0, 3) == "arc") {
-			isd1[i] = flg;
-		}
-	}
-	refreshchart();
-	refreshList();
-}
-function listtoggleagc() {
-	let flg = document.getElementById("list-agc-btn").getAttribute("class") == "ui toggle button";
-	document.getElementById("list-agc-btn").setAttribute("class", flg ? "ui toggle button active" : "ui toggle button");
-	for (let i in problist) {
-		if (i.slice(0, 3) == "agc") {
-			isd1[i] = flg;
-		}
-	}
-	refreshchart();
-	refreshList();
 }
 
 function isinarray(x, a) {
@@ -645,6 +698,14 @@ function isinarray(x, a) {
 }
 
 function setfilter() {
+	for (let i in problist)
+		isd1[i] = isd2[i] = 1;
+	for (let i in labels) {
+		let val = $("#" + i + "-checkbox").checkbox("is checked");
+		for (let j in problist)
+			if (problist[j].type == i) 
+				isd1[j] = val;
+	}
 	document.getElementById("rndprob").innerHTML = "";
 	let dl = document.getElementById("diflb").value, dr = document.getElementById("difrb").value, utg = $(".ui.dropdown").dropdown("get value"), flgor = $("#tag-combined-or").checkbox("is checked");
 	dl = dl == "" || isNaN(Number(dl)) ? -10000 : Number(dl);
@@ -670,16 +731,13 @@ function setfilter() {
 }
 
 function clrfilter() {
-	if (document.getElementById("list-abc-btn").getAttribute("class") == "ui toggle button")
-		listtoggleabc();
-	if (document.getElementById("list-arc-btn").getAttribute("class") == "ui toggle button")
-		listtogglearc();
-	if (document.getElementById("list-agc-btn").getAttribute("class") == "ui toggle button")
-		listtoggleagc();
+	for (let i in labels) {
+		$("#" + i + "-checkbox").checkbox("set checked");
+	}
 	document.getElementById("diflb").value = "";
 	document.getElementById("difrb").value = "";
 	$(".ui.dropdown").dropdown("clear");
-	$(".ui.checkbox").checkbox("uncheck");
+	$("#tag-combined-or").checkbox("uncheck");
 	setfilter();
 }
 
@@ -711,17 +769,22 @@ function writelist(taglist) {
 			<div id=\"container\" style=\"height:300px\"></div>\
 			<p class=\"highcharts-description\"></p>\
 		</figure>\
-		<p>\
-			<button class=\"ui toggle button active\" id=\"list-abc-btn\" onclick=\"listtoggleabc()\">\
-				显示 ABC\
-			</button>\
-			<button class=\"ui toggle button active\" id=\"list-arc-btn\" onclick=\"listtogglearc()\">\
-				显示 ARC\
-			</button>\
-			<button class=\"ui toggle button active\" id=\"list-agc-btn\" onclick=\"listtoggleagc()\">\
-				显示 AGC\
-			</button>\
-		</p>\
+		<div class='ui form' style='margin: 1em 0'>\
+			<div class='eight fields'>");
+	for (let i in labels) {
+		document.write("\
+				<div class='field'>\
+					<div class='ui checkbox' id='" + i + "-checkbox'>\
+						<input type='checkbox' name='" + i + "-checkbox'>\
+						<label>\
+							选择 " + labels[i].name + "\
+						</label>\
+					</div>\
+				</div>");
+	}
+	document.write("\
+			</div>\
+		</div>\
 		<div class=\"ui input\">\
 			<input id=\"diflb\" style=\"width: 150;\" placeholder=\"筛选难度下界\"/>\
 		</div>\
@@ -741,61 +804,60 @@ function writelist(taglist) {
 			</div>\
 		</div>\
 		&nbsp;&nbsp;\
-		<div class=\"ui checkbox\" id=\"tag-combined-or\">\
-			<input type=\"checkbox\" name=\"example\">\
-				<label>\
-					按或合并标签\
-				</label>\
-			</div>\
-			&nbsp;&nbsp;\
-			<button class=\"ui violet basic button\" onclick=\"setfilter()\">\
-				筛选\
-			</button>\
-			<button class=\"ui green basic button\" onclick=\"clrfilter()\" style=\"display: inline-block;\">\
-				重置\
-			</button>\
-			<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">\
-				随机跳题\
-			</button>\
-			<p></p>\
-			<table class=\"ui fixed celled table segment\">\
-				<tbody>\
-					<tr id=\"rndprob\">\
-					</tr>\
-				</tbody>\
-			</table>\
-			<table class=\"ui fixed sortable celled table segment\">\
-				<thead>\
-					<tr>\
-						<th>编号</th>\
-						<th>标题</th>\
-						<th>链接</th>\
-						<th>难度</th>\
-						<th>标签</th>\
-					</tr>\
-				</thead>\
-				<tbody>");
+		<div class=\"ui checkbox\">\
+			<input id='tag-combined-or' type='checkbox' name='example'>\
+			<label>\
+				按或合并标签\
+			</label>\
+		</div>\
+		<p></p>\
+		<button class=\"ui violet basic button\" onclick=\"setfilter()\">\
+			筛选\
+		</button>\
+		<button class=\"ui green basic button\" onclick=\"clrfilter()\">\
+			重置\
+		</button>\
+		<button class=\"ui orange basic button\" onclick=\"getrandprob()\">\
+			随机跳题\
+		</button>\
+		<p></p>\
+		<table class=\"ui fixed celled table segment\">\
+			<tbody>\
+				<tr id=\"rndprob\">\
+				</tr>\
+			</tbody>\
+		</table>\
+		<table class=\"ui fixed sortable celled table segment\">\
+			<thead>\
+				<tr>\
+					<th>编号</th>\
+					<th>标题</th>\
+					<th>链接</th>\
+					<th>难度</th>\
+					<th>标签</th>\
+				</tr>\
+			</thead>\
+			<tbody>");
 	let tLst = [];
 	for (let i in problist) {
 		tLst.push(i);
 	}
 	tLst.sort((a, b) => problist[b].time - problist[a].time);
-	console.log(tLst);
 	for (let id in tLst) {
 		let i = tLst[id];
 		isd1[i] = 1, isd2[i] = 1, pcol[i] = "#fff";
 		document.write("\
-					<tr id=\"" + problist[i].uname + "-col\">\
-						<td>" + problist[i].org_a + "</td>\
-						<td>" + getDiffCirc(problist[i].diff) + "<span class=\"diff-" + getColor(problist[i].diff).name + "\">" + problist[i].title + "</span></td>\
+					<tr id=\"" + i + "-col\">\
+						<td class='elipsed'>" + problist[i].org_a + "</td>\
+						<td class='elipsed'>" + getDiffCirc(problist[i].diff) + "<span class=\"diff-" + getColor(problist[i].diff).name + "\">" + problist[i].title + "</span></td>\
 						<td>");
 		if (problist[i].tra)
 			document.write("<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + problist[i].cid + "\", \"" + problist[i].pid + "\", \"" + problist[i].uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;");
 		if (problist[i].sol)
 			document.write("<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + problist[i].cid + "\", \"" + problist[i].pid + "\", \"" + problist[i].uname + "&nbsp;题解\", 1)'>题解</a>");
 		document.write("</td>\
-						<td>" + (problist[i].diff == 100000 ? "unavailable" : problist[i].diff.toString()) + "</td>");
-		document.write("<td class=\"noelipse\">");
+						<td class='elipsed'>" + (problist[i].diff == 100000 ? "unavailable" : problist[i].diff.toString()) + "</td>");
+		document.write("<td>");
 		if (problist[i].tag != undefined) {
 			let t = problist[i].tag;
 			for (let j in t) {
@@ -813,6 +875,7 @@ function writelist(taglist) {
 		transition: "drop",
 		allowAdditions: 1
 	});
+	clrfilter();
 	refreshchart();
 }
 
@@ -1084,45 +1147,11 @@ function buildcontestpage() {
 	showjoinpage();
 }
 let curProb = [];
-function getStatPriority(stat) {
-	if (stat == "AC in contest")
-		return 4;
-	if (stat == "AC")
-		return 3;
-	if (stat == "UA in contest")
-		return 2;
-	if (stat == "UA")
-		return 1;
-	return 0;
-}
-function getStatColor(stat) {
-	if (stat == "AC in contest")
-		return "#9ad59e";
-	if (stat == "AC")
-		return "#c3e6cb";
-	if (stat == "UA in contest")
-		return "#fd9";
-	if (stat == "UA")
-		return "#ffeeba";
-	return "#fff";
-}
-function getStatClass(stat) {
-	if (stat == undefined)
-		return "";
-	if (stat.slice(0, 2) == "AC")
-		return "positive";
-	if (stat.slice(0, 2) == "UA")
-		return "negative";
-	return "";
-}
 function importUser() {
 	let prbStat = {}, usrList = document.getElementById("user-name").value.split(" ");
 	window.localStorage.setItem("default-user-list", document.getElementById("user-name").value);
 	for (let i in curProb) {
-		let cellName = curProb[i] + "-cell-" + { abc: 1, arc: 2, agc: 3 }[curProb[i].slice(0, 3)];
-		document.getElementById(cellName).setAttribute("class", "");
-		document.getElementById(cellName).setAttribute("style", "background-color: #fff!important");
-		pcol[curProb[i]] = "#fff";
+		pcol[i] = "";
 	}
 	refreshList();
 	for (let i in usrList) {
@@ -1137,7 +1166,7 @@ function importUser() {
 		for (let i = lst; i != -1;) {
 			readTextFile("https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=" + usr + "&from_second=" + i.toString(), "json", function (txt, sta) {
 				if (sta == "200") {
-					let sub = JSON.parse(txt);
+					let sub = JSON.parse(txt), cur = i;
 					if (sub == 0) {
 						if (i == 0) {
 							usrNotFnd = 1;
@@ -1147,11 +1176,18 @@ function importUser() {
 						return;
 					}
 					for (let j in sub) {
+						if (!(sub[j].contest_id in contlist)) {
+							continue;
+						}
 						let isInContest = contlist[sub[j].contest_id].startTime <= sub[j].epoch_second && sub[j].epoch_second <= contlist[sub[j].contest_id].endTime,
 							subStat = (sub[j].result == "AC" ? "AC" : "UA") + (isInContest ? " in contest" : "");
 						if (getStatPriority(usrPrbStat[sub[j].problem_id]) < getStatPriority(subStat))
 							usrPrbStat[sub[j].problem_id] = subStat;
 						lst = i = sub[j].epoch_second + 1;
+					}
+					if (i == cur) {
+						i = -1;
+						return;
 					}
 				} else {
 					alert("导入用户提交失败，请重试");
@@ -1179,13 +1215,8 @@ function importUser() {
 	}
 	curProb = [];
 	for (let i in prbStat) {
-		if (i.slice(0, 3) == "abc" || i.slice(0, 3) == "arc" || i.slice(0, 3) == "agc") {
-			let cellName = i + "-cell-" + { abc: 1, arc: 2, agc: 3 }[i.slice(0, 3)];
-			document.getElementById(cellName).setAttribute("class", getStatClass(prbStat[i]));
-			document.getElementById(cellName).setAttribute("style", "background-color: " + getStatColor(prbStat[i]) + "!important");
-			pcol[i] = getStatColor(prbStat[i]);
-			curProb.push(i);
-		}
+		pcol[i] = prbStat[i];
+		curProb.push(i);
 	}
 	refreshList();
 }
@@ -1261,31 +1292,17 @@ function buildw() {
 		}
 	});
 	readTextFile("src/tag-list.json", "json", function (text) {
-		taglist = JSON.parse(text);
+		tagList = JSON.parse(text);
 	});
 	document.write("\
-	<div class=\"ui pointing menu\">\
-		<a class=\"item\" onclick=\"labToggle('abc-table')\">\
-			ABC\
-		</a>\
-		<a class=\"item\" onclick=\"labToggle('arc-table')\">\
-			ARC\
-		</a>\
-		<a class=\"item\" onclick=\"labToggle('agc-table')\">\
-			AGC\
-		</a>\
-		<a class=\"item\" onclick=\"labToggle('abc_like-table')\">\
-			ABC-Like\
-		</a>\
-		<a class=\"item\" onclick=\"labToggle('arc_like-table')\">\
-			ARC-Like\
-		</a>\
-		<a class=\"item\" onclick=\"labToggle('agc_like-table')\">\
-			AGC-Like\
-		</a>\
-		<a class=\"item\" onclick=\"labToggle('other-lst')\">\
-			Other\
-		</a>\
+	<div class=\"ui pointing menu\">");
+	for (let i in labels) {
+		document.write("\
+		<a class=\"item\" onclick=\"labToggle('" + i + (labels[i].index == undefined ? "-lst" : "-table") + "')\">\
+			" + labels[i].name + "\
+		</a>");
+	}
+	document.write("\
 		<a class=\"item\" onclick=\"labToggle('prob-list')\">\
 			筛选\
 		</a>\
@@ -1296,25 +1313,24 @@ function buildw() {
 			<div class=\"item\">\
 				<div class=\"ui transparent icon input\">\
 					<input type=\"text\" id=\"user-name\" placeholder=\"导入用户，多个用户用半角空格隔开\" style=\"width: 260px\"/>\
-					<i class=\"search link icon\" onclick=\"shownotyet()\"></i>\
+					<i class=\"search link icon\" onclick=\"importUser()\"></i>\
 				</div>\
 			</div>\
 		</div>\
 	</div>");
 	$("#user-name").keydown(function (e) {
 		if (event.keyCode == 13) {
-			// importUser();
-			shownotyet();
+			importUser();
 		}
 	});
-	buildTable("abc", rawd["abc"], ["A", "B", "C", "D", "E", "F", "G", "H/Ex"]);
-	buildTable("arc", rawd["arc"], ["A", "B", "C", "D", "E", "F", "F2"]);
-	buildTable("agc", rawd["agc"], ["A", "B", "C", "D", "E", "F", "F2"]);
-	buildTable("abc_like", rawd["abc_like"], ["A", "B", "C", "D", "E", "F", "G", "H/Ex"]);
-	buildTable("arc_like", rawd["arc_like"], ["A", "B", "C", "D", "E", "F"]);
-	buildTable("agc_like", rawd["agc_like"], ["A", "B", "C", "C1", "C2", "D", "E", "F", "G", "H", "I", "J"]);
-	buildContList("other", Object.assign(rawd["ahc"], rawd["others"]));
-	writelist(taglist);
+	for (let i in labels) {
+		if (labels[i].index == undefined) {
+			buildContList(i, labels[i].name, rawd[i]);
+		} else {
+			buildTable(i, labels[i].name, rawd[i], labels[i].index);
+		}
+	}
+	writelist(tagList);
 	buildcontestpage();
 
 	document.write("\
@@ -1354,5 +1370,5 @@ function buildw() {
 	labToggle('abc-table');
 	window.onclick();
 	document.getElementById("user-name").value = window.localStorage.getItem("default-user-list");
-	// importUser();
+	importUser();
 }
