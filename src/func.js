@@ -588,7 +588,7 @@ function refreshchart() {
 						document.getElementById("diflb").value = "";
 						document.getElementById("difrb").value = "";
 					}
-					setfilter();
+					setFilter();
 				}
 			}
 		},
@@ -661,11 +661,44 @@ function getStatClass(stat) {
 		return "negative";
 	return "";
 }
-function refreshList() {
-	for (let i in problist) {
-		document.getElementById(i + "-col").setAttribute("class", getStatClass(pcol[i]));
-		document.getElementById(i + "-col").setAttribute("style", (isd1[i] && isd2[i] ? "display: auto;" : "display: none;") + "background-color: " + getStatColor(pcol[i]) + "!important");
+
+let curPage = 1;
+function refreshMenu() {
+	let cnt = 0, html = "";
+	for (let i in problist)
+		if (isd1[i] && isd2[i])
+			cnt++;
+	cnt = Math.floor((cnt + 19) / 20);
+	html += "<a class='item' onclick='jumpToPage(1)'><i class='angle double left icon'></i></a>";
+	if (curPage > 5) {
+		html += "<a class='item'><i class='ellipsis horizontal icon'></i></a>";
 	}
+	let l = Math.max(1, curPage - 3), r = Math.min(cnt, curPage + 3);
+	for (let i = l; i < r; i++) {
+		html += "<a class='item' onclick='jumpToPage(" + i + ")'>" + i + "</a>";
+	}
+	if (curPage < cnt - 4) {
+		html += "<a class='item'><i class='ellipsis horizontal icon'></i></a>";
+	}
+	html += "<a class='item' onclick='jumpToPage(" + cnt + ")'><i class='angle double right icon'></i></a>";
+	document.getElementById("prob-list-menu").innerHTML = html;
+}
+function jumpToPage(x) {
+	curPage = x;
+	let cnt = 0;
+	for (let i in problist)
+		if (isd1[i] && isd2[i]) {
+			cnt++;
+			if (curPage * 20 - 19 <= cnt && cnt <= curPage * 20) {
+				document.getElementById(i + "-col").setAttribute("class", getStatClass(pcol[i]));
+				document.getElementById(i + "-col").setAttribute("style", "background-color: " + getStatColor(pcol[i]) + "!important");
+			} else {
+				document.getElementById(i + "-col").setAttribute("style", "display: none;");
+			}
+		}
+	refreshMenu();
+}
+function refreshList() {
 	for (let i in probCell)
 		for (let j in probCell[i]) {
 			let name = probCell[i][j];
@@ -686,8 +719,8 @@ function refreshList() {
 			document.getElementById(i).setAttribute("color", "background-color: #c3e6cb!important");
 		}
 	}
+	jumpToPage(curPage = 1);
 }
-
 function isinarray(x, a) {
 	if (a == undefined)
 		return 0;
@@ -696,14 +729,13 @@ function isinarray(x, a) {
 		flg |= x == a[i];
 	return flg;
 }
-
-function setfilter() {
+function setFilter() {
 	for (let i in problist)
 		isd1[i] = isd2[i] = 1;
 	for (let i in labels) {
 		let val = $("#" + i + "-checkbox").checkbox("is checked");
 		for (let j in problist)
-			if (problist[j].type == i) 
+			if (problist[j].type == i)
 				isd1[j] = val;
 	}
 	document.getElementById("rndprob").innerHTML = "";
@@ -728,9 +760,9 @@ function setfilter() {
 	}
 	refreshchart();
 	refreshList();
+	jumpToPage(curPage = 1);
 }
-
-function clrfilter() {
+function clearFilter() {
 	for (let i in labels) {
 		$("#" + i + "-checkbox").checkbox("set checked");
 	}
@@ -738,10 +770,9 @@ function clrfilter() {
 	document.getElementById("difrb").value = "";
 	$(".ui.dropdown").dropdown("clear");
 	$("#tag-combined-or").checkbox("uncheck");
-	setfilter();
+	setFilter();
 }
-
-function getrandprob() {
+function getRandProblem() {
 	document.getElementById("rndprob").innerHTML = "";
 	let cnt = 0, p;
 	for (let i in problist) {
@@ -753,16 +784,16 @@ function getrandprob() {
 		return;
 	p = Math.floor(Math.random() * cnt);
 	for (let i in problist) {
-		if (isd1[i] && isd2[i]) {
-			if (!p--) {
-				document.getElementById("rndprob").innerHTML = document.getElementById(i + "-col").innerHTML;
-				document.getElementById("rndprob").setAttribute("style", document.getElementById(i + "-col").getAttribute("style"));
-			}
+		if (isd1[i] && isd2[i] && !p--) {
+			document.getElementById("rndprob").innerHTML = document.getElementById(i + "-col").innerHTML;
+			document.getElementById("rndprob").setAttribute("class", getStatClass(pcol[i]));
+			document.getElementById("rndprob").setAttribute("style", "background-color: " + getStatColor(pcol[i]) + "!important");
+			break;
 		}
 	}
 }
 
-function writelist(taglist) {
+function writeList(taglist) {
 	document.write("\
 	<div id=\"prob-list\">\
 		<figure class=\"highcharts-figure\">\
@@ -811,23 +842,24 @@ function writelist(taglist) {
 			</label>\
 		</div>\
 		<p></p>\
-		<button class=\"ui violet basic button\" onclick=\"setfilter()\">\
+		<button class=\"ui violet basic button\" onclick=\"setFilter()\">\
 			筛选\
 		</button>\
-		<button class=\"ui green basic button\" onclick=\"clrfilter()\">\
+		<button class=\"ui green basic button\" onclick=\"clearFilter()\">\
 			重置\
 		</button>\
-		<button class=\"ui orange basic button\" onclick=\"getrandprob()\">\
+		<button class=\"ui orange basic button\" onclick=\"getRandProblem()\">\
 			随机跳题\
 		</button>\
 		<p></p>\
-		<table class=\"ui fixed celled table segment\">\
+		<table class='ui fixed celled table segment'>\
 			<tbody>\
-				<tr id=\"rndprob\">\
+				<tr id='rndprob'>\
 				</tr>\
 			</tbody>\
 		</table>\
-		<table class=\"ui fixed sortable celled table segment\">\
+		<div class='ui borderless menu' id='prob-list-menu'></div>\
+		<table class='ui fixed sortable celled table segment'>\
 			<thead>\
 				<tr>\
 					<th>编号</th>\
@@ -875,7 +907,7 @@ function writelist(taglist) {
 		transition: "drop",
 		allowAdditions: 1
 	});
-	clrfilter();
+	clearFilter();
 	refreshchart();
 }
 
@@ -1330,7 +1362,7 @@ function buildw() {
 			buildTable(i, labels[i].name, rawd[i], labels[i].index);
 		}
 	}
-	writelist(tagList);
+	writeList(tagList);
 	buildcontestpage();
 
 	document.write("\
