@@ -852,9 +852,9 @@ function writelist(taglist) {
 						<td class='elipsed'>" + getDiffCirc(problist[i].diff) + "<span class=\"diff-" + getColor(problist[i].diff).name + "\">" + problist[i].title + "</span></td>\
 						<td>");
 		if (problist[i].tra)
-			document.write("<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + problist[i].cid + "\", \"" + problist[i].pid + "\", \"" + problist[i].uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;");
+			document.write("<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + problist[i].cid + "\", \"" + i + "\", \"" + problist[i].uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;");
 		if (problist[i].sol)
-			document.write("<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + problist[i].cid + "\", \"" + problist[i].pid + "\", \"" + problist[i].uname + "&nbsp;题解\", 1)'>题解</a>");
+			document.write("<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + problist[i].cid + "\", \"" + i + "\", \"" + problist[i].uname + "&nbsp;题解\", 1)'>题解</a>");
 		document.write("</td>\
 						<td class='elipsed'>" + (problist[i].diff == 100000 ? "unavailable" : problist[i].diff.toString()) + "</td>");
 		document.write("<td>");
