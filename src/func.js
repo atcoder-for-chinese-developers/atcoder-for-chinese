@@ -379,7 +379,7 @@ function buildTable(name, uname, data, prbIdx) {
 		let cid = cont[i].id;
 		document.write("\
 				<tr>\
-					<td id=\"cell-" + cid + "-" + name + "\">\
+					<td class='elipsed' id=\"cell-" + cid + "-" + name + "\">\
 						<a href=\"https://atcoder.jp/contests/" + cid + "\">" + cid.toUpperCase() + "</a>\
 					</td>");
 		comboCell["cell-" + cid + "-" + name] = [];
@@ -504,7 +504,7 @@ function buildContList(name, uname, data) {
 		let cid = cont[i].id;
 		document.write("\
 			<div class=\"ui segment\">\
-				<div class=\"ui top attached large label\" id=\"cell-" + cid + "\">\
+				<div class=\"ui top attached large label elipsed\" id=\"cell-" + cid + "\">\
 					<a href=\"https://atcoder.jp/contests/" + cid + "\">" + cont[i].title + "（" + cid.toUpperCase() + "）</a>\
 				</div>\
 				<div style=\"overflow-x: " + (tbl[i].length < 10 ? "hidden" : "scroll") + ";\">\

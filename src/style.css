@@ -176,7 +176,7 @@ a:visited {
 	font-size: 10px!important;
 }
 
-td.elipsed {
+.elipsed {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
