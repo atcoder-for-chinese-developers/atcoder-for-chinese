@@ -1,12 +1,16 @@
-function readTextFile(file, ext, callback, isLocked = false) {
+function readTextFile(file, ext, callback, isLocked = true) {
 	let xhr = new XMLHttpRequest();
 	xhr.overrideMimeType("application/" + ext);
-	xhr.open("GET", file, isLocked);
+	xhr.open("GET", file, !isLocked);
 	xhr.onreadystatechange = function () {
-		if (xhr.readyState === 4)
+		if (xhr.readyState == 4)
 			callback(xhr.responseText, xhr.status);
 	}
-	xhr.send();
+	try {
+		xhr.send();
+	} catch {
+		alert("[Error] Can't fetch resource: " + file + "");
+	}
 }
 
 function copyToClipboard(txt) {
@@ -102,91 +106,48 @@ function Base64() {
 		return string;
 	}
 }
-function getabccnt(id) {
-	return id < 126 ? 4 : id < 212 ? 6 : 8;
-}
-function getarccnt(id) {
-	return id < 104 ? 4 : id == 120 ? 7 : 6;
-}
-function getagccnt(id) {
-	return id == 28 ? 7 : id == 9 ? 5 : 6;
-}
-function ext3(con) {
-	return (Math.floor(con / 100)).toString() + (Math.floor(con % 100 / 10)).toString() + (con % 10).toString();
-}
+const labels = {
+	"abc": {
+		name: "ABC",
+		index: ["A", "B", "C", "D", "E", "F", "G", "H/Ex"]
+	}, "arc": {
+		name: "ARC",
+		index: ["A", "B", "C", "D", "E", "F", "F2"]
+	}, "agc": {
+		name: "AGC",
+		index: ["A", "B", "C", "D", "E", "F", "F2"]
+	}, "abc_like": {
+		name: "ABC-Like",
+		index: ["A", "B", "C", "D", "E", "F", "G", "H/Ex"]
+	}, "arc_like": {
+		name: "ARC-Like",
+		index: ["A", "B", "C", "D", "E", "F"]
+	}, "agc_like": {
+		name: "AGC-Like",
+		index: ["A", "B", "C", "C1", "C2", "D", "E", "F", "G", "H", "I", "J"]
+	}, "ahc": {
+		name: "AHC"
+	}, "others": {
+		name: "其他"
+	}
+};
+let problist = [], contlist = [], rawd, traList, solList, tags, prbs, tagList, nameList = [], probCell = {}, comboCell = {};
 function transdiff(d) {
-	return Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
-}
-let abctoarc = new Array(233);
-function getabcname(con, id) {
-	if (abctoarc[con] != undefined && id > 1)
-		return "arc" + ext3(abctoarc[con]) + "_" + String.fromCharCode(id + 95);
-	return "abc" + ext3(con) + "_" + (con > 19 ? String.fromCharCode(id + 97) : (id + 1).toString());
-}
-function getarcname(con, id) {
-	if (con == 120 && id == 6)
-		return "arc120_f2";
-	return "arc" + ext3(con) + "_" + (con > 34 ? String.fromCharCode(id + 97) : (id + 1).toString());
-}
-function getagcname(con, id) {
-	if (con == 28 && id == 6)
-		return "agc028_f2";
-	return "agc" + ext3(con) + "_" + String.fromCharCode(id + 97);
-}
-function getabcname_u(con, id) {
-	return "ABC" + ext3(con) + "_" + (id > 6 ? "Ex" : String.fromCharCode(id + 65));
-}
-function getarcname_u(con, id) {
-	if (con == 120 && id == 6)
-		return "ARC120_F2";
-	return "ARC" + ext3(con) + "_" + String.fromCharCode(id + 65);
-}
-function getagcname_u(con, id) {
-	if (con == 28 && id == 6)
-		return "AGC028_F2";
-	return "AGC" + ext3(con) + "_" + String.fromCharCode(id + 65);
-}
-function sidebartoggle() {
-	$('.ui.sidebar').sidebar('toggle');
+	return d === null ? 100000 : Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
 }
 function closealltables() {
-	document.getElementById("abc-table").setAttribute("style", "display: none;");
-	document.getElementById("arc-table").setAttribute("style", "display: none;");
-	document.getElementById("agc-table").setAttribute("style", "display: none;");
+	for (let i in nameList) {
+		document.getElementById(nameList[i].id).setAttribute("style", "display: none;");
+	}
 	document.getElementById("prob-list").setAttribute("style", "display: none;");
 	document.getElementById("cont-page").setAttribute("style", "display: none;");
 }
-function abctabletoggle() {
+function labToggle(name) {
 	closealltables();
-	document.getElementById("abc-table").setAttribute("style", "display: block;");
+	document.getElementById(name).setAttribute("style", "display: block;");
 }
-function arctabletoggle() {
-	closealltables();
-	document.getElementById("arc-table").setAttribute("style", "display: block;");
-}
-function agctabletoggle() {
-	closealltables();
-	document.getElementById("agc-table").setAttribute("style", "display: block;");
-}
-function listtoggle() {
-	closealltables();
-	document.getElementById("prob-list").setAttribute("style", "display: block;");
-}
-function contesttoggle() {
-	closealltables();
-	document.getElementById("cont-page").setAttribute("style", "display: block;");
-}
-function abctagtoggle(i, j) {
-	document.getElementById("tag-" + getabcname(i, j)).setAttribute("style",
-		document.getElementById("tag-" + getabcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
-}
-function arctagtoggle(i, j) {
-	document.getElementById("tag-" + getarcname(i, j)).setAttribute("style",
-		document.getElementById("tag-" + getarcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
-}
-function agctagtoggle(i, j) {
-	document.getElementById("tag-" + getagcname(i, j)).setAttribute("style",
-		document.getElementById("tag-" + getagcname(i, j)).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
+function tagToggle(id) {
+	document.getElementById("tag-" + id).setAttribute("style", document.getElementById("tag-" + id).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
 }
 function getColor(k) {
 	if (k == 100000) {
@@ -245,7 +206,7 @@ function getColor(k) {
 		};
 	}
 }
-function getDiffCirc(d){
+function getDiffCirc(d) {
 	let t = getColor(d);
 	if (d < 3200) {
 		return "<ta href=\"\" title=\"难度：" + d + "\"><span class=\"difficulty-circle\" style=\"border-color: " + t.rgb + "; background: linear-gradient(to top, " + t.rgb + " " + t.val + "%, rgba(0, 0, 0, 0) " + t.val + "%) border-box;\"></span></ta>";
@@ -259,7 +220,6 @@ function getDiffCirc(d){
 		return "<ta href=\"\" title=\"难度：暂未评定\"><span class=\"diff-unavailable\">?</span></ta>";
 	}
 }
-let problist = [], contlist = [], abccnt = 0, arccnt = 0, agccnt = 0, rawd, tralist, sollist, tags, prbs, taglist;
 function formatDate(s, fmt = "yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒") {
 	if (s == "")
 		return "";
@@ -274,11 +234,11 @@ function formatDate(s, fmt = "yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒") {
 			"S": this.getMilliseconds()
 		};
 		if (/(y+)/.test(fmt)) {
-			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").slice(4 - RegExp.$1.length));
 		}
 		for (var k in o) {
 			if (new RegExp("(" + k + ")").test(fmt)) {
-				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).slice(("" + o[k]).length)));
 			}
 		}
 		return fmt;
@@ -287,7 +247,7 @@ function formatDate(s, fmt = "yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒") {
 	return t.toString();
 }
 function showProbModal(cid, pid, title, op) {
-	let list = (op ? sollist : tralist)[cid][pid], content = "\
+	let list = (op ? solList : traList)[cid][pid], content = "\
 		<div class=\"ui segment\">\
 			<H2 class=\"ui medium block top attached header\">" + title + "</h2>";
 	if (list == 0) {
@@ -330,420 +290,275 @@ function showProbModal(cid, pid, title, op) {
 	$("#show-prob-list").modal("show");
 }
 
-function writeabc(rawd, tags, list_tre, list_sol, prbs) {
-	let Lim = 8, mx = 1005, y = new Array(mx), siz = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
-		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], abctitle = new Array(mx);
-	while (getabcname(abccnt + 1, 1) in rawd)
-		abccnt++;
-	for (let i = 1; i <= abccnt; i++)
-		Ava_tre[i] = new Array(10);
-	for (let i = 1; i <= abccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_tre[i][j] = [];
-	for (let i = 1; i <= abccnt; i++)
-		Ava_sol[i] = new Array(10);
-	for (let i = 1; i <= abccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_sol[i][j] = [];
-	for (let i = 1; i <= abccnt; i++)
-		if (("abc" + ext3(i)) in list_tre)
-			for (let j = 0; j < getabccnt(i); j++)
-				if (getabcname(i, j) in list_tre["abc" + ext3(i)])
-					Ava_tre[i][j] = list_tre["abc" + ext3(i)][getabcname(i, j)];
-	for (let i = 1; i <= abccnt; i++)
-		if (("abc" + ext3(i)) in list_sol)
-			for (let j = 0; j < getabccnt(i); j++)
-				if (getabcname(i, j) in list_sol["abc" + ext3(i)])
-					Ava_sol[i][j] = list_sol["abc" + ext3(i)][getabcname(i, j)];
-	for (let i = 1, ri = 58; i <= abccnt; i++) {
-		x[i] = new Array(getabccnt(i));
-		tg[i] = new Array(getabccnt(i));
-		abctitle[i] = new Array(getabccnt(i));
-		cnt += x[i].length;
-		let flg = 0;
-		for (let j = 0; j < getabccnt(i); j++) {
-			if (i < 42 || i > 125 || j < 2 || getabcname(i, j) in rawd)
-				x[i][j] = !(getabcname(i, j) in rawd) || !("difficulty" in rawd[getabcname(i, j)]) ? 100000 : transdiff(rawd[getabcname(i, j)].difficulty, 0);
-			else
-				x[i][j] = !("difficulty" in rawd[getarcname(ri, j - 2)]) ? 100000 : transdiff(rawd[getarcname(ri, j - 2)].difficulty, 0), flg = 1, abctoarc[i] = ri;
-		}
-		ri += flg;
+function buildTable(name, uname, data, prbIdx) {
+	let c = prbIdx.length, cnt = 0, cnte = 0, cnts = 0, cntt = 0, cont = [], tbl = [], idxList = prbIdx;
+	for (let i in idxList) {
+		idxList[i] = prbIdx[i].split("/");
 	}
-	for (let i = 1; i <= abccnt; i++)
-		for (let j = 0; j < getabccnt(i); j++)
-			nametoid[getabcname(i, j)] = [i, j];
-	for (let i in prbs)
-		if (prbs[i].id in nametoid)
-			abctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
-	for (let i = 1; i <= abccnt; i++)
-		for (let j = 0; j < getabccnt(i); j++) {
-			tg[i][j] = tags[getabcname_u(i, j)];
-			problist[getabcname(i, j)] = {
-				"tag": tg[i][j],
-				"diff": x[i][j],
-				"title": abctitle[i][j],
-				"org_a": "<a href=\"https://atcoder.jp/contests/abc" + ext3(i) + "/tasks/" + getabcname(i, j) + "\">" + getabcname_u(i, j) + "</a>",
-				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"abc" + ext3(i) + "\", \"" + getabcname(i, j) + "\", \"" + getabcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
+	for (let i in data) {
+		cont.push(data[i]);
+	}
+	cont.sort((a, b) => b.start_epoch_second - a.start_epoch_second);
+	for (let i in cont) {
+		let prb = new Array(c);
+		for (let j = 0; j < c; j++)
+			prb[j] = {
+				html: "<td></td>"
 			};
+		for (let j in cont[i].problems) {
+			let idx = cont[i].problems[j].problem_index, p = prbIdx.findIndex((t) => t.find((a) => a == idx) != undefined), cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, lnk = "";
+			cnt++;
+			prb[p] =
+				"<td id=\"cell-" + pid + "-" + name + "\">\
+					<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\" class=\"diff-" + getColor(dif).name + "\">\
+						<ta href=\"javascript:void(0)\" title=\"难度：" + (dif == 100000 ? "暂未评定" : dif.toString()) + "\"" + getDiffCirc(dif) + idx + "&nbsp;\
+						</ta>\
+					</a>";
+			problist[pid] = {
+				tra: 0,
+				sol: 0,
+				cid: cid,
+				diff: dif,
+				type: name,
+				uname: uname,
+				tag: tags[uname],
+				time: cont[i].start_epoch_second,
+				title: cont[i].problems[j].title,
+				org_a: "<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\">" + uname + "</a>"
+			};
+			if ((cont[i].id in traList) && (pid in traList[cid])) {
+				problist[pid].tra = 1;
+				prb[p] += "<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;"
+				cnte++;
+			}
+			if ((cont[i].id in solList) && (pid in solList[cid])) {
+				problist[pid].sol = 1;
+				prb[p] += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题解\", 1)'>题解</a>";
+				cnts++;
+			}
+			if (uname in tags) {
+				let tgLst = tags[uname];
+				prb[p] +=
+					"<div onclick=\"tagToggle('" + pid + "-" + name + "')\" style=\"position: relative; right: -5;\">\
+						<a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important\">" + tgLst.length + "</a>\
+					</div>\
+					<div id=\"tag-" + pid + "-" + name + "\" style=\"display: none;\">";
+				for (let t in tgLst) {
+					prb[p] +=
+						"<p class=\"ui tag label\">" + tgLst[t] + "</p>";
+				}
+				prb[p] +=
+					"</div>";
+				cntt++;
+			}
+			if (probCell[pid] == undefined) {
+				probCell[pid] = [];
+			}
+			prb[p] = {
+				html: prb[p],
+				id: "cell-" + pid + "-" + name
+			};
+			probCell[pid].push(prb[p].id);
 		}
-	for (let i = abccnt; i >= 1; i--) {
-		siz[i] = getabccnt(i);
-		y[i] = new Array(siz[i]);
-		for (let j = 0; j < siz[i]; j++)
-			y[i][j] = "class=\"diff-" + getColor(x[i][j]).name + "\"";
+		tbl.push(prb);
 	}
 	document.write("\
-		<div id=\"abc-table\">\
+		<div id=\"" + name + "-table\">\
 			<table class=\"ui fixed celled definition table segment\">\
 				<thead class=\"full-width\">\
 					<tr>\
-						<th>比赛</th>\
-						<th>A</th>\
-						<th>B</th>\
-						<th>C</th>\
-						<th>D</th>\
-						<th>E</th>\
-						<th>F</th>\
-						<th>G</th>\
-						<th>H/Ex</th>\
-					</tr>\
+						<th>比赛</th>");
+	for (let i = 0; i < c; i++) {
+		document.write("<th id='cell-" + i + "-" + name + "'>" + prbIdx[i] + "</th>");
+		comboCell["cell-" + i + "-" + name] = [];
+	}
+	document.write("</tr>\
 				</thead>\
 			<tbody>");
-	for (let i = abccnt; i; i--) {
-		let t = ext3(i);
-		document.write('<tr><td id="abc' + t + '-cell"' + "><a href=\"https://atcoder.jp/contests/abc" + t + "\">ABC" + t + "</a></td>");
-		for (let j = 0; j < siz[i]; j++) {
-			let uC = String.fromCharCode(j + 65), traLink = "", solLink = "";
-			if (j == 7 && i > 232)
-				uC = "Ex";
-			if (Ava_tre[i][j] != 0)
-				traLink = problist[getabcname(i, j)].prob_a, cnte++;
-			if (Ava_sol[i][j] != 0)
-				solLink = problist[getabcname(i, j)].solu_a, cnts++;
-			document.write("<td id='" + getabcname(i, j) + "-cell-1'><a href=\"https://atcoder.jp/contests/abc" + t + "/tasks/" + getabcname(i, j) + "\" " + y[i][j] + ">" + getDiffCirc(x[i][j]) + uC + " </a>" + traLink + solLink);
-			if (tg[i][j] != undefined)
-				document.write("<div onclick=\"abctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
-			document.write("<div id=\"tag-" + getabcname(i, j) + "\" style=\"display: none;\">");
-			if (tg[i][j] != undefined) {
-				cntt++;
-				for (let t = 0; t < tg[i][j].length; t++) {
-					document.write("<p class=\"ui tag label\">" + tg[i][j][t] + "</p>");
-				}
+	for (let i in cont) {
+		let cid = cont[i].id;
+		document.write("\
+				<tr>\
+					<td id=\"cell-" + cid + "-" + name + "\">\
+						<a href=\"https://atcoder.jp/contests/" + cid + "\">" + cid.toUpperCase() + "</a>\
+					</td>");
+		comboCell["cell-" + cid + "-" + name] = [];
+		for (let j in tbl[i]) {
+			document.write(tbl[i][j].html);
+			if (tbl[i][j].html != "<td></td>") {
+				comboCell["cell-" + j + "-" + name].push(tbl[i][j].id);
+				comboCell["cell-" + cid + "-" + name].push(tbl[i][j].id);
 			}
-			document.write("</div></td>");
 		}
-		for (let j = siz[i]; j < Lim; j++)
-			document.write("<td> </td>");
-		document.write("</tr>");
+		document.write("\
+				</tr>");
 	}
-	document.write("</tbody></table>");
-	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
+	document.write("\
+			</tbody>\
+		</table>");
+	let eper = (cnte / cnt * 100).toFixed(3), sper = (cnts / cnt * 100).toFixed(3), tper = (cntt / cnt * 100).toFixed(3);
 	document.write("\
 		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-abc\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-" + name + "\">\
 				<div class=\"bar\"></div>\
 				<div class=\"label\">" + eper + "% 题面已完成</div>\
 			</div>\
 		</p>\
 		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-abc\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-" + name + "\">\
 				<div class=\"bar\"></div>\
 				<div class=\"label\">" + sper + "% 题解已完成</div>\
 			</div>\
 		</p>\
 		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-abc\">\
+			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-" + name + "\">\
 				<div class=\"bar\"></div>\
 				<div class=\"label\">" + tper + "% 标签已完成</div>\
 			</div>\
 		</p>\
 	</div>");
-	$('#progress-tre-abc').progress({
-		percent: cnte / cnt * 100
+	$("#progress-tre-" + name).progress({
+		percent: eper
 	});
-	$('#progress-sol-abc').progress({
-		percent: cnts / cnt * 100
+	$("#progress-sol-" + name).progress({
+		percent: sper
 	});
-	$('#progress-tag-abc').progress({
-		percent: cntt / cnt * 100
+	$("#progress-tag-" + name).progress({
+		percent: tper
 	});
 	console.log(cnt, cnte, cnts, cntt);
+	nameList.push({
+		id: name + "-table",
+		name: uname
+	});
 }
 
-function writearc(rawd, tags, list_tre, list_sol, prbs) {
-	let Lim = 7, mx = 1005, y = new Array(mx), siz = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
-		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], arctitle = new Array(mx);
-	while (getarcname(arccnt + 1, 1) in rawd)
-		arccnt++;
-	for (let i = 1; i <= arccnt; i++)
-		Ava_tre[i] = new Array(10);
-	for (let i = 1; i <= arccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_tre[i][j] = [];
-	for (let i = 1; i <= arccnt; i++)
-		Ava_sol[i] = new Array(10);
-	for (let i = 1; i <= arccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_sol[i][j] = [];
-	for (let i = 1; i <= arccnt; i++)
-		if (("arc" + ext3(i)) in list_tre)
-			for (let j = 0; j < getarccnt(i); j++)
-				if (getarcname(i, j) in list_tre["arc" + ext3(i)])
-					Ava_tre[i][j] = list_tre["arc" + ext3(i)][getarcname(i, j)];
-	for (let i = 1; i <= arccnt; i++)
-		if (("arc" + ext3(i)) in list_sol)
-			for (let j = 0; j < getarccnt(i); j++)
-				if (getarcname(i, j) in list_sol["arc" + ext3(i)])
-					Ava_sol[i][j] = list_sol["arc" + ext3(i)][getarcname(i, j)];
-
-	for (let i = 1; i <= arccnt; i++) {
-		x[i] = new Array(getarccnt(i));
-		tg[i] = new Array(getarccnt(i));
-		arctitle[i] = new Array(getarccnt(i));
-		cnt += x[i].length;
-		for (let j = 0; j < getarccnt(i); j++)
-			x[i][j] = !(getarcname(i, j) in rawd) || !("difficulty" in rawd[getarcname(i, j)]) ? 100000 : transdiff(rawd[getarcname(i, j)].difficulty, 0);
+function buildContList(name, uname, data) {
+	let cnt = 0, cnte = 0, cnts = 0, cntt = 0, cont = [], tbl = [];
+	for (let i in data) {
+		cont.push(data[i]);
 	}
-	for (let i = 1; i <= arccnt; i++)
-		for (let j = 0; j < getarccnt(i); j++)
-			nametoid[getarcname(i, j)] = [i, j];
-	for (let i in prbs)
-		if (prbs[i].id in nametoid)
-			arctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
-	for (let i = 1; i <= arccnt; i++)
-		for (let j = 57 < i && i < 104 ? 2 : 0; j < getarccnt(i); j++) {
-			tg[i][j] = tags[getarcname_u(i, j)];
-			problist[getarcname(i, j)] = {
-				"tag": tg[i][j],
-				"diff": x[i][j],
-				"title": arctitle[i][j],
-				"org_a": "<a href=\"https://atcoder.jp/contests/arc" + ext3(i) + "/tasks/" + getarcname(i, j) + "\">" + getarcname_u(i, j) + "</a>",
-				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;" : "",
-				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"arc" + ext3(i) + "\", \"" + getarcname(i, j) + "\", \"" + getarcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
+	cont.sort((a, b) => b.start_epoch_second - a.start_epoch_second);
+	for (let i in cont) {
+		let prb = [];
+		for (let j in cont[i].problems) {
+			let idx = cont[i].problems[j].problem_index, cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, lnk = "";
+			cnt++;
+			let cur =
+				"<td class='elipsed' id=\"cell-" + pid + "-" + name + "\">\
+					<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\" class=\"diff-" + getColor(dif).name + "\">\
+						<ta href=\"javascript:void(0)\" title=\"难度：" + (dif == 100000 ? "暂未评定" : dif.toString()) + "\"" + getDiffCirc(dif) + idx + "&nbsp;\
+						</ta>\
+					</a>";
+			if ((cont[i].id in traList) && (pid in traList[cid])) {
+				lnk += "<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;"
+				cnte++;
+			}
+			if ((cont[i].id in solList) && (pid in solList[cid])) {
+				lnk += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题解\", 1)'>题解</a>";
+				cnts++;
+			}
+			lnk = "<div>" + lnk + "</div>";
+			problist[pid] = {
+				pid: pid,
+				cid: cid,
+				diff: dif,
+				lnks: lnk,
+				type: name,
+				uname: uname,
+				tag: tags[uname],
+				time: cont[i].start_epoch_second,
+				title: cont[i].problems[j].title,
+				org_a: "<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\">" + uname + "</a>"
 			};
+			if (uname in tags) {
+				let tgLst = tags[uname];
+				cur +=
+					"<div onclick=\"tagToggle('" + pid + "-" + name + "')\" style=\"position: relative; right: -5;\">\
+						<a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important\">" + tgLst.length + "</a>\
+					</div>\
+					<div id=\"tag-" + pid + "-" + name + "\" style=\"display: none;\">";
+				for (let t in tgLst) {
+					cur +=
+						"<p class=\"ui tag label\">" + tgLst[t] + "</p>";
+				}
+				cur +=
+					"</div>";
+				cntt++;
+			}
+			if (probCell[pid] == undefined) {
+				probCell[pid] = [];
+			}
+			cur = {
+				html: cur,
+				id: cur == "<td></td>" ? 0 : "cell-" + pid + "-" + name
+			};
+			probCell[pid].push(cur.id);
+			prb.push(cur);
 		}
-	for (let i = arccnt; i >= 1; i--) {
-		siz[i] = getarccnt(i);
-		y[i] = new Array(siz[i]);
-		for (let j = 0; j < siz[i]; j++)
-			y[i][j] = "class=\"diff-" + getColor(x[i][j]).name + "\"";
+		tbl.push(prb);
 	}
 	document.write("\
-		<div id=\"arc-table\">\
-			<table class=\"ui fixed celled definition table segment\">\
-				<thead class=\"full-width\">\
-					<tr>\
-						<th>比赛</th>\
-						<th>A</th>\
-						<th>B</th>\
-						<th>C</th>\
-						<th>D</th>\
-						<th>E</th>\
-						<th>F</th>\
-						<th>F2</th>\
-					</tr>\
-				</thead>\
-				<tbody>");
-	for (let i = arccnt; i >= 1; i--) {
-		let t = ext3(i), w = 57 < i && i < 104 ? 2 : 0;
-		document.write("<tr><td id=\"arc" + t + "-cell\"><a href=\"https://atcoder.jp/contests/arc" + t + "\">ARC" + t + "</a></td>");
-		for (let j = 0; j < w; j++)
-			document.write("<td></td>");
-		for (let j = 0; j < siz[i]; j++) {
-			let uC = String.fromCharCode(j + 65), traLink = "", solLink = "";
-			if (i == 120 && j == 6)
-				uC = "F2";
-			if (Ava_tre[i][j] != 0)
-				traLink = problist[getarcname(i, j)].prob_a, cnte++;
-			if (Ava_sol[i][j] != 0)
-				solLink = problist[getarcname(i, j)].solu_a, cnts++;
-			document.write("<td id=\"" + getarcname(i, j) + "-cell-2\"><a href=\"https://atcoder.jp/contests/arc" + t + "/tasks/" + getarcname(i, j) + "\" " + y[i][j] + ">" + getDiffCirc(x[i][j]) + uC + " </a>" + traLink + solLink);
-			if (tg[i][j] != undefined)
-				document.write("<div onclick=\"arctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
-			document.write("<div id=\"tag-" + getarcname(i, j) + "\" style=\"display: none;\">");
-			if (tg[i][j] != undefined) {
-				cntt++;
-				for (let t = 0; t < tg[i][j].length; t++) {
-					document.write("<p class=\"ui tag label\">" + tg[i][j][t] + "</p>");
-				}
-			}
-			document.write("</td>");
+		<div id=\"" + name + "-lst\">");
+	for (let i in cont) {
+		let cid = cont[i].id;
+		document.write("\
+			<div class=\"ui segment\">\
+				<div class=\"ui top attached large label\" id=\"cell-" + cid + "\">\
+					<a href=\"https://atcoder.jp/contests/" + cid + "\">" + cont[i].title + "（" + cid.toUpperCase() + "）</a>\
+				</div>\
+				<div style=\"overflow-x: " + (tbl[i].length < 10 ? "hidden" : "scroll") + ";\">\
+					<div style=\"width: " + (tbl[i].length < 10 ? "auto" : 7 * tbl[i].length) + "em;\">\
+						<table class=\"ui fixed celled table\">\
+							<tbody>\
+								<tr>");
+		comboCell["cell-" + cid] = [];
+		for (let j in tbl[i]) {
+			document.write(tbl[i][j].html);
+			comboCell["cell-" + cid].push(tbl[i][j].id);
 		}
-		for (let j = siz[i] + w; j < Lim; j++)
-			document.write("<td></td>");
-		document.write("</tr>");
+		document.write("</tr>\
+							</tbody>\
+						</table>\
+					</div>\
+				</div>\
+			</div>");
 	}
-	document.write("</tbody></table>");
-
 	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
 	document.write("\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-arc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + eper + "% 题面已完成</div>\
-			</div>\
-		</p>\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-arc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + sper + "% 题解已完成</div>\
-			</div>\
-		</p>\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-arc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + tper + "% 标签已完成</div>\
-			</div>\
-		</p>\
-	</div>");
-	$('#progress-tre-arc').progress({
+			<p align=\"center\">\
+				<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-" + name + "\">\
+					<div class=\"bar\"></div>\
+					<div class=\"label\">" + eper + "% 题面已完成</div>\
+				</div>\
+			</p>\
+			<p align=\"center\">\
+				<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-" + name + "\">\
+					<div class=\"bar\"></div>\
+					<div class=\"label\">" + sper + "% 题解已完成</div>\
+				</div>\
+			</p>\
+			<p align=\"center\">\
+				<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-" + name + "\">\
+					<div class=\"bar\"></div>\
+					<div class=\"label\">" + tper + "% 标签已完成</div>\
+				</div>\
+			</p>\
+		</div>");
+	$("#progress-tre-" + name).progress({
 		percent: cnte / cnt * 100
 	});
-	$('#progress-sol-arc').progress({
+	$("#progress-sol-" + name).progress({
 		percent: cnts / cnt * 100
 	});
-	$('#progress-tag-arc').progress({
+	$("#progress-tag-" + name).progress({
 		percent: cntt / cnt * 100
 	});
 	console.log(cnt, cnte, cnts, cntt);
-}
-
-function writeagc(rawd, tags, list_tre, list_sol, prbs) {
-	let Lim = 7, mx = 1005, y = new Array(mx), siz = new Array(mx), CCC = new Array(mx), Val = new Array(mx), RG = new Array(mx), Ava_tre = new Array(mx), Ava_sol = new Array(mx), x = new Array(mx), tg = new Array(mx),
-		cnt = 0, cnte = 0, cnts = 0, cntt = 0, nametoid = [], agctitle = [];
-	while (agccnt == 41 || getagcname(agccnt + 1, 1) in rawd)
-		agccnt++;
-	for (let i = 1; i <= agccnt; i++)
-		Ava_tre[i] = new Array(10);
-	for (let i = 1; i <= agccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_tre[i][j] = [];
-	for (let i = 1; i <= agccnt; i++)
-		Ava_sol[i] = new Array(10);
-	for (let i = 1; i <= agccnt; i++)
-		for (let j = 0; j <= 10; j++)
-			Ava_sol[i][j] = [];
-	for (let i = 1; i <= agccnt; i++)
-		if (("agc" + ext3(i)) in list_tre)
-			for (let j = 0; j < getagccnt(i); j++)
-				if (getagcname(i, j) in list_tre["agc" + ext3(i)])
-					Ava_tre[i][j] = list_tre["agc" + ext3(i)][getagcname(i, j)];
-	for (let i = 1; i <= agccnt; i++)
-		if (("agc" + ext3(i)) in list_sol)
-			for (let j = 0; j < getagccnt(i); j++)
-				if (getagcname(i, j) in list_sol["agc" + ext3(i)])
-					Ava_sol[i][j] = list_sol["agc" + ext3(i)][getagcname(i, j)];
-	for (let i = 1; i <= agccnt; i++) {
-		x[i] = new Array(getarccnt(i));
-		tg[i] = new Array(getarccnt(i));
-		agctitle[i] = new Array(getagccnt(i));
-		cnt += x[i].length;
-		for (let j = 0; j < getagccnt(i); j++)
-			x[i][j] = !(getagcname(i, j) in rawd) || !("difficulty" in rawd[getagcname(i, j)]) ? 100000 : transdiff(rawd[getagcname(i, j)].difficulty, 0);
-	}
-	for (let i = 1; i <= agccnt; i++)
-		for (let j = 0; j < getagccnt(i); j++)
-			nametoid[getagcname(i, j)] = [i, j];
-	for (let i in prbs)
-		if (prbs[i].id in nametoid)
-			agctitle[nametoid[prbs[i].id][0]][nametoid[prbs[i].id][1]] = prbs[i].title;
-	for (let i = 1; i <= agccnt; i++)
-		for (let j = 0; j < getagccnt(i); j++) {
-			tg[i][j] = tags[getagcname_u(i, j)];
-			problist[getagcname(i, j)] = {
-				"tag": tg[i][j],
-				"diff": x[i][j],
-				"title": agctitle[i][j],
-				"org_a": "<a href=\"https://atcoder.jp/contests/agc" + ext3(i) + "/tasks/" + getagcname(i, j) + "\">" + getagcname_u(i, j) + "</a>",
-				"prob_a": Ava_tre[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题面\", 0)'>题面</a>" : "",
-				"solu_a": Ava_sol[i][j] != 0 ? "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"agc" + ext3(i) + "\", \"" + getagcname(i, j) + "\", \"" + getagcname_u(i, j) + "&nbsp;题解\", 1)'>题解</a>" : ""
-			};
-		}
-	for (let i = agccnt; i >= 1; i--) {
-		siz[i] = getagccnt(i);
-		y[i] = new Array(siz[i]);
-		for (let j = 0; j < siz[i]; j++)
-			y[i][j] = "class=\"diff-" + getColor(x[i][j]).name + "\"";
-	}
-	document.write("\
-		<div id=\"agc-table\">\
-			<table class=\"ui fixed celled definition table segment\">\
-				<thead class=\"full-width\">\
-					<tr>\
-						<th>比赛</th>\
-						<th>A</th>\
-						<th>B</th>\
-						<th>C</th>\
-						<th>D</th>\
-						<th>E</th>\
-						<th>F</th>\
-						<th>F2</th>\
-					</tr>\
-				</thead>\
-			<tbody>");
-	for (let i = agccnt; i; i--) {
-		if (i == 42)
-			continue;
-		document.write("<tr>");
-		let t = ext3(i);
-		document.write("<td id=\"agc" + t + "-cell\"><a href=\"https://atcoder.jp/contests/agc" + t + "\">AGC" + t + "</a></td>");
-		for (let j = 0; j < siz[i]; j++) {
-			let uC = String.fromCharCode(j + 65), traLink = "", solLink = "";
-			if (i == 28 && j == 6)
-				uC = "F2", lC = "_F2\" ";
-			if (Ava_tre[i][j] != 0)
-				traLink = problist[getagcname(i, j)].prob_a, cnte++;
-			if (Ava_sol[i][j] != 0)
-				solLink = problist[getagcname(i, j)].solu_a, cnts++;
-			document.write("<td id=\"" + getagcname(i, j) + "-cell-3\"><a href=\"https://atcoder.jp/contests/agc" + t + "/tasks/" + getagcname(i, j) + "\" " + y[i][j] + ">" + getDiffCirc(x[i][j]) + uC + " </a>" + traLink + solLink);
-			if (tg[i][j] != undefined)
-				document.write("<div onclick=\"agctagtoggle(" + i.toString() + "," + j.toString() + ")\" style=\"position: relative; right: -5\"><a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important;\">" + tg[i][j].length.toString() + "</a></div>");
-			document.write("<div id=\"tag-" + getagcname(i, j) + "\" style=\"display: none;\">");
-			if (tg[i][j] != undefined) {
-				cntt++;
-				for (let t = 0; t < tg[i][j].length; t++) {
-					document.write("<p class=\"ui tag label\">" + tg[i][j][t] + "</p>");
-				}
-			}
-			document.write("</td>");
-		}
-		for (let j = siz[i]; j < Lim; j++)
-			document.write("<td> </td>");
-		document.write("</tr>");
-	}
-	document.write("</tbody></table>");
-	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
-	document.write("\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-agc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + eper + "% 题面已完成</div>\
-			</div>\
-		</p>\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-agc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + sper + "% 题解已完成</div>\
-			</div>\
-		</p>\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-agc\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + tper + "% 标签已完成</div>\
-			</div>\
-		</p>\
-	</div>");
-	$('#progress-tre-agc').progress({
-		percent: cnte / cnt * 100
+	nameList.push({
+		id: name + "-lst",
+		uname: uname
 	});
-	$('#progress-sol-agc').progress({
-		percent: cnts / cnt * 100
-	});
-	$('#progress-tag-agc').progress({
-		percent: cntt / cnt * 100
-	});
-	console.log(cnt, cnte, cnts, cntt);
 }
 
 let isd1 = {}, isd2 = {}, pcol = {}, presel = -1;
@@ -814,67 +629,63 @@ function refreshchart() {
 		]
 	});
 }
+
+function getStatPriority(stat) {
+	if (stat == "AC in contest")
+		return 4;
+	if (stat == "AC")
+		return 3;
+	if (stat == "UA in contest")
+		return 2;
+	if (stat == "UA")
+		return 1;
+	return 0;
+}
+function getStatColor(stat) {
+	if (stat == "AC in contest")
+		return "#9ad59e";
+	if (stat == "AC")
+		return "#c3e6cb";
+	if (stat == "UA in contest")
+		return "#fd9";
+	if (stat == "UA")
+		return "#ffeeba";
+	return "#fff";
+}
+function getStatClass(stat) {
+	if (stat == undefined)
+		return "";
+	if (stat.slice(0, 2) == "AC")
+		return "positive";
+	if (stat.slice(0, 2) == "UA")
+		return "negative";
+	return "";
+}
 function refreshList() {
 	for (let i in problist) {
-		document.getElementById(i + "-col").setAttribute("style", (isd1[i] && isd2[i] ? "display: auto; " : "display: none; ") + "background-color: " + pcol[i]);
+		document.getElementById(i + "-col").setAttribute("class", getStatClass(pcol[i]));
+		document.getElementById(i + "-col").setAttribute("style", (isd1[i] && isd2[i] ? "display: auto;" : "display: none;") + "background-color: " + getStatColor(pcol[i]) + "!important");
 	}
-	for (let i = 1; i <= abccnt; i++) {
+	for (let i in probCell)
+		for (let j in probCell[i]) {
+			let name = probCell[i][j];
+			document.getElementById(name).setAttribute("class", getStatClass(pcol[i]));
+			document.getElementById(name).setAttribute("style", "background-color: " + getStatColor(pcol[i]) + "!important");
+		}
+	for (let i in comboCell) {
 		let flg = 1;
-		for (let j = 0; j < getabccnt(i); j++)
-			flg &= document.getElementById(getabcname(i, j) + "-cell-1").getAttribute("class") == "positive";
-		document.getElementById("abc" + ext3(i) + "-cell").setAttribute("class", flg ? "positive" : "");
-		document.getElementById("abc" + ext3(i) + "-cell").setAttribute("style", flg ? "background-color: #c3e6cb!important" : "");
-	}
-	for (let i = 1; i <= arccnt; i++) {
-		let flg = 1;
-		for (let j = 0; j < getarccnt(i); j++)
-			flg &= document.getElementById(getarcname(i, j) + "-cell-2").getAttribute("class") == "positive";
-		document.getElementById("arc" + ext3(i) + "-cell").setAttribute("class", flg ? "positive" : "");
-		document.getElementById("arc" + ext3(i) + "-cell").setAttribute("style", flg ? "background-color: #c3e6cb!important" : "");
-	}
-	for (let i = 1; i <= agccnt; i++) {
-		if (i == 42)
-			continue;
-		let flg = 1;
-		for (let j = 0; j < getagccnt(i); j++)
-			flg &= document.getElementById(getagcname(i, j) + "-cell-3").getAttribute("class") == "positive";
-		document.getElementById("agc" + ext3(i) + "-cell").setAttribute("class", flg ? "positive" : "");
-		document.getElementById("agc" + ext3(i) + "-cell").setAttribute("style", flg ? "background-color: #c3e6cb!important" : "");
-	}
-}
-
-function listtoggleabc() {
-	let flg = document.getElementById("list-abc-btn").getAttribute("class") == "ui toggle button";
-	document.getElementById("list-abc-btn").setAttribute("class", flg ? "ui toggle button active" : "ui toggle button");
-	for (let i in problist) {
-		if (i.substr(0, 3) == "abc") {
-			isd1[i] = flg;
+		for (let j in comboCell[i]) {
+			try {
+				flg &= document.getElementById(comboCell[i][j]).getAttribute("style") == "positive";
+			} catch {
+				console.log(comboCell[i][j]);
+			}
+		}
+		if (flg) {
+			document.getElementById(i).setAttribute("class", "positive");
+			document.getElementById(i).setAttribute("color", "background-color: #c3e6cb!important");
 		}
 	}
-	refreshchart();
-	refreshList();
-}
-function listtogglearc() {
-	let flg = document.getElementById("list-arc-btn").getAttribute("class") == "ui toggle button";
-	document.getElementById("list-arc-btn").setAttribute("class", flg ? "ui toggle button active" : "ui toggle button");
-	for (let i in problist) {
-		if (i.substr(0, 3) == "arc") {
-			isd1[i] = flg;
-		}
-	}
-	refreshchart();
-	refreshList();
-}
-function listtoggleagc() {
-	let flg = document.getElementById("list-agc-btn").getAttribute("class") == "ui toggle button";
-	document.getElementById("list-agc-btn").setAttribute("class", flg ? "ui toggle button active" : "ui toggle button");
-	for (let i in problist) {
-		if (i.substr(0, 3) == "agc") {
-			isd1[i] = flg;
-		}
-	}
-	refreshchart();
-	refreshList();
 }
 
 function isinarray(x, a) {
@@ -887,6 +698,14 @@ function isinarray(x, a) {
 }
 
 function setfilter() {
+	for (let i in problist)
+		isd1[i] = isd2[i] = 1;
+	for (let i in labels) {
+		let val = $("#" + i + "-checkbox").checkbox("is checked");
+		for (let j in problist)
+			if (problist[j].type == i) 
+				isd1[j] = val;
+	}
 	document.getElementById("rndprob").innerHTML = "";
 	let dl = document.getElementById("diflb").value, dr = document.getElementById("difrb").value, utg = $(".ui.dropdown").dropdown("get value"), flgor = $("#tag-combined-or").checkbox("is checked");
 	dl = dl == "" || isNaN(Number(dl)) ? -10000 : Number(dl);
@@ -912,16 +731,13 @@ function setfilter() {
 }
 
 function clrfilter() {
-	if (document.getElementById("list-abc-btn").getAttribute("class") == "ui toggle button")
-		listtoggleabc();
-	if (document.getElementById("list-arc-btn").getAttribute("class") == "ui toggle button")
-		listtogglearc();
-	if (document.getElementById("list-agc-btn").getAttribute("class") == "ui toggle button")
-		listtoggleagc();
+	for (let i in labels) {
+		$("#" + i + "-checkbox").checkbox("set checked");
+	}
 	document.getElementById("diflb").value = "";
 	document.getElementById("difrb").value = "";
 	$(".ui.dropdown").dropdown("clear");
-	$(".ui.checkbox").checkbox("uncheck");
+	$("#tag-combined-or").checkbox("uncheck");
 	setfilter();
 }
 
@@ -953,17 +769,22 @@ function writelist(taglist) {
 			<div id=\"container\" style=\"height:300px\"></div>\
 			<p class=\"highcharts-description\"></p>\
 		</figure>\
-		<p>\
-			<button class=\"ui toggle button active\" id=\"list-abc-btn\" onclick=\"listtoggleabc()\">\
-				显示 ABC\
-			</button>\
-			<button class=\"ui toggle button active\" id=\"list-arc-btn\" onclick=\"listtogglearc()\">\
-				显示 ARC\
-			</button>\
-			<button class=\"ui toggle button active\" id=\"list-agc-btn\" onclick=\"listtoggleagc()\">\
-				显示 AGC\
-			</button>\
-		</p>\
+		<div class='ui form' style='margin: 1em 0'>\
+			<div class='eight fields'>");
+	for (let i in labels) {
+		document.write("\
+				<div class='field'>\
+					<div class='ui checkbox' id='" + i + "-checkbox'>\
+						<input type='checkbox' name='" + i + "-checkbox'>\
+						<label>\
+							选择 " + labels[i].name + "\
+						</label>\
+					</div>\
+				</div>");
+	}
+	document.write("\
+			</div>\
+		</div>\
 		<div class=\"ui input\">\
 			<input id=\"diflb\" style=\"width: 150;\" placeholder=\"筛选难度下界\"/>\
 		</div>\
@@ -983,52 +804,63 @@ function writelist(taglist) {
 			</div>\
 		</div>\
 		&nbsp;&nbsp;\
-		<div class=\"ui checkbox\" id=\"tag-combined-or\">\
-			<input type=\"checkbox\" name=\"example\">\
-				<label>\
-					按或合并标签\
-				</label>\
-			</div>\
-			&nbsp;&nbsp;\
-			<button class=\"ui violet basic button\" onclick=\"setfilter()\">\
-				筛选\
-			</button>\
-			<button class=\"ui green basic button\" onclick=\"clrfilter()\" style=\"display: inline-block;\">\
-				重置\
-			</button>\
-			<button class=\"ui orange basic button\" onclick=\"getrandprob()\" style=\"display: inline-block;\">\
-				随机跳题\
-			</button>\
-			<p></p>\
-			<table class=\"ui fixed celled table segment\">\
-				<tbody>\
-					<tr id=\"rndprob\">\
-					</tr>\
-				</tbody>\
-			</table>\
-			<table class=\"ui fixed sortable celled table segment\">\
-				<thead>\
-					<tr>\
-						<th>编号</th>\
-						<th>标题</th>\
-						<th>链接</th>\
-						<th>难度</th>\
-						<th>标签</th>\
-					</tr>\
-				</thead>\
-				<tbody>");
+		<div class=\"ui checkbox\">\
+			<input id='tag-combined-or' type='checkbox' name='example'>\
+			<label>\
+				按或合并标签\
+			</label>\
+		</div>\
+		<p></p>\
+		<button class=\"ui violet basic button\" onclick=\"setfilter()\">\
+			筛选\
+		</button>\
+		<button class=\"ui green basic button\" onclick=\"clrfilter()\">\
+			重置\
+		</button>\
+		<button class=\"ui orange basic button\" onclick=\"getrandprob()\">\
+			随机跳题\
+		</button>\
+		<p></p>\
+		<table class=\"ui fixed celled table segment\">\
+			<tbody>\
+				<tr id=\"rndprob\">\
+				</tr>\
+			</tbody>\
+		</table>\
+		<table class=\"ui fixed sortable celled table segment\">\
+			<thead>\
+				<tr>\
+					<th>编号</th>\
+					<th>标题</th>\
+					<th>链接</th>\
+					<th>难度</th>\
+					<th>标签</th>\
+				</tr>\
+			</thead>\
+			<tbody>");
+	let tLst = [];
 	for (let i in problist) {
+		tLst.push(i);
+	}
+	tLst.sort((a, b) => problist[b].time - problist[a].time);
+	for (let id in tLst) {
+		let i = tLst[id];
 		isd1[i] = 1, isd2[i] = 1, pcol[i] = "#fff";
 		document.write("\
 					<tr id=\"" + i + "-col\">\
-						<td>" + problist[i].org_a + "</td>\
-						<td>" + getDiffCirc(problist[i].diff) + "<span class=\"diff-" + getColor(problist[i].diff).name + "\">" + problist[i].title + "</span></td>\
-						<td>" + problist[i].prob_a + problist[i].solu_a + "</td>\
-						<td>" + (problist[i].diff == 100000 ? "unavailable" : problist[i].diff.toString()) + "</td>");
+						<td class='elipsed'>" + problist[i].org_a + "</td>\
+						<td class='elipsed'>" + getDiffCirc(problist[i].diff) + "<span class=\"diff-" + getColor(problist[i].diff).name + "\">" + problist[i].title + "</span></td>\
+						<td>");
+		if (problist[i].tra)
+			document.write("<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + problist[i].cid + "\", \"" + i + "\", \"" + problist[i].uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;");
+		if (problist[i].sol)
+			document.write("<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + problist[i].cid + "\", \"" + i + "\", \"" + problist[i].uname + "&nbsp;题解\", 1)'>题解</a>");
+		document.write("</td>\
+						<td class='elipsed'>" + (problist[i].diff == 100000 ? "unavailable" : problist[i].diff.toString()) + "</td>");
 		document.write("<td>");
 		if (problist[i].tag != undefined) {
 			let t = problist[i].tag;
-			for (let j = 0; j < t.length; j++) {
+			for (let j in t) {
 				document.write("<div class=\"ui tag label\">" + t[j] + "</div>");
 			}
 		}
@@ -1043,6 +875,7 @@ function writelist(taglist) {
 		transition: "drop",
 		allowAdditions: 1
 	});
+	clrfilter();
 	refreshchart();
 }
 
@@ -1135,7 +968,7 @@ function printInviteCode() {
 		res += '"' + prb + '",';
 		scr.push(t);
 	}
-	res = res.substr(0, res.length - 1);
+	res = res.slice(0, res.length - 1);
 	res += '],"players":[';
 	let plylist = document.getElementById("get-players").value.split(' ');
 	if (document.getElementById("get-players").value == "") {
@@ -1146,7 +979,7 @@ function printInviteCode() {
 		if (plylist[i] != "")
 			res += '"' + plylist[i] + '",';
 	}
-	res = res.substr(0, res.length - 1) + '],"score":[';
+	res = res.slice(0, res.length - 1) + '],"score":[';
 	for (let i in scr) {
 		if (i > 0) res += ",";
 		res += scr[i].toString();
@@ -1160,8 +993,8 @@ function g2(w) {
 }
 function buildcontestpage() {
 	let stTime = new Date(), edTime = new Date(Number(stTime) + 7200000),
-		startTime = formatDate(stTime,"yyyy-MM-ddThh:mm"),
-		finishTime = formatDate(edTime,"yyyy-MM-ddThh:mm");
+		startTime = formatDate(stTime, "yyyy-MM-ddThh:mm"),
+		finishTime = formatDate(edTime, "yyyy-MM-ddThh:mm");
 	document.write("\
 	<div id=\"cont-page\">\
 		<div class=\"ui secondary menu\">\
@@ -1314,45 +1147,11 @@ function buildcontestpage() {
 	showjoinpage();
 }
 let curProb = [];
-function getStatPriority(stat) {
-	if (stat == "AC in contest")
-		return 4;
-	if (stat == "AC")
-		return 3;
-	if (stat == "UA in contest")
-		return 2;
-	if (stat == "UA")
-		return 1;
-	return 0;
-}
-function getStatColor(stat) {
-	if (stat == "AC in contest")
-		return "#9ad59e";
-	if (stat == "AC")
-		return "#c3e6cb";
-	if (stat == "UA in contest")
-		return "#fd9";
-	if (stat == "UA")
-		return "#ffeeba";
-	return "#fff";
-}
-function getStatClass(stat) {
-	if (stat == undefined)
-		return "";
-	if (stat.substr(0, 2) == "AC")
-		return "positive";
-	if (stat.substr(0, 2) == "UA")
-		return "negative";
-	return "";
-}
 function importUser() {
 	let prbStat = {}, usrList = document.getElementById("user-name").value.split(" ");
 	window.localStorage.setItem("default-user-list", document.getElementById("user-name").value);
 	for (let i in curProb) {
-		let cellName = curProb[i] + "-cell-" + { abc: 1, arc: 2, agc: 3 }[curProb[i].substr(0, 3)];
-		document.getElementById(cellName).setAttribute("class", "");
-		document.getElementById(cellName).setAttribute("style", "background-color: #fff!important");
-		pcol[curProb[i]] = "#fff";
+		pcol[i] = "";
 	}
 	refreshList();
 	for (let i in usrList) {
@@ -1367,7 +1166,7 @@ function importUser() {
 		for (let i = lst; i != -1;) {
 			readTextFile("https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=" + usr + "&from_second=" + i.toString(), "json", function (txt, sta) {
 				if (sta == "200") {
-					let sub = JSON.parse(txt);
+					let sub = JSON.parse(txt), cur = i;
 					if (sub == 0) {
 						if (i == 0) {
 							usrNotFnd = 1;
@@ -1377,11 +1176,18 @@ function importUser() {
 						return;
 					}
 					for (let j in sub) {
+						if (!(sub[j].contest_id in contlist)) {
+							continue;
+						}
 						let isInContest = contlist[sub[j].contest_id].startTime <= sub[j].epoch_second && sub[j].epoch_second <= contlist[sub[j].contest_id].endTime,
 							subStat = (sub[j].result == "AC" ? "AC" : "UA") + (isInContest ? " in contest" : "");
 						if (getStatPriority(usrPrbStat[sub[j].problem_id]) < getStatPriority(subStat))
 							usrPrbStat[sub[j].problem_id] = subStat;
 						lst = i = sub[j].epoch_second + 1;
+					}
+					if (i == cur) {
+						i = -1;
+						return;
 					}
 				} else {
 					alert("导入用户提交失败，请重试");
@@ -1409,15 +1215,14 @@ function importUser() {
 	}
 	curProb = [];
 	for (let i in prbStat) {
-		if (i.substr(0, 3) == "abc" || i.substr(0, 3) == "arc" || i.substr(0, 3) == "agc") {
-			let cellName = i + "-cell-" + { abc: 1, arc: 2, agc: 3 }[i.substr(0, 3)];
-			document.getElementById(cellName).setAttribute("class", getStatClass(prbStat[i]));
-			document.getElementById(cellName).setAttribute("style", "background-color: " + getStatColor(prbStat[i]) + "!important");
-			pcol[i] = getStatColor(prbStat[i]);
-			curProb.unshift(i);
-		}
+		pcol[i] = prbStat[i];
+		curProb.push(i);
 	}
 	refreshList();
+}
+
+function shownotyet() {
+	alert("in progress");
 }
 
 function buildw() {
@@ -1454,27 +1259,29 @@ function buildw() {
 		document.getElementById("button-top").setAttribute("style", cur - $("#page-top").offset().top < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
 		document.getElementById("button-end").setAttribute("style", $("#page-end").offset().top - h - cur < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
 	};
-	readTextFile("https://kenkoooo.com/atcoder/resources/problem-models.json", "json", function (text) {
-		rawd = JSON.parse(text);
-	});
-	readTextFile("https://kenkoooo.com/atcoder/resources/problems.json", "json", function (text) {
-		prbs = JSON.parse(text);
-	});
-	readTextFile("https://kenkoooo.com/atcoder/resources/contests.json", "json", function (text) {
-		let cons = JSON.parse(text);
-		for (let i in cons) {
-			let cur = cons[i];
-			contlist[cur.id] = {
-				startTime: Number(cur["start_epoch_second"]),
-				endTime: Number(cur["start_epoch_second"]) + Number(cur["duration_second"])
-			};
+	readTextFile("https://atcoder-for-chinese-developers.github.io/spiders/data.json", "json", function (text) {
+		try {
+			rawd = JSON.parse(text);
+			for (let i in rawd) {
+				let ci = rawd[i];
+				for (let j in ci) {
+					let cur = ci[j];
+					contlist[cur.id] = {
+						startTime: Number(cur["start_epoch_second"]),
+						endTime: Number(cur["start_epoch_second"]) + Number(cur["duration_second"])
+					};
+				}
+			}
+		} catch {
+			alert("The spider does not work. Check your network connection or contact with the site owner.");
+			return;
 		}
 	});
 	readTextFile("https://atcoder-for-chinese-developers.github.io/translations/list.json", "json", function (text) {
-		tralist = JSON.parse(text).data;
+		traList = JSON.parse(text).data;
 	});
 	readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/list.json", "json", function (text) {
-		sollist = JSON.parse(text).data;
+		solList = JSON.parse(text).data;
 	});
 	readTextFile("tags.json", "json", function (text) {
 		try {
@@ -1485,23 +1292,21 @@ function buildw() {
 		}
 	});
 	readTextFile("src/tag-list.json", "json", function (text) {
-		taglist = JSON.parse(text);
+		tagList = JSON.parse(text);
 	});
 	document.write("\
-	<div class=\"ui pointing menu\">\
-		<a class=\"item\" onclick=\"abctabletoggle()\">\
-			ABC\
-		</a>\
-		<a class=\"item\" onclick=\"arctabletoggle()\">\
-			ARC\
-		</a>\
-		<a class=\"item\" onclick=\"agctabletoggle()\">\
-			AGC\
-		</a>\
-		<a class=\"item\" onclick=\"listtoggle()\">\
+	<div class=\"ui pointing menu\">");
+	for (let i in labels) {
+		document.write("\
+		<a class=\"item\" onclick=\"labToggle('" + i + (labels[i].index == undefined ? "-lst" : "-table") + "')\">\
+			" + labels[i].name + "\
+		</a>");
+	}
+	document.write("\
+		<a class=\"item\" onclick=\"labToggle('prob-list')\">\
 			筛选\
 		</a>\
-		<a class=\"item\" onclick=\"contesttoggle()\">\
+		<a class=\"item\" onclick=\"labToggle('cont-page')\">\
 			比赛\
 		</a>\
 		<div class=\"right menu\">\
@@ -1518,10 +1323,14 @@ function buildw() {
 			importUser();
 		}
 	});
-	writeabc(rawd, tags, tralist, sollist, prbs);
-	writearc(rawd, tags, tralist, sollist, prbs);
-	writeagc(rawd, tags, tralist, sollist, prbs);
-	writelist(taglist);
+	for (let i in labels) {
+		if (labels[i].index == undefined) {
+			buildContList(i, labels[i].name, rawd[i]);
+		} else {
+			buildTable(i, labels[i].name, rawd[i], labels[i].index);
+		}
+	}
+	writelist(tagList);
 	buildcontestpage();
 
 	document.write("\
@@ -1558,7 +1367,7 @@ function buildw() {
 		</div>\
 	</div>\
 	<div id=\"page-end\" style=\"display: inline;\"></div>");
-	abctabletoggle();
+	labToggle('abc-table');
 	window.onclick();
 	document.getElementById("user-name").value = window.localStorage.getItem("default-user-list");
 	importUser();

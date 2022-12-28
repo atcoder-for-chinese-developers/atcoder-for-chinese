@@ -150,28 +150,34 @@ a:visited {
 }
 
 .mdpage td {
-	border-left: 1px solid rgba(34,36,38,.1);
-    padding: .78571429em .78571429em;
     text-align: inherit;
+    padding: .78571429em .78571429em;
+	border-left: 1px solid rgba(34,36,38,.1);
 }
 
 .mdpage th {
-	border-left: 1px solid rgba(34,36,38,.1);
 	cursor: auto;
-    background: #f9fafb;
-    text-align: inherit;
-    color: rgba(0,0,0,.87);
-    padding: .92857143em .78571429em;
-    vertical-align: inherit;
     font-style: none;
     font-weight: 700;
-    text-transform: none;
     border-left: none;
+    text-align: inherit;
+    text-transform: none;
+    background: #f9fafb;
+    vertical-align: inherit;
+    color: rgba(0,0,0,.87);
+    padding: .92857143em .78571429em;
     border-bottom: 1px solid rgba(34,36,38,.1);
+	border-left: 1px solid rgba(34,36,38,.1);
 }
 
 .ui.question.circle.icon.helper {
 	top: -8px;
 	position: relative;
 	font-size: 10px!important;
+}
+
+td.elipsed {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
