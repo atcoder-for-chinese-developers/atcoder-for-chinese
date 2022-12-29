@@ -306,8 +306,22 @@ function buildTable(name, uname, data, prbIdx) {
 				html: "<td></td>"
 			};
 		for (let j in cont[i].problems) {
-			let idx = cont[i].problems[j].problem_index, p = prbIdx.findIndex((t) => t.find((a) => a == idx) != undefined), cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, lnk = "";
+			let idx = cont[i].problems[j].problem_index, p = prbIdx.findIndex((t) => t.find((a) => a == idx) != undefined), cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, tag = tags[uname];
+			if (tag == undefined)
+				tag = [];
 			cnt++;
+			if (cid in traList && pid in traList[cid]) {
+				for (let t in traList[cid][pid]) {
+					let tt = traList[cid][pid][t].tags;
+					tag = Array.from(new Set(tag.concat(tt)));
+				}
+			}
+			if (cid in solList && pid in solList[cid]) {
+				for (let t in solList[cid][pid]) {
+					let tt = solList[cid][pid][t].tags;
+					tag = Array.from(new Set(tag.concat(tt)));
+				}
+			}
 			prb[p] =
 				"<td id=\"cell-" + pid + "-" + name + "\">\
 					<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\" class=\"diff-" + getColor(dif).name + "\">\
@@ -318,10 +332,10 @@ function buildTable(name, uname, data, prbIdx) {
 				tra: 0,
 				sol: 0,
 				cid: cid,
+				tag: tag,
 				diff: dif,
 				type: name,
 				uname: uname,
-				tag: tags[uname],
 				time: cont[i].start_epoch_second,
 				title: cont[i].problems[j].title,
 				org_a: "<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\">" + uname + "</a>"
@@ -336,16 +350,15 @@ function buildTable(name, uname, data, prbIdx) {
 				prb[p] += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题解\", 1)'>题解</a>";
 				cnts++;
 			}
-			if (uname in tags) {
-				let tgLst = tags[uname];
+			if (tag != 0) {
 				prb[p] +=
 					"<div onclick=\"tagToggle('" + pid + "-" + name + "')\" style=\"position: relative; right: -5;\">\
-						<a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important\">" + tgLst.length + "</a>\
+						<a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important\">" + tag.length + "</a>\
 					</div>\
 					<div id=\"tag-" + pid + "-" + name + "\" style=\"display: none;\">";
-				for (let t in tgLst) {
+				for (let t in tag) {
 					prb[p] +=
-						"<p class=\"ui tag label\">" + tgLst[t] + "</p>";
+						"<p class=\"ui tag label\">" + tag[t] + "</p>";
 				}
 				prb[p] +=
 					"</div>";
@@ -442,7 +455,22 @@ function buildContList(name, uname, data) {
 	for (let i in cont) {
 		let prb = [];
 		for (let j in cont[i].problems) {
-			let idx = cont[i].problems[j].problem_index, cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, lnk = "";
+			let idx = cont[i].problems[j].problem_index, cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, tag = tags[uname];
+			if (tag == undefined)
+				tag = [];
+			cnt++;
+			if (cid in traList && pid in traList[cid]) {
+				for (let t in traList[cid][pid]) {
+					let tt = traList[cid][pid][t].tags;
+					tag = Array.from(new Set(tag.concat(tt)));
+				}
+			}
+			if (cid in solList && pid in solList[cid]) {
+				for (let t in solList[cid][pid]) {
+					let tt = solList[cid][pid][t].tags;
+					tag = Array.from(new Set(tag.concat(tt)));
+				}
+			}
 			cnt++;
 			let cur =
 				"<td class='elipsed' id=\"cell-" + pid + "-" + name + "\">\
@@ -450,37 +478,38 @@ function buildContList(name, uname, data) {
 						<ta href=\"javascript:void(0)\" title=\"难度：" + (dif == 100000 ? "暂未评定" : dif.toString()) + "\"" + getDiffCirc(dif) + idx + "&nbsp;\
 						</ta>\
 					</a>";
-			if ((cont[i].id in traList) && (pid in traList[cid])) {
-				lnk += "<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;"
-				cnte++;
-			}
-			if ((cont[i].id in solList) && (pid in solList[cid])) {
-				lnk += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题解\", 1)'>题解</a>";
-				cnts++;
-			}
-			lnk = "<div>" + lnk + "</div>";
 			problist[pid] = {
+				tra: 0,
+				sol: 0,
 				pid: pid,
 				cid: cid,
+				tag: tag,
 				diff: dif,
-				lnks: lnk,
 				type: name,
 				uname: uname,
-				tag: tags[uname],
 				time: cont[i].start_epoch_second,
 				title: cont[i].problems[j].title,
 				org_a: "<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\">" + uname + "</a>"
 			};
-			if (uname in tags) {
-				let tgLst = tags[uname];
+			if ((cont[i].id in traList) && (pid in traList[cid])) {
+				problist[pid].tra = 1;
+				cur += "<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;"
+				cnte++;
+			}
+			if ((cont[i].id in solList) && (pid in solList[cid])) {
+				problist[pid].sol = 1;
+				cur += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题解\", 1)'>题解</a>";
+				cnts++;
+			}
+			if (tag != 0) {
 				cur +=
 					"<div onclick=\"tagToggle('" + pid + "-" + name + "')\" style=\"position: relative; right: -5;\">\
-						<a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important\">" + tgLst.length + "</a>\
+						<a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important\">" + tag.length + "</a>\
 					</div>\
 					<div id=\"tag-" + pid + "-" + name + "\" style=\"display: none;\">";
-				for (let t in tgLst) {
+				for (let t in tag) {
 					cur +=
-						"<p class=\"ui tag label\">" + tgLst[t] + "</p>";
+						"<p class=\"ui tag label\">" + tag[t] + "</p>";
 				}
 				cur +=
 					"</div>";
@@ -670,14 +699,14 @@ function refreshMenu() {
 			cnt++;
 	cnt = Math.floor((cnt + 19) / 20);
 	html += "<a class='item' onclick='jumpToPage(1)'><i class='angle double left icon'></i></a>";
-	if (curPage > 5) {
+	if (curPage > 4) {
 		html += "<a class='item'><i class='ellipsis horizontal icon'></i></a>";
 	}
 	let l = Math.max(1, curPage - 3), r = Math.min(cnt, curPage + 3);
 	for (let i = l; i < r; i++) {
 		html += "<a class='item' onclick='jumpToPage(" + i + ")'>" + i + "</a>";
 	}
-	if (curPage < cnt - 4) {
+	if (curPage < cnt - 3) {
 		html += "<a class='item'><i class='ellipsis horizontal icon'></i></a>";
 	}
 	html += "<a class='item' onclick='jumpToPage(" + cnt + ")'><i class='angle double right icon'></i></a>";
@@ -708,15 +737,10 @@ function refreshList() {
 	for (let i in comboCell) {
 		let flg = 1;
 		for (let j in comboCell[i]) {
-			try {
-				flg &= document.getElementById(comboCell[i][j]).getAttribute("style") == "positive";
-			} catch {
-				console.log(comboCell[i][j]);
-			}
+			flg &= document.getElementById(comboCell[i][j]).getAttribute("class") == "positive";
 		}
 		if (flg) {
-			document.getElementById(i).setAttribute("class", "positive");
-			document.getElementById(i).setAttribute("color", "background-color: #c3e6cb!important");
+			document.getElementById(i).setAttribute("style", "background-color: #c3e6cb!important");
 		}
 	}
 	jumpToPage(curPage = 1);

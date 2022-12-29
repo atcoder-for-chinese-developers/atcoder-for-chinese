@@ -6,15 +6,23 @@ function readTextFile(file, ext, callback) {
 		if (xhr.readyState === 4)
 			callback(xhr.responseText, xhr.status);
 	}
-	xhr.send();
+	try {
+		xhr.send();
+	} catch {
+		alert("[Error] Can't fetch resource: " + file + "");
+	}
+}
+function getContName() {
+	let w = escape(window.location.href);
+	return w.slice(w.indexOf("%3Fpage%3D") + 10).split('.')[0].slice(1);
 }
 function getProbName() {
 	let w = escape(window.location.href);
-	return w.substr(w.indexOf("%3Fpage%3D") + 10).split('.')[1];
+	return w.slice(w.indexOf("%3Fpage%3D") + 10).split('.')[1];
 }
 function getProbName_u() {
 	let w = getProbName().toUpperCase();
-	if (w[0] == 'A' && w[2] == 'C' && Number(w.substr(3, 3)) > 232)
+	if (w[0] == 'A' && w[2] == 'C' && Number(w.slice(3, 3)) > 232)
 		w = w.replace("H", "Ex");
 	if (!isNaN(Number(w.split("_")[1])))
 		w = w.split("_")[0] + "_" + String.fromCharCode(Number(w.split("_")[1]) + 64);
@@ -31,7 +39,7 @@ function getTitle() {
 	let t = escape(window.location.href);
 	if (t.indexOf("%3Fpage%3D") == -1)
 		return "AtCoder 中文版";
-	t = t.substr(t.lastIndexOf("%3Fpage%3D") + 10);
+	t = t.slice(t.lastIndexOf("%3Fpage%3D") + 10);
 	return getProbName_u().replace("_", "") + (t[0] == 'T' ? " 翻译" : " 题解");
 }
 function getColor(k) {
@@ -138,7 +146,34 @@ function buildPage(content) {
 				tg = tmp[str];
 		} else {
 			alert("请求标签失败");
-			window.location.href = "index.html";
+			return;
+		}
+	});
+	readTextFile("https://atcoder-for-chinese-developers.github.io/translations/list.json", "json", function (txt, sta) {
+		if (sta == "200") {
+			let tmp = JSON.parse(txt).data, cnt = getContName(escape(window.location.href)), prb = getProbName(escape(window.location.href));
+			if (cnt in tmp && prb in tmp[cnt]) {
+				for (let i in tmp[cnt][prb]) {
+					let tt = tmp[cnt][prb][i].tags;
+					tg = Array.from(new Set(tg.concat(tt)));
+				}
+			}
+		} else {
+			alert("请求标签失败");
+			return;
+		}
+	});
+	readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/list.json", "json", function (txt, sta) {
+		if (sta == "200") {
+			let tmp = JSON.parse(txt).data, cnt = getContName(escape(window.location.href)), prb = getProbName(escape(window.location.href));
+			if (cnt in tmp && prb in tmp[cnt]) {
+				for (let i in tmp[cnt][prb]) {
+					let tt = tmp[cnt][prb][i].tags;
+					tg = Array.from(new Set(tg.concat(tt)));
+				}
+			}
+		} else {
+			alert("请求标签失败");
 			return;
 		}
 	});
@@ -156,9 +191,9 @@ function buildPage(content) {
 };
 
 !function () {
-	let lnk = escape(window.location.href), pos = lnk.indexOf("%3Fpage%3D") + 10, name = lnk.substr(pos);
+	let lnk = escape(window.location.href), pos = lnk.indexOf("%3Fpage%3D") + 10, name = lnk.slice(pos);
 	if (name[0] == 'T') {
-		name = name.substr(1);
+		name = name.slice(1);
 		console.log("translation page");
 		readTextFile("https://atcoder-for-chinese-developers.github.io/translations/" + name + ".html", "html", function (text, stat) {
 			if (stat == "200") {
@@ -170,7 +205,7 @@ function buildPage(content) {
 			}
 		});
 	} else {
-		name = name.substr(1);
+		name = name.slice(1);
 		console.log("solution page");
 		readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/" + name + ".html", "html", function (text, stat) {
 			if (stat == "200") {
