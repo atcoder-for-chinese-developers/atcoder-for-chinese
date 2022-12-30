@@ -24,9 +24,9 @@
 
 Atcoder Descripution and Solution for Chinese. Now support both [web](https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/) and [script](https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B) version.
 
-# Atcoder 中文版
+# Atcoder 中文站
 
-Atcoder 中文版题解与题面。现在支持[网页版](https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/)和[插件版](https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B)。
+Atcoder 的中文版题解与题面。现在支持[网页版](https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/)和[插件版](https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B)。
 
 ## 如何贡献
 

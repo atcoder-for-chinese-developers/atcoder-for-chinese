@@ -38,7 +38,7 @@ function jumpLink2() {
 function getTitle() {
 	let t = escape(window.location.href);
 	if (t.indexOf("%3Fpage%3D") == -1)
-		return "AtCoder 中文版";
+		return "AtCoder 中文站";
 	t = t.slice(t.lastIndexOf("%3Fpage%3D") + 10);
 	return getProbName_u().replace("_", "") + (t[0] == 'T' ? " 翻译" : " 题解");
 }
