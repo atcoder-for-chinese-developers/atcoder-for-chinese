@@ -305,6 +305,11 @@ function buildTable(name, uname, data, prbIdx) {
 			prb[j] = {
 				html: "<td></td>"
 			};
+		contlist[cont[i].id] = {
+			type: name,
+			startTime: cont[i].start_epoch_second,
+			endTime: cont[i].start_epoch_second + cont[i].duration_second
+		};
 		for (let j in cont[i].problems) {
 			let idx = cont[i].problems[j].problem_index, p = prbIdx.findIndex((t) => t.find((a) => a == idx) != undefined), cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, tag = tags[uname];
 			if (tag == undefined)
@@ -323,7 +328,7 @@ function buildTable(name, uname, data, prbIdx) {
 				}
 			}
 			prb[p] =
-				"<td id=\"cell-" + pid + "-" + name + "\">\
+				"<td id=\"cell-" + pid + "-" + cid + "\">\
 					<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\" class=\"diff-" + getColor(dif).name + "\">\
 						<ta href=\"javascript:void(0)\" title=\"难度：" + (dif == 100000 ? "暂未评定" : dif.toString()) + "\"" + getDiffCirc(dif) + idx + "&nbsp;\
 						</ta>\
@@ -369,7 +374,7 @@ function buildTable(name, uname, data, prbIdx) {
 			}
 			prb[p] = {
 				html: prb[p],
-				id: "cell-" + pid + "-" + name
+				id: "cell-" + pid + "-" + cid
 			};
 			probCell[pid].push(prb[p].id);
 		}
@@ -454,6 +459,11 @@ function buildContList(name, uname, data) {
 	cont.sort((a, b) => b.start_epoch_second - a.start_epoch_second);
 	for (let i in cont) {
 		let prb = [];
+		contlist[cont[i].id] = {
+			type: name,
+			startTime: cont[i].start_epoch_second,
+			endTime: cont[i].start_epoch_second + cont[i].duration_second
+		};
 		for (let j in cont[i].problems) {
 			let idx = cont[i].problems[j].problem_index, cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, tag = tags[uname];
 			if (tag == undefined)
@@ -473,7 +483,7 @@ function buildContList(name, uname, data) {
 			}
 			cnt++;
 			let cur =
-				"<td class='elipsed' id=\"cell-" + pid + "-" + name + "\">\
+				"<td class='elipsed' id=\"cell-" + pid + "-" + cid + "\">\
 					<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\" class=\"diff-" + getColor(dif).name + "\">\
 						<ta href=\"javascript:void(0)\" title=\"难度：" + (dif == 100000 ? "暂未评定" : dif.toString()) + "\"" + getDiffCirc(dif) + idx + "&nbsp;\
 						</ta>\
@@ -520,7 +530,7 @@ function buildContList(name, uname, data) {
 			}
 			cur = {
 				html: cur,
-				id: cur == "<td></td>" ? 0 : "cell-" + pid + "-" + name
+				id: cur == "<td></td>" ? 0 : "cell-" + pid + "-" + cid
 			};
 			probCell[pid].push(cur.id);
 			prb.push(cur);
@@ -714,8 +724,13 @@ function refreshMenu() {
 }
 function jumpToPage(x) {
 	curPage = x;
-	let cnt = 0;
-	for (let i in problist)
+	let cnt = 0, tLst = [];
+	for (let i in problist) {
+		tLst.push(i);
+	}
+	tLst.sort((a, b) => problist[b].time - problist[a].time);
+	for (let id in tLst) {
+		let i = tLst[id];
 		if (isd1[i] && isd2[i]) {
 			cnt++;
 			if (curPage * 20 - 19 <= cnt && cnt <= curPage * 20) {
@@ -724,7 +739,10 @@ function jumpToPage(x) {
 			} else {
 				document.getElementById(i + "-col").setAttribute("style", "display: none;");
 			}
+		} else {
+			document.getElementById(i + "-col").setAttribute("style", "display: none;");
 		}
+	}
 	refreshMenu();
 }
 function refreshList() {
@@ -905,7 +923,7 @@ function writeList(taglist) {
 		document.write("\
 					<tr id=\"" + i + "-col\">\
 						<td class='elipsed'>" + problist[i].org_a + "</td>\
-						<td class='elipsed'>" + getDiffCirc(problist[i].diff) + "<span class=\"diff-" + getColor(problist[i].diff).name + "\">" + problist[i].title + "</span></td>\
+						<td class='elipsed'><a href=\"https://atcoder.jp/contests/" + problist[i].cid + "/tasks/" + problist[i].pid + "\">" + getDiffCirc(problist[i].diff) + "<span class=\"diff-" + getColor(problist[i].diff).name + "\">" + problist[i].title + "</span></a></td>\
 						<td>");
 		if (problist[i].tra)
 			document.write("<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + problist[i].cid + "\", \"" + i + "\", \"" + problist[i].uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;");
@@ -1283,6 +1301,7 @@ function shownotyet() {
 
 function buildw() {
 	document.write("\
+	<title>AtCoder 中文站</title>\
 	<div id=\"page-top\" class=\"display: inline;\"></div>\
 	<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; right: 50; top: 50;\" id=\"button-top\">\
 		<i style=\"font-size: 1em;\" class=\"arrow up icon\">\
@@ -1302,7 +1321,7 @@ function buildw() {
 	</div>\
 	<h1>\
 		<p align=\"center\">\
-			AtCoder 中文版\
+			AtCoder 中文站\
 		</p>\
 	</h1>");
 	window.onscroll = function () {
@@ -1318,16 +1337,6 @@ function buildw() {
 	readTextFile("https://atcoder-for-chinese-developers.github.io/spiders/data.json", "json", function (text) {
 		try {
 			rawd = JSON.parse(text);
-			for (let i in rawd) {
-				let ci = rawd[i];
-				for (let j in ci) {
-					let cur = ci[j];
-					contlist[cur.id] = {
-						startTime: Number(cur["start_epoch_second"]),
-						endTime: Number(cur["start_epoch_second"]) + Number(cur["duration_second"])
-					};
-				}
-			}
 		} catch {
 			alert("The spider does not work. Check your network connection or contact with the site owner.");
 			return;

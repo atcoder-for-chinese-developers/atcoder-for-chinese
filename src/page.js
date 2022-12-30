@@ -177,8 +177,7 @@ function buildPage(content) {
 			return;
 		}
 	});
-	document.write("<div class=\"mdpagetop\"><a href=\"https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/\"><img src=\"images/logo2.png\" class=\"mdpageicon\"/></a><span class=\"mdpagetop title\">" + getTitle() + "</span>");
-
+	document.write("<div class=\"mdpagetop\"><a href=\"index.html\"><img src=\"images/logo2.png\" class=\"mdpageicon\"/></a><span class=\"mdpagetop title\">" + getTitle() + "</span>");
 	if (tg.length > 0) {
 		for (let i = 0; i < tg.length; i++)
 			tags += "<span class=\"ui tag label\">" + tg[i] + "</span>";
