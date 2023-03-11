@@ -381,7 +381,7 @@ function buildTable(name, uname, data, prbIdx) {
 		tbl.push(prb);
 	}
 	document.write("\
-		<div id=\"" + name + "-table\">\
+		<div id=\"" + name + "-table\" style=\"display: none; \">\
 			<table class=\"ui fixed celled definition table segment\">\
 				<thead class=\"full-width\">\
 					<tr>\
@@ -538,7 +538,7 @@ function buildContList(name, uname, data) {
 		tbl.push(prb);
 	}
 	document.write("\
-		<div id=\"" + name + "-lst\">");
+		<div id=\"" + name + "-lst\" style=\"display: none; \">");
 	for (let i in cont) {
 		let cid = cont[i].id;
 		document.write("\
@@ -1070,7 +1070,7 @@ function buildcontestpage() {
 		startTime = formatDate(stTime, "yyyy-MM-ddThh:mm"),
 		finishTime = formatDate(edTime, "yyyy-MM-ddThh:mm");
 	document.write("\
-	<div id=\"cont-page\">\
+	<div id=\"cont-page\" style=\"display: none; \">\
 		<div class=\"ui secondary menu\">\
 			<a class=\"item\" onclick=\"showjoinpage()\">\
 				参加\
