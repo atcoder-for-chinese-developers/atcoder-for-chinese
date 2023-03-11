@@ -411,7 +411,9 @@ function buildpage() {
 		rankfresh(data);
 		setInterval(rankfresh, 1000 * 120, data);
 		$(function () {
-			setInterval("refreshtime();", 500);
+			setInterval(function() {
+				refreshtime();
+			}, 500);
 		})
 	}
 }
