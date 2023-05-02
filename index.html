@@ -1,30 +1,9 @@
 <head>
-	<meta charset="UTF-8">
+	<meta charset="UTF-8" />
 	<meta name="referrer" content="no-referrer" />
-	<script>
-		function getprbname() {
-			let w = escape(window.location.href);
-			return w.substr(w.indexOf("%3Fpage%3D") + 10).split('.')[1];
-		}
-		function getprbname_u() {
-			let w = getprbname().toUpperCase();
-			if (w[0] == 'A' && w[2] == 'C' && Number(w.substr(3, 3)) > 232)
-				w = w.replace("H", "Ex");
-			if (!isNaN(Number(w.split("_")[1])))
-				w = w.split("_")[0] + "_" + String.fromCharCode(Number(w.split("_")[1]) + 64);
-			return w;
-		}
-		function gettitle() {
-			let t = escape(window.location.href);
-			if (t.indexOf("%3Fpage%3D") == -1)
-				return "AtCoder 中文站";
-			t = t.substr(t.lastIndexOf("%3Fpage%3D") + 10);
-			return getprbname_u().replace("_", "") + (t[0] == 'T' ? " 翻译" : " 题解");
-		}
-		document.write("<title>" + gettitle() + "</title>");
-	</script>
+	<title>AtCoder 中文站</title>
 	<link rel="stylesheet" href="src/style.css" />
-	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="shortcut icon" href="images/favicon.ico" />
 	<script type="text/javascript" src="src/func.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism.min.css"
 		integrity="sha512-/mZ1FHPkg6EKcxo0fKXF51ak6Cr2ocgDi5ytaTBjsQZIH/RNs6GF6+oId/vPe3eJB836T36nXwVh/WBl/cWT4w=="
@@ -61,20 +40,333 @@
 </head>
 
 <body>
-	<noscript>
-		You need to enable JavaScript to view the page.
-	</noscript>
+	<noscript> You need to enable JavaScript to view the page. </noscript>
+	<div class="ui main container">
+		<div id="page-top" class="display: inline;"></div>
+		<button class="circular ui icon button" onclick="jumptotop()"
+			style="z-index: 999; position: fixed; right: 50; top: 50" id="button-top">
+			<i style="font-size: 1em" class="arrow up icon"> </i>
+			<p style="font-size: 10px; display: inline-block">&nbsp;到顶部</p>
+		</button>
+		<button class="circular ui icon button" onclick="jumptobottom()"
+			style="z-index: 999; position: fixed; right: 50; bottom: 80" id="button-end">
+			<i style="font-size: 1em" class="arrow down icon"> </i>
+			<p style="font-size: 10px; display: inline-block">&nbsp;到底部</p>
+		</button>
+		<div class="ui large basic modal" id="show-prob-list"></div>
+		<h1 class="ui header" style="text-align: center">AtCoder 中文站</h1>
+		<div class="ui pointing menu">
+			<a class="item" onclick="switchTable('abc')"> ABC </a>
+			<a class="item" onclick="switchTable('arc')"> ARC </a>
+			<a class="item" onclick="switchTable('agc')"> AGC </a>
+			<a class="item" onclick="switchTable('abc_like')"> ABC-Like </a>
+			<a class="item" onclick="switchTable('arc_like')"> ARC-Like </a>
+			<a class="item" onclick="switchTable('agc_like')"> AGC-Like </a>
+			<a class="item" onclick="switchList('ahc')"> AHC </a>
+			<a class="item" onclick="switchList('others')"> 其他 </a>
+			<a class="item" onclick="labToggle('prob-archive')"> 筛选 </a>
+			<a class="item" onclick="labToggle('cont-page')"> 比赛 </a>
+			<div class="right menu">
+				<div class="item">
+					<div class="ui segment" style="padding: unset; border: unset; margin: unset; position: unset; box-shadow: unset;">
+						<div class="ui transparent icon input">
+							<input type="text" id="user-name" placeholder="导入用户，多个用户用半角空格隔开" style="width: 260px" />
+							<i class="search link icon" onclick="importUser()"></i>
+						</div>
+						<div class="ui bottom attached progress" id="sub-fetch-prog">
+							<div class="bar">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="item" onclick="clearStorage()" id="clear-storage">
+					清除缓存
+				</div>
+			</div>
+		</div>
+		<div id="cont-tbl" style="display: none">
+			<div id="cont-data">
+			</div>
+			<div style="text-align: center;">
+				<div class="ui indicating progress" data-percent="" id="progress-tre">
+					<div class="bar"></div>
+					<div class="label"></div>
+				</div>
+				<div class="ui indicating progress" data-percent="" id="progress-sol">
+					<div class="bar"></div>
+					<div class="label"></div>
+				</div>
+				<div class="ui indicating progress" data-percent="" id="progress-tag">
+					<div class="bar"></div>
+					<div class="label"></div>
+				</div>
+				<div class="ui indicating progress" data-percent="" id="progress-acc">
+					<div class="bar"></div>
+					<div class="label"></div>
+				</div>
+			</div>
+		</div>
+		<div id="prob-archive" style="display: none">
+			<div id="prob-list">
+				<figure class="highcharts-figure">
+					<div id="container" style="height:300px"></div>
+					<p class="highcharts-description"></p>
+				</figure>
+				<div class='ui form' style='margin: 1em 0'>
+					<div class='eight fields'>
+					</div>
+				</div>
+				<div class='ui form' style='margin: 1em 0'>
+					<div class='six fields'>
+					</div>
+				</div>
+				<div class="ui input">
+					<input id="diflb" style="width: 150;" placeholder="筛选难度下界" />
+				</div>
+				<div class="ui input">
+					<input id="difrb" style="width: 150;" placeholder="筛选难度上界" />
+				</div>
+				<div id="get-tag" class="ui selection multiple search dropdown">
+					<input type="hidden" name="intag" />
+					<div class="default text">
+						单击此处筛选题目标签
+					</div>
+					<div id="tag-list" class="menu">
+					</div>
+				</div>
+				<div class="ui checkbox">
+					<input id='tag-combined-or' type='checkbox' name='example'>
+					<label>
+						按或合并标签
+					</label>
+				</div>
+				<p></p>
+				<button class="ui violet basic button" onclick="setFilter()">
+					筛选
+				</button>
+				<button class="ui green basic button" onclick="clearFilter()">
+					重置
+				</button>
+				<button class="ui orange basic button" onclick="getRandProblem()">
+					随机跳题
+				</button>
+				<p></p>
+				<table class='ui fixed celled table segment'>
+					<tbody>
+						<tr id='rndprob'>
+						</tr>
+					</tbody>
+				</table>
+				<div class='ui borderless menu' id='prob-list-menu'>
+					<a class="item">
+						<i class="ellipsis horizontal icon">
+						</i>
+					</a>
+				</div>
+				<table class='ui fixed sortable celled table segment'>
+					<thead>
+						<tr>
+							<th>编号</th>
+							<th>标题</th>
+							<th>链接</th>
+							<th>难度</th>
+							<th>标签</th>
+						</tr>
+					</thead>
+					<tbody id="archive-show">
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div id="cont-page" style="display: none">
+			<div class="ui secondary menu">
+				<a class="item" onclick="showjoinpage()"> 参加 </a>
+				<a class="item" onclick="showcreatepage()"> 创建 </a>
+			</div>
+			<div id="join-page">
+				<div class="ui fluid input">
+					<input id="rev-code" placeholder="输入邀请码" />
+					<button class="ui button" onclick="redr()">
+						跳转到比赛界面
+					</button>
+				</div>
+			</div>
+			<div id="create-page">
+				<h4 class="ui header">设置比赛标题</h4>
+				<div class="ui fluid input">
+					<input id="get-title" placeholder="比赛标题" />
+				</div>
+				<h4 class="ui header">设置比赛类型</h4>
+				<div class="ui form">
+					<div class="three fields">
+						<div class="field">
+							<div class="ui radio checkbox" id="cont-type-prac">
+								<input type="radio" name="contest-type" />
+								<label>
+									练习赛
+									<i class="ui question circle icon helper" id="getPracticeContestInfo"></i>
+								</label>
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui radio checkbox" id="cont-type-icpc">
+								<input type="radio" name="contest-type" />
+								<label>
+									ICPC 赛制
+									<i class="ui question circle icon helper" id="getICPCContestInfo"></i>
+								</label>
+							</div>
+						</div>
+						<div class="field">
+							<div class="ui radio checkbox" id="cont-type-atc">
+								<input type="radio" name="contest-type" />
+								<label>
+									AtCoder 赛制
+									<i class="ui question circle icon helper" id="getAtcoderContestInfo"></i>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ui popup top center transition hidden" id="practiceContestInfo"
+					style="width: 170px !important">
+					题目不加权，没有罚时
+				</div>
+				<div class="ui popup top center transition hidden" id="ICPCContestInfo" style="width: 210px !important">
+					题目不加权，罚时加和，每次不通过提交罚时为 5 分钟（ CE 不计罚时）
+				</div>
+				<div class="ui popup top center transition hidden" id="atcoderContestInfo"
+					style="width: 250px !important">
+					题目可以设置为加权，罚时取各题通过时间最大值，每次不通过提交罚时额外加 5 分钟（ CE 不计罚时）
+				</div>
+				<h4 class="ui header">设置开始时间</h4>
+				<p></p>
+				<div class="ui fluid input">
+					<input id="get-start-time" type="datetime-local" value="" + startTime + "">
+				</div>
+				<h4 class="ui header">设置结束时间</h4>
+				<p></p>
+				<div class="ui fluid input">
+					<input id="get-finish-time" type="datetime-local" value="" + finishTime + "">
+				</div>
+				<h4 class="ui header">
+					参赛选手
+					<i class="ui question circle icon helper" id="getAccountInfo"></i>
+				</h4>
+				<div class="ui popup top left transition hidden" id="accountInfo" style="width: 260px !important">
+					如果需要使用 CodeForces 账号，请使用
+					<code>&lt;AT账号&gt;(&lt;CF账号&gt;)</code>
+					的格式，如：<code>houzhiyuan(houzhiyuan123)</code>
+				</div>
+				<div class="ui fluid input">
+					<input id="get-players" placeholder="以半角空格分隔" />
+				</div>
+				<h4 class="ui header">比赛题目</h4>
+				<div class="ui accordion" id="id-sample">
+					<div class="title">
+						<i class="dropdown icon"></i>
+						格式说明
+					</div>
+					<div class="content">
+						<p>
+							请填写题目链接内的 AtCoder
+							格式标识符（<code>atcoder.jp/<比赛标识符>/tasks/<题目标识符></code>），例如下：
+						</p>
+						<p>
+							<a href="https://atcoder.jp/contests/abc255/tasks/abc255_h">ABC255Ex</a>
+							的标识符为 <code>abc255_h</code>；
+						</p>
+						<p>
+							<a href="https://atcoder.jp/contests/abc111/tasks/arc103_b">ABC111D</a>
+							的标识符为 <code>arc103_b</code>；
+						</p>
+						<p>
+							<a href="https://atcoder.jp/contests/zone2021/tasks/zone2021_f">ZONE2021F</a>
+							的标识符为 <code>zone2021_f</code>；
+						</p>
+						<p>
+							<a href="https://atcoder.jp/contests/code-festival-2017-qualc/tasks/code_festival_2017_qualc_f">CF17QualcF</a>
+							的标识符为 <code>code_festival_2017_qualc_f。</code>
+						</p>
+						<p>
+							同时支持 CodeForces 题目，格式为
+							<code>CFXXXI</code> ，如 CF1A。
+						</p>
+						<p>
+							在 AtCoder 赛制下可以为题目赋不同的权，格式为
+							<code>&lt;题目ID&gt;(&lt;分数&gt;)</code> ，如
+							<code>abc277_h(600)</code> 。权默认为 1。
+						</p>
+					</div>
+				</div>
+				<p></p>
+				<div class="ui fluid input">
+					<input id="get-problems" placeholder="以半角空格分隔" />
+				</div>
+				<h4 class="ui header">生成邀请码</h4>
+				<div class="ui fluid input">
+					<input id="print-code" placeholder="邀请码" />
+					<button class="ui primary button" onclick="printInviteCode()" id="getCode">
+						获取邀请码
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="ui vertical footer segment">
+		<div class="ui center aligned container">
+			<div class="ui section divider"></div>
+			<div class="ui buttons">
+				<script>
+					function jumplink1() {
+						window.open(
+							"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese"
+						);
+					}
+					function jumplink2() {
+						window.open("https://atcoder.jp/");
+					}
+					function jumplink3() {
+						window.open("https://kenkoooo.com/atcoder/#/table/");
+					}
+					function jumplink4() {
+						window.open("https://semantic-ui.com/");
+					}
+					function jumplink5() {
+						window.open(
+							"https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B"
+						);
+					}
+				</script>
+				<button class="ui basic button" onclick="jumplink1()">
+					<img src="images/logo1.png" class="ui centered mini image" />
+				</button>
+				<button class="ui basic button" onclick="jumplink2()">
+					<img src="images/atcoder.png" class="ui centered mini image" />
+				</button>
+				<button class="ui basic button" onclick="jumplink3()">
+					<img src="images/kenkoooo.png" class="ui centered mini image" />
+				</button>
+				<button class="ui basic button" onclick="jumplink4()">
+					<img src="images/semantic.png" class="ui centered mini image" />
+				</button>
+				<button class="ui basic button" onclick="jumplink5()">
+					<img src="images/greasyfork.png" class="ui centered mini image" />
+				</button>
+			</div>
+			<p style="text-align: center">
+				Powered by
+				<a href="https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese">
+					AtCoder for Chinese Develop Team </a>.
+				<br />
+				Under
+				<a href="https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese/blob/main/LICENSE">
+					the GPL-3.0 license </a>.
+			</p>
+		</div>
+	</div>
+	<div id="page-end" style="display: inline"></div>
 	<script>
-		let lnk = escape(window.location.href);
-		if (lnk.indexOf("index.html") == -1) {
-			window.location.href = "index.html";
-		} else if (lnk.indexOf("%3Fpage%3D") == -1) {
-			console.log("main page");
-			document.write("<div class=\"ui main container\">");
-			buildw();
-			document.write("</div>");
-		} else {
-			document.write("<script src=\"src/page.js\"></scri" + "pt>");
-		}
+		buildMainPage();
 	</script>
 </body>

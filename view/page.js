@@ -1,10 +1,12 @@
 function readTextFile(file, ext, callback) {
+	console.log(file, ext);
 	let xhr = new XMLHttpRequest();
 	xhr.overrideMimeType("application/" + ext);
 	xhr.open("GET", file, false);
 	xhr.onreadystatechange = function () {
-		if (xhr.readyState === 4)
+		if (xhr.readyState === 4) {
 			callback(xhr.responseText, xhr.status);
+		}
 	}
 	try {
 		xhr.send();
@@ -103,12 +105,12 @@ function transdiff(d) {
 	return Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
 }
 function tagToggle() {
-	document.getElementById("tags").setAttribute("style",
-		document.getElementById("tags").getAttribute("style") == "position: relative; display: none" ? "position: relative; display: inline-block" : "position: relative; display: none");
+	document.getElementById("tags").style.position = "relative";
+	document.getElementById("tags").style.display == document.getElementById("tags").style.display == "none" ? "inline-block" : "none";
 }
 
 function buildPage(content) {
-	let tg = [], tags = "<button class=\"ui grey label\" onclick=\"tagToggle()\">切换标签显示</button><div id=\"tags\" style=\"position: relative; display: none\">";
+	let tg = [];
 	readTextFile("https://kenkoooo.com/atcoder/resources/problems.json", "json", function (txt, sta) {
 		if (sta == "200") {
 			let prob = JSON.parse(txt);
@@ -118,13 +120,13 @@ function buildPage(content) {
 						if (sta == 200) {
 							let diff = transdiff(JSON.parse(txt)[getProbName()].difficulty), st = getColor(diff);
 							if (diff < 3200) {
-								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large\" style=\"border-color: " + st.rgb + "; background: linear-gradient(to top, " + st.rgb + " " + st.val + "%, rgba(0, 0, 0, 0) " + st.val + "%) border-box;\"></span></ta><span style=\"color:" + st.rgb + "\">" + prob[i].title + "</span>"+ " " + getTitle().split(" ")[1] + "</h2>" + content;
+								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large\" style=\"border-color: " + st.rgb + "; background: linear-gradient(to top, " + st.rgb + " " + st.val + "%, rgba(0, 0, 0, 0) " + st.val + "%) border-box;\"></span></ta><span style=\"color:" + st.rgb + "\">" + prob[i].title + "</span>" + " " + getTitle().split(" ")[1] + "</h2>" + content;
 							} else if (diff < 3600) {
-								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large bronze-circle\"></span></ta><span style=\"color:red\">" + prob[i].title + "</span>"+ " " + getTitle().split(" ")[1] + "</h2>" + content;
+								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large bronze-circle\"></span></ta><span style=\"color:red\">" + prob[i].title + "</span>" + " " + getTitle().split(" ")[1] + "</h2>" + content;
 							} else if (diff < 4000) {
-								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large silver-circle\"></span></ta><span style=\"color:red\">" + prob[i].title + "</span>"+ " " + getTitle().split(" ")[1] + "</h2>" + content;
+								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large silver-circle\"></span></ta><span style=\"color:red\">" + prob[i].title + "</span>" + " " + getTitle().split(" ")[1] + "</h2>" + content;
 							} else if (diff < 10000) {
-								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large gold-circle\"></span></ta><span style=\"color:red\">" + prob[i].title + "</span>"+ " " + getTitle().split(" ")[1] + "</h2>" + content;
+								content = "<h2><ta href=\"\" title=\"难度：" + diff.toString() + "\"><span class=\"difficulty-circle large gold-circle\"></span></ta><span style=\"color:red\">" + prob[i].title + "</span>" + " " + getTitle().split(" ")[1] + "</h2>" + content;
 							} else {
 								content = "<h2>" + prob[i].title + " " + getTitle().split(" ")[1] + "</h2>" + content;
 							}
@@ -139,7 +141,7 @@ function buildPage(content) {
 			alert("请求标题失败");
 		}
 	});
-	readTextFile("tags.json", "json", function (txt, sta) {
+	readTextFile("../tags.json", "json", function (txt, sta) {
 		if (sta == "200") {
 			let tmp = JSON.parse(txt), str = getProbName_u(escape(window.location.href));
 			if (str in tmp)
@@ -177,23 +179,30 @@ function buildPage(content) {
 			return;
 		}
 	});
-	document.write("<div class=\"mdpagetop\"><a href=\"index.html\"><img src=\"images/logo2.png\" class=\"mdpageicon\"/></a><span class=\"mdpagetop title\">" + getTitle() + "</span>");
+	document.getElementById("tags").innerHTML = "";
 	if (tg.length > 0) {
-		for (let i = 0; i < tg.length; i++)
-			tags += "<span class=\"ui tag label\">" + tg[i] + "</span>";
+		for (let i = 0; i < tg.length; i++) {
+			let t = document.createElement("span");
+			t.className = "ui tag label";
+			t.innerHTML = tg[i];
+			document.getElementById("tags").appendChild(t);
+		}
 	} else {
-		tags += "<span style=\"color: #000; font-size: 0.8em\">&nbsp;暂无题目标签</span>";
+		let t = document.createElement("span");
+		t.style = "color: #000; font-size: 0.8em";
+		t.innerHTML = "暂无题目标签";
+		document.getElementById("tags").appendChild(t);
 	}
-	document.write("<button class=\"ui animated right button\" onclick=\"jumpLink2()\" style=\"right: 0; top: 5px; position: absolute;\"><div class=\"visible content\">原题链接</div><div class=\"hidden content\">" + getProbName_u().replace("_", "") + "</div></button></div></div>");
-	tags = "<div style=\"top: -25px; position: relative;\">" + tags + "</div></div>";
-	document.write("<div class=\"mdpage\">" + tags + content + "</div>");
+	document.getElementsByClassName("hidden content")[0].innerHTML = getProbName_u().replace("_", "");
+	document.getElementsByClassName("mdpagetop title")[0].innerHTML = getTitle();
+	document.getElementById("content").innerHTML = content;
 };
 
 !function () {
+	document.title = getTitle();
 	let lnk = escape(window.location.href), pos = lnk.indexOf("%3Fpage%3D") + 10, name = lnk.slice(pos);
 	if (name[0] == 'T') {
 		name = name.slice(1);
-		console.log("translation page");
 		readTextFile("https://atcoder-for-chinese-developers.github.io/translations/" + name + ".html", "html", function (text, stat) {
 			if (stat == "200") {
 				buildPage(text);
@@ -205,7 +214,6 @@ function buildPage(content) {
 		});
 	} else {
 		name = name.slice(1);
-		console.log("solution page");
 		readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/" + name + ".html", "html", function (text, stat) {
 			if (stat == "200") {
 				buildPage(text);

@@ -1,162 +1,178 @@
 .diff-red {
-	color: #ff0000;
+    color: #ff0000;
 }
 
 .diff-orange {
-	color: #ff8000;
+    color: #ff8000;
 }
 
 .diff-yellow {
-	color: #c0c000;
+    color: #c0c000;
 }
 
 .diff-blue {
-	color: #0000ff;
+    color: #0000ff;
 }
 
 .diff-cyan {
-	color: #00c0c0;
+    color: #00c0c0;
 }
 
 .diff-green {
-	color: #008000;
+    color: #008000;
 }
 
 .diff-brown {
-	color: #804000;
+    color: #804000;
 }
 
 .diff-grey {
-	color: #808080;
+    color: #808080;
 }
 
 .diff-black {
-	color: #000000;
+    color: #000000;
 }
 
 .link-disabled {
-	display: none;
+    display: none;
 }
 
 .link-black {
-	color: #000000;
+    color: #000000;
 }
 
 a:link {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 a:visited {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 .difficulty-circle {
-	width: 12px;
-	height: 12px;
-	border-width: 1px;
-	margin-right: 5px;
-	border-radius: 50%;
-	border-style: solid;
-	display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-width: 1px;
+    margin-right: 5px;
+    border-radius: 50%;
+    border-style: solid;
+    display: inline-block;
 }
 
 .difficulty-circle.large {
-	height: 24px;
-	width: 24px;
+    height: 24px;
+    width: 24px;
 }
 
 .bronze-circle {
-	border-color: rgb(150, 92, 44);
-	background: linear-gradient(to right, rgb(150, 92, 44), rgb(255, 218, 189), rgb(150, 92, 44));
+    border-color: rgb(150, 92, 44);
+    background: linear-gradient(
+        to right,
+        rgb(150, 92, 44),
+        rgb(255, 218, 189),
+        rgb(150, 92, 44)
+    );
 }
 
 .silver-circle {
-	border-color: rgb(128, 128, 128);
-	background: linear-gradient(to right, rgb(128, 128, 128), white, rgb(128, 128, 128));
+    border-color: rgb(128, 128, 128);
+    background: linear-gradient(
+        to right,
+        rgb(128, 128, 128),
+        white,
+        rgb(128, 128, 128)
+    );
 }
 
 .gold-circle {
-	border-color: rgb(255, 215, 0);
-	background: linear-gradient(to right, rgb(255, 215, 0), white, rgb(255, 215, 0));
+    border-color: rgb(255, 215, 0);
+    background: linear-gradient(
+        to right,
+        rgb(255, 215, 0),
+        white,
+        rgb(255, 215, 0)
+    );
 }
 
 .diff-unavailable {
-	color: #fff;
-	line-height: 1;
-	font-weight: 700;
-	font-size: .6em;
-	margin-right: .6em;
-	padding-left: .6em;
-	border-radius: 10rem;
-	padding-right: .6em;
-	display: inline-block;
-	padding: 0.25em 0.4em;
-	background-color: #17a2b8
+    color: #fff;
+    line-height: 1;
+    font-weight: 700;
+    font-size: 0.6em;
+    margin-right: 0.6em;
+    padding-left: 0.6em;
+    border-radius: 10rem;
+    padding-right: 0.6em;
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    background-color: #17a2b8;
 }
 
 .mdpage {
-	width: 70em;
-	display: block;
-	max-width: 70em;
-	font-size: 1.2em;
-	background: #fff;
-	margin: auto auto;
-	box-sizing: inherit;
-	padding: 100px 45px 25px;
-	box-shadow: 0px 0px 10px 5px #888;
+    width: 70em;
+    display: block;
+    max-width: 70em;
+    font-size: 1.2em;
+    background: #fff;
+    margin: auto auto;
+    box-sizing: inherit;
+    padding: 100px 45px 25px;
+    box-shadow: 0px 0px 10px 5px #888;
 }
 
 .mdpagetop {
-	top: 0px;
-	width: 100%;
-	z-index: 999;
-	padding: 0px;
-	position: fixed;
-	background: #222222;
-	font-size: 14px !important;
-	overflow: visible !important;
+    top: 0px;
+    width: 100%;
+    z-index: 999;
+    padding: 0px;
+    position: fixed;
+    background: #222222;
+    font-size: 14px !important;
+    overflow: visible !important;
 }
 
 .mdpageicon {
-	max-width: 87px;
-	margin-left: 5px;
-	margin-right: 5px;
-	filter: invert(100%);
+    max-width: 87px;
+    margin-left: 5px;
+    margin-right: 5px;
+    filter: invert(100%);
 }
 
 .mdpagetop.title {
-	top: -15px;
-	color: #fff;
-	padding: 10px 10px;
-	position: relative;
+    top: -15px;
+    color: #fff;
+    padding: 10px 10px;
+    position: relative;
+}
+
+code {
+    color: #c7254e;
+    border-radius: 3px;
+    background-color: #f9f2f4;
+	font-family: 'Courier New', Courier, monospace;
 }
 
 .mdpage h1 {
-	font-size: 63px;
+    font-size: 63px;
 }
 
 .mdpage h2 {
-	font-size: 30px;
+    font-size: 30px;
 }
 
 .mdpage h3 {
-	font-size: 24px;
-}
-
-.mdpage code {
-	color: #c7254e;
-	border-radius: 3px;
-	background-color: #f9f2f4;
+    font-size: 24px;
 }
 
 .mdpage td {
     text-align: inherit;
-    padding: .78571429em .78571429em;
-	border-left: 1px solid rgba(34,36,38,.1);
+    padding: 0.78571429em 0.78571429em;
+    border-left: 1px solid rgba(34, 36, 38, 0.1);
 }
 
 .mdpage th {
-	cursor: auto;
+    cursor: auto;
     font-style: none;
     font-weight: 700;
     border-left: none;
@@ -164,20 +180,20 @@ a:visited {
     text-transform: none;
     background: #f9fafb;
     vertical-align: inherit;
-    color: rgba(0,0,0,.87);
-    padding: .92857143em .78571429em;
-    border-bottom: 1px solid rgba(34,36,38,.1);
-	border-left: 1px solid rgba(34,36,38,.1);
+    color: rgba(0, 0, 0, 0.87);
+    padding: 0.92857143em 0.78571429em;
+    border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+    border-left: 1px solid rgba(34, 36, 38, 0.1);
 }
 
 .ui.question.circle.icon.helper {
-	top: -8px;
-	position: relative;
-	font-size: 10px!important;
+    top: -8px;
+    position: relative;
+    font-size: 10px !important;
 }
 
 .elipsed {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }

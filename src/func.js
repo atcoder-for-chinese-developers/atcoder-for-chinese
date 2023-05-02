@@ -131,26 +131,48 @@ const labels = {
 		name: "其他"
 	}
 };
-let problist = [], contlist = [], rawd, traList, solList, tags, prbs, tagList, nameList = [], probCell = {}, comboCell = {};
-function transdiff(d) {
-	return d === null ? 100000 : Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
-}
-function closealltables() {
-	for (let i in nameList) {
-		document.getElementById(nameList[i].id).setAttribute("style", "display: none;");
+const statuses = [
+	{
+		name: "NS",
+		cname: "未提交",
+		color: "#fff"
+	}, {
+		name: "NA",
+		cname: "未通过",
+		color: "#ffeeba"
+	}, {
+		name: "NA-during-Contest",
+		cname: "赛时未通过",
+		color: "#fd9"
+	}, {
+		name: "AC",
+		cname: "已通过",
+		color: "#c3e6cb"
+	}, {
+		name: "AC-during-Contest",
+		cname: "赛时已通过",
+		color: "#9ad59e"
+	}, {
+		name: "AC-before-Contest",
+		cname: "赛前通过",
+		color: "#9cf"
 	}
-	document.getElementById("prob-list").setAttribute("style", "display: none;");
-	document.getElementById("cont-page").setAttribute("style", "display: none;");
+];
+let problist = [], contlist = [], rawd, traList, solList, tags = {}, prbs, tagList, probCell = {}, comboCell = {}, curProbs = [], probHTML = {};
+function transdiff(d) {
+	return d === null || d === undefined ? null : Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
 }
 function labToggle(name) {
-	closealltables();
-	document.getElementById(name).setAttribute("style", "display: block;");
+	document.getElementById("cont-tbl").style.display = "none";
+	document.getElementById("prob-archive").style.display = "none";
+	document.getElementById("cont-page").style.display = "none";
+	document.getElementById(name).style.display = "block";
 }
 function tagToggle(id) {
 	document.getElementById("tag-" + id).setAttribute("style", document.getElementById("tag-" + id).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
 }
 function getColor(k) {
-	if (k == 100000) {
+	if (k == null) {
 		return {
 			rgb: "rgb(0,0,0)",
 			val: "0",
@@ -159,65 +181,67 @@ function getColor(k) {
 	} else if (k < 400) {
 		return {
 			rgb: "rgb(128,128,128)",
-			val: (k / 4).toString(),
+			val: k / 4,
 			name: "grey"
 		};
 	} else if (k < 800) {
 		return {
 			rgb: "rgb(128,64,0)",
-			val: ((k - 400) / 4).toString(),
+			val: (k - 400) / 4,
 			name: "brown"
 		};
 	} else if (k < 1200) {
 		return {
 			rgb: "rgb(0,128,0)",
-			val: ((k - 800) / 4).toString(),
+			val: (k - 800) / 4,
 			name: "green"
 		};
 	} else if (k < 1600) {
 		return {
 			rgb: "rgb(0,192,192)",
-			val: ((k - 1200) / 4).toString(),
+			val: (k - 1200) / 4,
 			name: "cyan"
 		};
 	} else if (k < 2000) {
 		return {
 			rgb: "rgb(0,0,255)",
-			val: ((k - 1600) / 4).toString(),
+			val: (k - 1600) / 4,
 			name: "blue"
 		};
 	} else if (k < 2400) {
 		return {
 			rgb: "rgb(192,192,0)",
-			val: ((k - 2000) / 4).toString(),
+			val: (k - 2000) / 4,
 			name: "yellow"
 		};
 	} else if (k < 2800) {
 		return {
 			rgb: "rgb(255,128,0)",
-			val: ((k - 2400) / 4).toString(),
+			val: (k - 2400) / 4,
 			name: "orange"
 		};
 	} else {
 		return {
 			rgb: "rgb(255,0,0)",
-			val: ((k - 2800) / 4).toString(),
+			val: (k - 2800) / 4,
 			name: "red"
 		};
 	}
 }
 function getDiffCirc(d) {
 	let t = getColor(d);
-	if (d < 3200) {
-		return "<ta href=\"\" title=\"难度：" + d + "\"><span class=\"difficulty-circle\" style=\"border-color: " + t.rgb + "; background: linear-gradient(to top, " + t.rgb + " " + t.val + "%, rgba(0, 0, 0, 0) " + t.val + "%) border-box;\"></span></ta>";
+	if (d == null) {
+		return "<ta href='' title='难度：暂未评定'><span class='diff-unavailable'>?</span></ta>";
+	} else if (d < 3200) {
+		return "<ta href='' title='难度：" + d + "'><span class='difficulty-circle' style='border-color: " + t.rgb + "; background: linear-gradient(to top, " + t.rgb + " " + t.val + "%, rgba(0, 0, 0, 0) " + t.val + "%) border-box;'></span></ta>";
 	} else if (d < 3600) {
-		return "<ta href=\"\" title=\"难度：" + d + "\"><span class=\"difficulty-circle bronze-circle\"></span></ta>";
+		return "<ta href='' title='难度：" + d + "'><span class='difficulty-circle bronze-circle'></span></ta>";
 	} else if (d < 4000) {
-		return "<ta href=\"\" title=\"难度：" + d + "\"><span class=\"difficulty-circle silver-circle\"></span></ta>";
+		return "<ta href='' title='难度：" + d + "'><span class='difficulty-circle silver-circle'></span></ta>";
 	} else if (d < 10000) {
-		return "<ta href=\"\" title=\"难度：" + d + "\"><span class=\"difficulty-circle gold-circle\"></span></ta>";
+		return "<ta href='' title='难度：" + d + "'><span class='difficulty-circle gold-circle'></span></ta>";
 	} else {
-		return "<ta href=\"\" title=\"难度：暂未评定\"><span class=\"diff-unavailable\">?</span></ta>";
+		alert("!");
 	}
 }
 function formatDate(s, fmt = "yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒") {
@@ -247,51 +271,67 @@ function formatDate(s, fmt = "yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒") {
 	return t.toString();
 }
 function showProbModal(cid, pid, title, op) {
-	let list = (op ? solList : traList)[cid][pid], content = "\
-		<div class=\"ui segment\">\
-			<H2 class=\"ui medium block top attached header\">" + title + "</h2>";
+	let list = (op ? solList : traList)[cid][pid], content = "<div class='ui segment'><h2 class='ui medium block top attached header'>" + title + "</h2>";
 	if (list == 0) {
-		content += "\
-			<div class=\"ui placeholder attached segment\">\
-				<div class=\"ui icon header\">\
-					<i aria-hidden=\"true\" class=\"hdd outline icon\"></i>\
-					没有内容\
-				</div>\
-			</div>\
-		</div>";
+		content += "<div class='ui placeholder attached segment'><div class='ui icon header'><i aria-hidden='true' class='hdd outline icon'></i>没有内容\</div></div></div>";
 	} else {
-		content += "\
-			<div class=\"ui attached segment\">\
-				<table class=\"ui single line table fixed\">\
-					<thead>\
-						<tr>\
-							<th>标题</th>\
-							<th>作者</th>\
-							<th>创建时间</th>\
-							<th>最后修改时间</th>\
-						</tr>\
-					</thead>\
-					<tbody>";
+		content += "<div class='ui attached segment'><table class='ui single line table fixed'><thead><tr><th>标题</th><th>作者</th><th>创建时间</th>\<th>最后修改时间</th></tr></thead><tbody>";
 		for (let i in list) {
 			let cur = list[i];
-			content += "<tr>\
-							<td><a href=\"?page=" + (op ? "S" : "T") + cid + "." + pid + "." + i + "\">" + cur.title + "</a></td>\
-							<td>" + cur.author + "</td>\
-							<td>" + formatDate(cur.created) + "</td>\
-							<td>" + formatDate(cur.lastCommit.date) + "</td>\
-						</tr>";
+			content += "<tr><td><a href='./view?page=" + (op ? "S" : "T") + cid + "." + pid + "." + i + "'>" + cur.title + "</a></td><td>" + cur.author + "</td><td>" + formatDate(cur.created) + "</td><td>" + formatDate(cur.lastCommit.date) + "</td></tr>";
 		}
-		content += "</tbody>\
-				</table>\
-			</div>\
-		</div>";
+		content += "</tbody></table></div></div>";
 	}
 	document.getElementById("show-prob-list").innerHTML = content;
 	$("#show-prob-list").modal("show");
 }
 
-function buildTable(name, uname, data, prbIdx) {
-	let c = prbIdx.length, cnt = 0, cnte = 0, cnts = 0, cntt = 0, cont = [], tbl = [], idxList = prbIdx;
+function initProbList() {
+	for (let i in labels) {
+		let data = rawd[i];
+		for (let cid in data) {
+			contlist[cid] = {
+				type: i,
+				startTime: data[cid].start_epoch_second,
+				endTime: data[cid].start_epoch_second + data[cid].duration_second
+			};
+			for (let pid in data[cid].problems) {
+				let tcnt = 0, scnt = 0, curp = data[cid].problems[pid], uname = cid.toUpperCase() + "_" + curp.problem_index, tg = tags[uname] ?? [];
+				if (cid in traList && pid in traList[cid]) {
+					let cur = traList[cid][pid];
+					for (let j in cur) {
+						tcnt++;
+						tg = tg.concat(cur[j].tags);
+					}
+				}
+				if (cid in solList && pid in solList[cid]) {
+					let cur = solList[cid][pid];
+					for (let j in cur) {
+						scnt++;
+						tg = tg.concat(cur[j].tags);
+					}
+				}
+				tg = Array.from(new Set(tg));
+				problist[pid] = {
+					tra: tcnt,
+					sol: scnt,
+					pid: pid,
+					cid: cid,
+					tag: tg,
+					diff: transdiff(curp.difficulty),
+					type: i,
+					stat: 0,
+					uname: curp.contest_id + "_" + curp.problem_index,
+					time: data[cid].start_epoch_second,
+					title: curp.title,
+				};
+			}
+		}
+	}
+}
+function switchTable(name) {
+	let prbIdx = labels[name].index, c = prbIdx.length, cnt = 0, cnte = 0, cnts = 0, cntt = 0, cnta = 0, cont = [], tbl = [], idxList = prbIdx.concat([]), data = rawd[name];
+	document.getElementById("cont-data").innerHTML = "<div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div>";
 	for (let i in idxList) {
 		idxList[i] = prbIdx[i].split("/");
 	}
@@ -305,68 +345,27 @@ function buildTable(name, uname, data, prbIdx) {
 			prb[j] = {
 				html: "<td></td>"
 			};
-		contlist[cont[i].id] = {
-			type: name,
-			startTime: cont[i].start_epoch_second,
-			endTime: cont[i].start_epoch_second + cont[i].duration_second
-		};
 		for (let j in cont[i].problems) {
-			let idx = cont[i].problems[j].problem_index, p = prbIdx.findIndex((t) => t.find((a) => a == idx) != undefined), cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, tag = tags[uname];
-			if (tag == undefined)
-				tag = [];
-			cnt++;
-			if (cid in traList && pid in traList[cid]) {
-				for (let t in traList[cid][pid]) {
-					let tt = traList[cid][pid][t].tags;
-					tag = Array.from(new Set(tag.concat(tt)));
-				}
-			}
-			if (cid in solList && pid in solList[cid]) {
-				for (let t in solList[cid][pid]) {
-					let tt = solList[cid][pid][t].tags;
-					tag = Array.from(new Set(tag.concat(tt)));
-				}
-			}
-			prb[p] =
-				"<td id=\"cell-" + pid + "-" + cid + "\">\
-					<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\" class=\"diff-" + getColor(dif).name + "\">\
-						<ta href=\"javascript:void(0)\" title=\"难度：" + (dif == 100000 ? "暂未评定" : dif.toString()) + "\"" + getDiffCirc(dif) + idx + "&nbsp;\
-						</ta>\
-					</a>";
-			problist[pid] = {
-				tra: 0,
-				sol: 0,
-				cid: cid,
-				tag: tag,
-				diff: dif,
-				type: name,
-				uname: uname,
-				time: cont[i].start_epoch_second,
-				title: cont[i].problems[j].title,
-				org_a: "<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\">" + uname + "</a>"
-			};
-			if ((cont[i].id in traList) && (pid in traList[cid])) {
-				problist[pid].tra = 1;
-				prb[p] += "<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;"
+			let idx = cont[i].problems[j].problem_index, p = idxList.findIndex((t) => t.find((a) => a == idx) != undefined), cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, tag = problist[j].tag;
+			cnt++, cnta += problist[pid].stat > 2;
+			prb[p] = "<td id='cell-" + pid + "-" + cid + "' style='background-color: " + statuses[problist[pid].stat].color + "'><a href='https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "' class='diff-" + getColor(dif).name + "'><ta href='javascript:void(0)' title='难度：" + (dif ?? "暂未评定") + "'" + getDiffCirc(dif) + idx + "&nbsp;</ta></a>";
+			if (problist[pid].tra) {
+				prb[p] += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>";
 				cnte++;
 			}
-			if ((cont[i].id in solList) && (pid in solList[cid])) {
-				problist[pid].sol = 1;
+			if (problist[pid].sol) {
+				if (problist[pid].tra) {
+					prb[p] += "&nbsp;&nbsp;";
+				}
 				prb[p] += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题解\", 1)'>题解</a>";
 				cnts++;
 			}
 			if (tag != 0) {
-				prb[p] +=
-					"<div onclick=\"tagToggle('" + pid + "-" + name + "')\" style=\"position: relative; right: -5;\">\
-						<a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important\">" + tag.length + "</a>\
-					</div>\
-					<div id=\"tag-" + pid + "-" + name + "\" style=\"display: none;\">";
+				prb[p] += "<div onclick='tagToggle('" + pid + "-" + name + "')' style='position: relative; right: -5;'><a class='floating ui circular teal right label' style='background-color: #50d0d0!important'>" + tag.length + "</a></div><div id='tag-" + pid + "-" + name + "' style='display: none;'>";
 				for (let t in tag) {
-					prb[p] +=
-						"<p class=\"ui tag label\">" + tag[t] + "</p>";
+					prb[p] += "<p class='ui tag label'>" + tag[t] + "</p>";
 				}
-				prb[p] +=
-					"</div>";
+				prb[p] += "</div>";
 				cntt++;
 			}
 			if (probCell[pid] == undefined) {
@@ -380,149 +379,91 @@ function buildTable(name, uname, data, prbIdx) {
 		}
 		tbl.push(prb);
 	}
-	document.write("\
-		<div id=\"" + name + "-table\" style=\"display: none; \">\
-			<table class=\"ui fixed celled definition table segment\">\
-				<thead class=\"full-width\">\
-					<tr>\
-						<th>比赛</th>");
+	let t = document.createElement("table"), s = "<thead class='full-width'><tr><th>比赛</th>";
+	t.className = "ui fixed celled definition table segment";
 	for (let i = 0; i < c; i++) {
-		document.write("<th id='cell-" + i + "-" + name + "'>" + prbIdx[i] + "</th>");
+		s += "<th id='cell-" + i + "-" + name + "'>" + prbIdx[i] + "</th>";
 		comboCell["cell-" + i + "-" + name] = [];
 	}
-	document.write("</tr>\
-				</thead>\
-			<tbody>");
+	s += "</tr></thead><tbody>";
 	for (let i in cont) {
 		let cid = cont[i].id;
-		document.write("\
-				<tr>\
-					<td class='elipsed' id=\"cell-" + cid + "-" + name + "\">\
-						<a href=\"https://atcoder.jp/contests/" + cid + "\">" + cid.toUpperCase() + "</a>\
-					</td>");
+		s += "<tr><td class='elipsed' id='cell-" + cid + "-" + name + "'><a href='https://atcoder.jp/contests/" + cid + "'>" + cid.toUpperCase() + "</a></td>";
 		comboCell["cell-" + cid + "-" + name] = [];
 		for (let j in tbl[i]) {
-			document.write(tbl[i][j].html);
+			s += tbl[i][j].html;
 			if (tbl[i][j].html != "<td></td>") {
 				comboCell["cell-" + j + "-" + name].push(tbl[i][j].id);
 				comboCell["cell-" + cid + "-" + name].push(tbl[i][j].id);
 			}
 		}
-		document.write("\
-				</tr>");
+		s += "</tr>";
 	}
-	document.write("\
-			</tbody>\
-		</table>");
-	let eper = (cnte / cnt * 100).toFixed(3), sper = (cnts / cnt * 100).toFixed(3), tper = (cntt / cnt * 100).toFixed(3);
-	document.write("\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-" + name + "\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + eper + "% 题面已完成</div>\
-			</div>\
-		</p>\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-" + name + "\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + sper + "% 题解已完成</div>\
-			</div>\
-		</p>\
-		<p align=\"center\">\
-			<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-" + name + "\">\
-				<div class=\"bar\"></div>\
-				<div class=\"label\">" + tper + "% 标签已完成</div>\
-			</div>\
-		</p>\
-	</div>");
-	$("#progress-tre-" + name).progress({
-		percent: eper
+	s += "</tbody>";
+	t.innerHTML = s;
+	document.getElementById("cont-data").innerHTML = "";
+	document.getElementById("cont-data").appendChild(t);
+	$("#progress-tre").progress({
+		percent: cnte / cnt * 100,
+		text: {
+			active: '{percent}% 题面已完成',
+			success: '所有题面已完成'
+		}
 	});
-	$("#progress-sol-" + name).progress({
-		percent: sper
+	$("#progress-sol").progress({
+		percent: cnts / cnt * 100,
+		text: {
+			active: '{percent}% 题解已完成',
+			success: '所有题解已完成'
+		}
 	});
-	$("#progress-tag-" + name).progress({
-		percent: tper
+	$("#progress-tag").progress({
+		percent: cntt / cnt * 100,
+		text: {
+			active: '{percent}% 标签已完成',
+			success: '所有标签已完成'
+		}
 	});
-	console.log(cnt, cnte, cnts, cntt);
-	nameList.push({
-		id: name + "-table",
-		name: uname
+	$("#progress-acc").progress({
+		percent: cnta / cnt * 100,
+		text: {
+			active: '{percent}% 题目已通过',
+			success: '所有题目已通过'
+		}
 	});
+	labToggle("cont-tbl");
 }
-
-function buildContList(name, uname, data) {
-	let cnt = 0, cnte = 0, cnts = 0, cntt = 0, cont = [], tbl = [];
+function switchList(name) {
+	let cnt = 0, cnte = 0, cnts = 0, cntt = 0, cnta = 0, cont = [], tbl = [], data = rawd[name];
+	document.getElementById("cont-data").innerHTML = "<div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div>";
+	labToggle("cont-tbl");
 	for (let i in data) {
 		cont.push(data[i]);
 	}
 	cont.sort((a, b) => b.start_epoch_second - a.start_epoch_second);
 	for (let i in cont) {
 		let prb = [];
-		contlist[cont[i].id] = {
-			type: name,
-			startTime: cont[i].start_epoch_second,
-			endTime: cont[i].start_epoch_second + cont[i].duration_second
-		};
 		for (let j in cont[i].problems) {
-			let idx = cont[i].problems[j].problem_index, cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, tag = tags[uname];
-			if (tag == undefined)
-				tag = [];
-			cnt++;
-			if (cid in traList && pid in traList[cid]) {
-				for (let t in traList[cid][pid]) {
-					let tt = traList[cid][pid][t].tags;
-					tag = Array.from(new Set(tag.concat(tt)));
-				}
-			}
-			if (cid in solList && pid in solList[cid]) {
-				for (let t in solList[cid][pid]) {
-					let tt = solList[cid][pid][t].tags;
-					tag = Array.from(new Set(tag.concat(tt)));
-				}
-			}
-			cnt++;
-			let cur =
-				"<td class='elipsed' id=\"cell-" + pid + "-" + cid + "\">\
-					<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\" class=\"diff-" + getColor(dif).name + "\">\
-						<ta href=\"javascript:void(0)\" title=\"难度：" + (dif == 100000 ? "暂未评定" : dif.toString()) + "\"" + getDiffCirc(dif) + idx + "&nbsp;\
-						</ta>\
-					</a>";
-			problist[pid] = {
-				tra: 0,
-				sol: 0,
-				pid: pid,
-				cid: cid,
-				tag: tag,
-				diff: dif,
-				type: name,
-				uname: uname,
-				time: cont[i].start_epoch_second,
-				title: cont[i].problems[j].title,
-				org_a: "<a href=\"https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "\">" + uname + "</a>"
-			};
-			if ((cont[i].id in traList) && (pid in traList[cid])) {
-				problist[pid].tra = 1;
-				cur += "<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;"
+			let idx = cont[i].problems[j].problem_index, cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, tag = problist[j].tag;
+			cnt++, cnta += problist[pid].stat > 2;
+			let cur = "<td class='elipsed' id='cell-" + pid + "-" + cid + "' style='background-color: " + statuses[problist[pid].stat].color + "'><a href='https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "' class='diff-" + getColor(dif).name + "'><ta href='javascript:void(0)' title='难度：" + (dif ?? "暂未评定") + "'" + getDiffCirc(dif) + idx + "&nbsp;</ta></a>";
+			if (problist[pid].tra) {
+				cur += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>";
 				cnte++;
 			}
-			if ((cont[i].id in solList) && (pid in solList[cid])) {
-				problist[pid].sol = 1;
+			if (problist[pid].sol) {
+				if (problist[pid].tra) {
+					cur += "&nbsp;&nbsp;";
+				}
 				cur += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题解\", 1)'>题解</a>";
 				cnts++;
 			}
 			if (tag != 0) {
-				cur +=
-					"<div onclick=\"tagToggle('" + pid + "-" + name + "')\" style=\"position: relative; right: -5;\">\
-						<a class=\"floating ui circular teal right label\" style=\"background-color: #50d0d0!important\">" + tag.length + "</a>\
-					</div>\
-					<div id=\"tag-" + pid + "-" + name + "\" style=\"display: none;\">";
+				cur += "<div onclick='tagToggle('" + pid + "-" + name + "')' style='position: relative; right: -5;'><a class='floating ui circular teal right label' style='background-color: #50d0d0!important'>" + tag.length + "</a></div><div id='tag-" + pid + "-" + name + "' style='display: none;'>";
 				for (let t in tag) {
-					cur +=
-						"<p class=\"ui tag label\">" + tag[t] + "</p>";
+					cur += "<p class='ui tag label'>" + tag[t] + "</p>";
 				}
-				cur +=
-					"</div>";
+				cur += "</div>";
 				cntt++;
 			}
 			if (probCell[pid] == undefined) {
@@ -537,96 +478,110 @@ function buildContList(name, uname, data) {
 		}
 		tbl.push(prb);
 	}
-	document.write("\
-		<div id=\"" + name + "-lst\" style=\"display: none; \">");
+	document.getElementById("cont-data").innerHTML = "";
 	for (let i in cont) {
-		let cid = cont[i].id;
-		document.write("\
-			<div class=\"ui segment\">\
-				<div class=\"ui top attached large label elipsed\" id=\"cell-" + cid + "\">\
-					<a href=\"https://atcoder.jp/contests/" + cid + "\">" + cont[i].title + "（" + cid.toUpperCase() + "）</a>\
-				</div>\
-				<div style=\"overflow-x: " + (tbl[i].length < 10 ? "hidden" : "scroll") + ";\">\
-					<div style=\"width: " + (tbl[i].length < 10 ? "auto" : 7 * tbl[i].length) + "em;\">\
-						<table class=\"ui fixed celled table\">\
-							<tbody>\
-								<tr>");
+		let cid = cont[i].id, t = document.createElement("div"), s = "";
+		t.className = "ui segment";
+		s = "<div class='ui top attached large label elipsed' id='cell-" + cid + "'><a href='https://atcoder.jp/contests/" + cid + "'>" + cont[i].title + "（" + cid.toUpperCase() + "）</a></div><div style='overflow-x: " + (tbl[i].length < 10 ? "hidden" : "scroll") + ";'><div style='width: " + (tbl[i].length < 10 ? "auto" : 7 * tbl[i].length) + "em;'><table class='ui fixed celled table'><tbody><tr>";
 		comboCell["cell-" + cid] = [];
 		for (let j in tbl[i]) {
-			document.write(tbl[i][j].html);
+			s += tbl[i][j].html;
 			comboCell["cell-" + cid].push(tbl[i][j].id);
 		}
-		document.write("</tr>\
-							</tbody>\
-						</table>\
-					</div>\
-				</div>\
-			</div>");
+		s += "</tr></tbody></table></div></div></div>";
+		t.innerHTML = s;
+		document.getElementById("cont-data").appendChild(t);
 	}
-	let eper = (cnte / cnt * 100).toFixed(3).toString(), sper = (cnts / cnt * 100).toFixed(3).toString(), tper = (cntt / cnt * 100).toFixed(3);
-	document.write("\
-			<p align=\"center\">\
-				<div class=\"ui indicating progress\" data-percent=\"" + eper + "\" id=\"progress-tre-" + name + "\">\
-					<div class=\"bar\"></div>\
-					<div class=\"label\">" + eper + "% 题面已完成</div>\
-				</div>\
-			</p>\
-			<p align=\"center\">\
-				<div class=\"ui indicating progress\" data-percent=\"" + sper + "\" id=\"progress-sol-" + name + "\">\
-					<div class=\"bar\"></div>\
-					<div class=\"label\">" + sper + "% 题解已完成</div>\
-				</div>\
-			</p>\
-			<p align=\"center\">\
-				<div class=\"ui indicating progress\" data-percent=\"" + tper + "\" id=\"progress-tag-" + name + "\">\
-					<div class=\"bar\"></div>\
-					<div class=\"label\">" + tper + "% 标签已完成</div>\
-				</div>\
-			</p>\
-		</div>");
-	$("#progress-tre-" + name).progress({
-		percent: cnte / cnt * 100
+	$("#progress-tre").progress({
+		percent: cnte / cnt * 100,
+		text: {
+			active: '{percent}% 题面已完成',
+			success: '所有题面已完成'
+		}
 	});
-	$("#progress-sol-" + name).progress({
-		percent: cnts / cnt * 100
+	$("#progress-sol").progress({
+		percent: cnts / cnt * 100,
+		text: {
+			active: '{percent}% 题解已完成',
+			success: '所有题解已完成'
+		}
 	});
-	$("#progress-tag-" + name).progress({
-		percent: cntt / cnt * 100
+	$("#progress-tag").progress({
+		percent: cntt / cnt * 100,
+		text: {
+			active: '{percent}% 标签已完成',
+			success: '所有标签已完成'
+		}
 	});
-	console.log(cnt, cnte, cnts, cntt);
-	nameList.push({
-		id: name + "-lst",
-		uname: uname
+	$("#progress-acc").progress({
+		percent: cnta / cnt * 100,
+		text: {
+			active: '{percent}% 题目已通过',
+			success: '所有题目已通过'
+		}
 	});
+	labToggle("cont-tbl");
 }
-
-let isd1 = {}, isd2 = {}, pcol = {}, presel = -1;
-
-function refreshchart() {
+function refreshMenu(x) {
+	let cnt = Math.floor((curProbs.length + 9) / 10), html = "", p = 0;
+	if (x < 1 || x > cnt)
+		return;
+	html += "<a class='item' onclick='refreshMenu(1)'><i class='angle double left icon'></i></a>";
+	if (x > 1) {
+		html += "<a class='item' onclick='refreshMenu(" + (x - 1) + ")'><i class='caret left icon'></i></a>";
+	}
+	if (x > 4) {
+		html += "<a class='item'><i class='ellipsis horizontal icon'></i></a>";
+	}
+	let l = Math.max(1, x - 3), r = Math.min(cnt + 1, x + 3);
+	for (let i = l; i < r; i++) {
+		html += "<a class='item' onclick='refreshMenu(" + i + ")'>" + i + "</a>";
+	}
+	if (x < cnt - 3) {
+		html += "<a class='item'><i class='ellipsis horizontal icon'></i></a>";
+	}
+	if (x < cnt) {
+		html += "<a class='item' onclick='refreshMenu(" + (x + 1) + ")'><i class='caret right icon'></i></a>";
+	}
+	html += "<a class='item' onclick='refreshMenu(" + cnt + ")'><i class='angle double right icon'></i></a>";
+	document.getElementById("prob-list-menu").innerHTML = html;
+	document.getElementById("archive-show").innerHTML = "";
+	for (let i in curProbs) {
+		if (x * 10 - 10 <= p && p < x * 10) {
+			let t = document.createElement("tr");
+			t.innerHTML = probHTML[curProbs[i]];
+			t.style.backgroundColor = statuses[problist[curProbs[i]].stat].color;
+			document.getElementById("archive-show").appendChild(t);
+		}
+		p++;
+	}
+}
+function refreshChart() {
 	let ctg = new Array(44), cnt = new Array(44);
 	for (let i = 0; i < 44; i++)
-		ctg[i] = "<" + (i * 100 + 100).toString(), cnt[i] = {
+		ctg[i] = "<" + (i * 100 + 100), cnt[i] = {
 			y: 0,
 			color: i < 4 ? "rgb(128,128,128)" : i < 8 ? "rgb(128,64,0)" : i < 12 ? "rgb(0,128,0)" : i < 16 ? "rgb(0,192,192)" : i < 20 ? "rgb(0,0,255)" : i < 24 ? "rgb(192,192,0)" : i < 28 ? "rgb(255,128,0)" : "rgb(255,0,0)"
 		};
-	for (let i in problist)
-		if (isd1[i] && isd2[i] && problist[i].diff < 4400)
-			cnt[Math.floor(problist[i].diff / 100)].y++;
+	for (let i in curProbs) {
+		let p = problist[curProbs[i]].diff;
+		if (p != null && p < 4400) {
+			cnt[Math.floor(p / 100)].y++;
+		}
+	}
 	Highcharts.chart('container', {
 		chart: {
 			type: "column",
 			events: {
 				click: function (event) {
-					let p = Math.round(event.xAxis[0].value);
-					if (presel != p) {
-						presel = p;
-						document.getElementById("diflb").value = p * 100;
-						document.getElementById("difrb").value = p * 100 + 99;
+					let p = Math.round(event.xAxis[0].value), lv = document.getElementById("diflb").value, rv = document.getElementById("difrb").value;
+					if (lv != p * 100 || rv != p * 100 + 99) {
+						lv = p * 100, rv = p * 100 + 99;
 					} else {
-						presel = -1;
-						document.getElementById("diflb").value = "";
-						document.getElementById("difrb").value = "";
+						lv = rv = "";
 					}
+					document.getElementById("diflb").value = lv;
+					document.getElementById("difrb").value = rv;
 					setFilter();
 				}
 			}
@@ -648,9 +603,8 @@ function refreshchart() {
 			}
 		},
 		tooltip: {
-			headerFormat: "<span style=\"font-size:10px\">{point.key}</span><table>",
-			pointFormat: "<tr><td style=\"font-size:10px;color:{series.color};padding:0\">{}:</td>" +
-				"<td style=\"font-size:10px;padding:0\"><b>{point.y:.0f}</b></td></tr>",
+			headerFormat: "<span style='font-size:10px'>{point.key}</span><table>",
+			pointFormat: "<tr><td style='font-size:10px;color:{series.color};padding:0'>{}:</td>" + "<td style='font-size:10px;padding:0'><b>{point.y:.0f}</b></td></tr>",
 			footerFormat: "</table>",
 			shared: true,
 			useHTML: true
@@ -668,141 +622,43 @@ function refreshchart() {
 		]
 	});
 }
-
-function getStatPriority(stat) {
-	if (stat == "AC in contest")
-		return 4;
-	if (stat == "AC")
-		return 3;
-	if (stat == "UA in contest")
-		return 2;
-	if (stat == "UA")
-		return 1;
-	return 0;
-}
-function getStatColor(stat) {
-	if (stat == "AC in contest")
-		return "#9ad59e";
-	if (stat == "AC")
-		return "#c3e6cb";
-	if (stat == "UA in contest")
-		return "#fd9";
-	if (stat == "UA")
-		return "#ffeeba";
-	return "#fff";
-}
-function getStatClass(stat) {
-	if (stat == undefined)
-		return "";
-	if (stat.slice(0, 2) == "AC")
-		return "positive";
-	if (stat.slice(0, 2) == "UA")
-		return "negative";
-	return "";
-}
-
-let curPage = 1;
-function refreshMenu() {
-	let cnt = 0, html = "";
-	for (let i in problist)
-		if (isd1[i] && isd2[i])
-			cnt++;
-	cnt = Math.floor((cnt + 19) / 20);
-	html += "<a class='item' onclick='jumpToPage(1)'><i class='angle double left icon'></i></a>";
-	if (curPage > 4) {
-		html += "<a class='item'><i class='ellipsis horizontal icon'></i></a>";
-	}
-	let l = Math.max(1, curPage - 3), r = Math.min(cnt, curPage + 3);
-	for (let i = l; i < r; i++) {
-		html += "<a class='item' onclick='jumpToPage(" + i + ")'>" + i + "</a>";
-	}
-	if (curPage < cnt - 3) {
-		html += "<a class='item'><i class='ellipsis horizontal icon'></i></a>";
-	}
-	html += "<a class='item' onclick='jumpToPage(" + cnt + ")'><i class='angle double right icon'></i></a>";
-	document.getElementById("prob-list-menu").innerHTML = html;
-}
-function jumpToPage(x) {
-	curPage = x;
-	let cnt = 0, tLst = [];
-	for (let i in problist) {
-		tLst.push(i);
-	}
-	tLst.sort((a, b) => problist[b].time - problist[a].time);
-	for (let id in tLst) {
-		let i = tLst[id];
-		if (isd1[i] && isd2[i]) {
-			cnt++;
-			if (curPage * 20 - 19 <= cnt && cnt <= curPage * 20) {
-				document.getElementById(i + "-col").setAttribute("class", getStatClass(pcol[i]));
-				document.getElementById(i + "-col").setAttribute("style", "background-color: " + getStatColor(pcol[i]) + "!important");
-			} else {
-				document.getElementById(i + "-col").setAttribute("style", "display: none;");
-			}
-		} else {
-			document.getElementById(i + "-col").setAttribute("style", "display: none;");
-		}
-	}
-	refreshMenu();
-}
-function refreshList() {
-	for (let i in probCell)
-		for (let j in probCell[i]) {
-			let name = probCell[i][j];
-			document.getElementById(name).setAttribute("class", getStatClass(pcol[i]));
-			document.getElementById(name).setAttribute("style", "background-color: " + getStatColor(pcol[i]) + "!important");
-		}
-	for (let i in comboCell) {
-		let flg = 1;
-		for (let j in comboCell[i]) {
-			flg &= document.getElementById(comboCell[i][j]).getAttribute("class") == "positive";
-		}
-		if (flg) {
-			document.getElementById(i).setAttribute("style", "background-color: #c3e6cb!important");
-		}
-	}
-	jumpToPage(curPage = 1);
-}
-function isinarray(x, a) {
-	if (a == undefined)
-		return 0;
-	let flg = 0;
-	for (let i in a)
-		flg |= x == a[i];
-	return flg;
-}
 function setFilter() {
-	for (let i in problist)
-		isd1[i] = isd2[i] = 1;
-	for (let i in labels) {
-		let val = $("#" + i + "-checkbox").checkbox("is checked");
-		for (let j in problist)
-			if (problist[j].type == i)
-				isd1[j] = val;
-	}
-	document.getElementById("rndprob").innerHTML = "";
-	let dl = document.getElementById("diflb").value, dr = document.getElementById("difrb").value, utg = $(".ui.dropdown").dropdown("get value"), flgor = $("#tag-combined-or").checkbox("is checked");
-	dl = dl == "" || isNaN(Number(dl)) ? -10000 : Number(dl);
-	dr = dr == "" || isNaN(Number(dr)) ? 10000 : Number(dr);
-	utg = utg == '' ? 0 : utg.split(",");
-	for (let i in problist) {
-		let flg = (dl == -10000 && dr == 10000) || (dl <= problist[i].diff && problist[i].diff <= dr);
-		if (!flgor) {
-			for (let j in utg)
-				flg &= isinarray(utg[j], problist[i].tag);
-		} else {
-			if (utg) {
-				let flg1 = 0;
-				for (let j in utg)
-					flg1 |= isinarray(utg[j], problist[i].tag);
-				flg &= flg1;
-			}
+	document.getElementById("archive-show").innerHTML = "<tr><div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div></tr>";;
+	curProbs = [];
+	let flt = function (p) {
+		if (!$("#" + contlist[p.cid].type + "-checkbox").checkbox("is checked") || !$("#" + statuses[p.stat].name + "-checkbox").checkbox("is checked")) {
+			return 0;
 		}
-		isd2[i] = flg;
+		let dl = document.getElementById("diflb").value, dr = document.getElementById("difrb").value, utg = $(".ui.dropdown").dropdown("get value");
+		dl = dl == "" || isNaN(Number(dl)) ? -10000 : Number(dl);
+		dr = dr == "" || isNaN(Number(dr)) ? 10000 : Number(dr);
+		utg = utg == '' ? 0 : utg.split(",");
+		if (p.diff != null && (p.diff < dl || p.diff > dr)) {
+			return 0;
+		}
+		if ($("#tag-combined-or").checkbox("is checked")) {
+			if (!utg.length)
+				return 1;
+			for (let j in utg) {
+				if (p.tag.some(i => i == utg[j]))
+					return 1;
+			}
+			return 0;
+		} else {
+			for (let j in utg)
+				if (!p.tag.some(i => i == utg[j]))
+					return 0;
+			return 1;
+		}
+	};
+	for (let i in problist) {
+		if (flt(problist[i])) {
+			curProbs.push(i);
+		}
 	}
-	refreshchart();
-	refreshList();
-	jumpToPage(curPage = 1);
+	curProbs.sort((a, b) => problist[b].time - problist[a].time);
+	refreshChart();
+	refreshMenu(1);
 }
 function clearFilter() {
 	for (let i in labels) {
@@ -816,141 +672,149 @@ function clearFilter() {
 }
 function getRandProblem() {
 	document.getElementById("rndprob").innerHTML = "";
-	let cnt = 0, p;
-	for (let i in problist) {
-		if (isd1[i] && isd2[i]) {
-			cnt++;
-		}
-	}
-	if (!cnt)
+	if (curProbs == 0)
 		return;
-	p = Math.floor(Math.random() * cnt);
-	for (let i in problist) {
-		if (isd1[i] && isd2[i] && !p--) {
-			document.getElementById("rndprob").innerHTML = document.getElementById(i + "-col").innerHTML;
-			document.getElementById("rndprob").setAttribute("class", getStatClass(pcol[i]));
-			document.getElementById("rndprob").setAttribute("style", "background-color: " + getStatColor(pcol[i]) + "!important");
+	let cnt = curProbs.length, p = Math.floor(Math.random() * cnt);
+	for (let i in curProbs) {
+		if (!p--) {
+			document.getElementById("rndprob").innerHTML = probHTML[curProbs[i]];
+			document.getElementById("rndprob").style.backgroundColor = statuses[problist[curProbs[i]].stat].color;
 			break;
 		}
 	}
 }
-
-function writeList(taglist) {
-	document.write("\
-	<div id=\"prob-list\">\
-		<figure class=\"highcharts-figure\">\
-			<div id=\"container\" style=\"height:300px\"></div>\
-			<p class=\"highcharts-description\"></p>\
-		</figure>\
-		<div class='ui form' style='margin: 1em 0'>\
-			<div class='eight fields'>");
+function buildList() {
 	for (let i in labels) {
-		document.write("\
-				<div class='field'>\
-					<div class='ui checkbox' id='" + i + "-checkbox'>\
-						<input type='checkbox' name='" + i + "-checkbox'>\
-						<label>\
-							选择 " + labels[i].name + "\
-						</label>\
-					</div>\
-				</div>");
+		let t = document.createElement("div");
+		t.className = "field";
+		t.innerHTML = "<div class='ui checkbox' id='" + i + "-checkbox'><input type='checkbox' name='" + i + "-checkbox'><label> 选择 " + labels[i].name + " </label></div></div>";
+		document.getElementsByClassName("eight fields")[0].appendChild(t);
 	}
-	document.write("\
-			</div>\
-		</div>\
-		<div class=\"ui input\">\
-			<input id=\"diflb\" style=\"width: 150;\" placeholder=\"筛选难度下界\"/>\
-		</div>\
-		<div class=\"ui input\">\
-			<input id=\"difrb\" style=\"width: 150;\" placeholder=\"筛选难度上界\"/>\
-		</div>\
-		<div id=\"get-tag\" class=\"ui selection multiple search dropdown\">\
-			<input type=\"hidden\" name=\"intag\"/>\
-				<div class=\"default text\">\
-					单击此处筛选题目标签\
-				</div>\
-			<div class=\"menu\">");
-	for (let i in taglist) {
-		document.write("<div class=\"item\" data-value=\"" + taglist[i] + "\">" + taglist[i] + "</div>")
+	for (let i in labels) {
+		$("#" + i + "checkbox").checkbox("set checked");
 	}
-	document.write("\
-			</div>\
-		</div>\
-		&nbsp;&nbsp;\
-		<div class=\"ui checkbox\">\
-			<input id='tag-combined-or' type='checkbox' name='example'>\
-			<label>\
-				按或合并标签\
-			</label>\
-		</div>\
-		<p></p>\
-		<button class=\"ui violet basic button\" onclick=\"setFilter()\">\
-			筛选\
-		</button>\
-		<button class=\"ui green basic button\" onclick=\"clearFilter()\">\
-			重置\
-		</button>\
-		<button class=\"ui orange basic button\" onclick=\"getRandProblem()\">\
-			随机跳题\
-		</button>\
-		<p></p>\
-		<table class='ui fixed celled table segment'>\
-			<tbody>\
-				<tr id='rndprob'>\
-				</tr>\
-			</tbody>\
-		</table>\
-		<div class='ui borderless menu' id='prob-list-menu'></div>\
-		<table class='ui fixed sortable celled table segment'>\
-			<thead>\
-				<tr>\
-					<th>编号</th>\
-					<th>标题</th>\
-					<th>链接</th>\
-					<th>难度</th>\
-					<th>标签</th>\
-				</tr>\
-			</thead>\
-			<tbody>");
+	for (let i in statuses) {
+		let t = document.createElement("div"), s = statuses[i];
+		t.className = "field";
+		t.innerHTML = "<div class='ui checkbox' id='" + s.name + "-checkbox'><input type='checkbox' name='" + s.name + "-checkbox'><label> 选择" + s.cname + "的题目 </label></div></div>";
+		document.getElementsByClassName("six fields")[0].appendChild(t);
+	}
+	for (let i in statuses) {
+		$("#" + statuses[i].name + "-checkbox").checkbox("set checked");
+	}
+	for (let i in tagList) {
+		let t = document.createElement("div");
+		t.className = "item";
+		t.setAttribute("data-value", tagList[i]);
+		t.innerHTML = tagList[i];
+		document.getElementById("tag-list").appendChild(t);
+	}
 	let tLst = [];
 	for (let i in problist) {
 		tLst.push(i);
 	}
 	tLst.sort((a, b) => problist[b].time - problist[a].time);
 	for (let id in tLst) {
-		let i = tLst[id];
-		isd1[i] = 1, isd2[i] = 1, pcol[i] = "#fff";
-		document.write("\
-					<tr id=\"" + i + "-col\">\
-						<td class='elipsed'>" + problist[i].org_a + "</td>\
-						<td class='elipsed'><a href=\"https://atcoder.jp/contests/" + problist[i].cid + "/tasks/" + problist[i].pid + "\">" + getDiffCirc(problist[i].diff) + "<span class=\"diff-" + getColor(problist[i].diff).name + "\">" + problist[i].title + "</span></a></td>\
-						<td>");
-		if (problist[i].tra)
-			document.write("<a class=\"link-black\" href=\"javascript:void(0);\" onclick='showProbModal(\"" + problist[i].cid + "\", \"" + i + "\", \"" + problist[i].uname + "&nbsp;题面\", 0)'>题面</a>&nbsp;&nbsp;");
-		if (problist[i].sol)
-			document.write("<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + problist[i].cid + "\", \"" + i + "\", \"" + problist[i].uname + "&nbsp;题解\", 1)'>题解</a>");
-		document.write("</td>\
-						<td class='elipsed'>" + (problist[i].diff == 100000 ? "unavailable" : problist[i].diff.toString()) + "</td>");
-		document.write("<td>");
-		if (problist[i].tag != undefined) {
-			let t = problist[i].tag;
-			for (let j in t) {
-				document.write("<div class=\"ui tag label\">" + t[j] + "</div>");
+		let i = tLst[id], curp = problist[i], s = "<tr id='" + i + "-col'><td class='elipsed'><a href='https://atcoder.jp/contests/" + curp.cid + "/tasks/" + curp.pid + "'>" + curp.uname.toUpperCase() + "</a></td><td class='elipsed'><a href='https://atcoder.jp/contests/" + curp.cid + "/tasks/" + curp.pid + "'>" + getDiffCirc(curp.diff) + "<span class='diff-" + getColor(curp.diff).name + "'>" + curp.title + "</span></a></td><td>";
+		if (problist[i].tra) {
+			s += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + problist[i].cid + "\", \"" + i + "\", \"" + problist[i].uname + "&nbsp;题面\", 0)'>题面</a>";
+			if (problist[i].sol) {
+				s += "&nbsp;&nbsp;";
 			}
 		}
-		document.write("</td></tr>");
+		if (problist[i].sol)
+			s += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + problist[i].cid + "\", \"" + i + "\", \"" + problist[i].uname + "&nbsp;题解\", 1)'>题解</a>";
+		s += "</td><td class='elipsed'>" + (problist[i].diff ?? "unavailable") + "</td><td>";
+		let t = problist[i].tag;
+		for (let j in t) {
+			s += "<div class='ui tag label'>" + t[j] + "</div>";
+		}
+		s += "</td></tr>";
+		probHTML[i] = s;
 	}
-	document.write("\
-				</tbody>\
-			</table>\
-		</div>");
 	$(".ui.dropdown").dropdown({
 		on: "hover",
 		transition: "drop",
 		allowAdditions: 1
 	});
 	clearFilter();
-	refreshchart();
+}
+function importUser() {
+	let usrList = document.getElementById("user-name").value.split(" "), cnt = 0;
+	window.localStorage.setItem("default-user-list", document.getElementById("user-name").value);
+	for (let i in problist) {
+		problist[i].stat = 0;
+	}
+	$("#sub-fetch-prog").progress("reset");
+	for (let i in usrList) {
+		let usr = usrList[i], cookie = window.localStorage.getItem("prob-stat-" + usr), lst = 0, usrNotFnd = 0, usrPrbStat = {};
+		if (usr == "")
+			continue;
+		if (cookie != undefined) {
+			cookie = JSON.parse(cookie);
+			usrPrbStat = cookie.value;
+			lst = cookie.lastFetchTime;
+		}
+		for (let i = lst; i != -1;) {
+			readTextFile("https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=" + usr + "&from_second=" + i, "json", function (txt, sta) {
+				if (sta == "200") {
+					let sub = JSON.parse(txt), cur = i;
+					if (sub == 0) {
+						if (i == 0) {
+							usrNotFnd = 1;
+							alert("未找到用户或者用户没有提交");
+						}
+						i = -1;
+						return;
+					}
+					for (let j in sub) {
+						if (!(sub[j].contest_id in contlist)) {
+							continue;
+						}
+						let isInContest = contlist[sub[j].contest_id].startTime <= sub[j].epoch_second && sub[j].epoch_second <= contlist[sub[j].contest_id].endTime,
+							subStat = (sub[j].result == "AC" ? "AC" : "UA") + (isInContest ? "-during-Contest" : sub[j].epoch_second < contlist[sub[j].contest_id].startTime ? "-before-Contest" : "");
+						subStat = statuses.findIndex(x => x.name == subStat);
+						if (!usrPrbStat[sub[j].problem_id]) {
+							usrPrbStat[sub[j].problem_id] = 0;
+						}
+						usrPrbStat[sub[j].problem_id] = Math.max(usrPrbStat[sub[j].problem_id], subStat);
+						lst = i = sub[j].epoch_second + 1;
+					}
+					if (i == cur) {
+						i = -1;
+						return;
+					}
+				} else {
+					alert("导入用户提交失败，请重试");
+					i = -1;
+					return;
+				}
+			});
+			if (i == -1) {
+				break;
+			}
+			for (let w = Date.now(); Date.now() < w + 1000;);
+		}
+		if (!usrNotFnd) {
+			window.localStorage.setItem("prob-stat-" + usr, JSON.stringify({
+				lastFetchTime: lst,
+				value: usrPrbStat
+			}));
+		}
+		for (let i in usrPrbStat) {
+			if (i in problist) {
+				problist[i].stat = Math.max(problist[i].stat, usrPrbStat[i]);
+			}
+		}
+		if (i == -1) {
+			break;
+		}
+		$("#sub-fetch-prog").progress({
+			percent: ++cnt / usrList.length * 100
+		});
+		for (let w = Date.now(); Date.now() < w + 1000;);
+	}
+	setFilter();
 }
 
 function jumptotop() {
@@ -978,16 +842,16 @@ function redr() {
 	window.location.href = "contest.html?id=" + escape(document.getElementById("rev-code").value);
 }
 function closecontestpage() {
-	document.getElementById("join-page").setAttribute("style", "display: none;");
-	document.getElementById("create-page").setAttribute("style", "display: none;");
+	document.getElementById("join-page").style.display = "none";
+	document.getElementById("create-page").style.display = "none";
 }
 function showjoinpage() {
 	closecontestpage();
-	document.getElementById("join-page").setAttribute("style", "display: block;");
+	document.getElementById("join-page").style.display = "block";
 }
 function showcreatepage() {
 	closecontestpage();
-	document.getElementById("create-page").setAttribute("style", "display: block;");
+	document.getElementById("create-page").style.display = "block";
 }
 function printInviteCode() {
 	let res = "", trans = new Base64();
@@ -1056,144 +920,18 @@ function printInviteCode() {
 	res = res.slice(0, res.length - 1) + '],"score":[';
 	for (let i in scr) {
 		if (i > 0) res += ",";
-		res += scr[i].toString();
+		res += scr[i];
 	}
 	res += "]}";
 	document.getElementById("print-code").value = trans.encode(res);
 	copyToClipboard(trans.encode(res));
 }
-function g2(w) {
-	return Math.floor(w / 10).toString() + (w % 10).toString();
-}
-function buildcontestpage() {
+function buildContestPage() {
 	let stTime = new Date(), edTime = new Date(Number(stTime) + 7200000),
 		startTime = formatDate(stTime, "yyyy-MM-ddThh:mm"),
 		finishTime = formatDate(edTime, "yyyy-MM-ddThh:mm");
-	document.write("\
-	<div id=\"cont-page\" style=\"display: none; \">\
-		<div class=\"ui secondary menu\">\
-			<a class=\"item\" onclick=\"showjoinpage()\">\
-				参加\
-			</a>\
-			<a class=\"item\" onclick=\"showcreatepage()\">\
-				创建\
-			</a>\
-		</div>\
-		<div id=\"join-page\">\
-			<div class=\"ui fluid input\">\
-				<input id=\"rev-code\" placeholder=\"输入邀请码\"/>\
-				<button class=\"ui button\" onclick=\"redr()\">\
-					跳转到比赛界面\
-				</button>\
-			</div>\
-		</div>\
-		<div id=\"create-page\">\
-			<h4 class=\"ui header\">\
-				设置比赛标题\
-			</h4>\
-			<div class=\"ui fluid input\">\
-				<input id=\"get-title\" placeholder=\"比赛标题\"/>\
-			</div>\
-			<h4 class=\"ui header\">\
-				设置比赛类型\
-			</h4>\
-			<div class=\"ui form\">\
-				<div class=\"three fields\">\
-					<div class=\"field\">\
-						<div class=\"ui radio checkbox\" id=\"cont-type-prac\">\
-							<input type=\"radio\" name=\"contest-type\"/>\
-							<label>\
-								练习赛\
-								<i class=\"ui question circle icon helper\" id=\"getPracticeContestInfo\"></i>\
-							</label>\
-						</div>\
-					</div>\
-					<div class=\"field\">\
-						<div class=\"ui radio checkbox\" id=\"cont-type-icpc\">\
-							<input type=\"radio\" name=\"contest-type\"/>\
-							<label>\
-								ICPC 赛制\
-								<i class=\"ui question circle icon helper\" id=\"getICPCContestInfo\"></i>\
-							</label>\
-						</div>\
-					</div>\
-					<div class=\"field\">\
-						<div class=\"ui radio checkbox\" id=\"cont-type-atc\">\
-							<input type=\"radio\" name=\"contest-type\"/>\
-							<label>\
-								AtCoder 赛制\
-								<i class=\"ui question circle icon helper\" id=\"getAtcoderContestInfo\"></i>\
-							</label>\
-						</div>\
-					</div>\
-				</div>\
-			</div>\
-			<div class=\"ui popup top center transition hidden\" id=\"practiceContestInfo\" style=\"width: 170px !important\">\
-				题目不加权，没有罚时\
-			</div>\
-			<div class=\"ui popup top center transition hidden\" id=\"ICPCContestInfo\" style=\"width: 210px !important\">\
-				题目不加权，罚时加和，每次不通过提交罚时为 5 分钟（CE 不计罚时）\
-			</div>\
-			<div class=\"ui popup top center transition hidden\" id=\"atcoderContestInfo\" style=\"width: 250px !important\">\
-				题目可以设置为加权，罚时取各题通过时间最大值，每次不通过提交罚时额外加 5 分钟（CE 不计罚时）\
-			</div>\
-			<h4 class=\"ui header\">\
-				设置开始时间\
-			</h4>\
-			<p></p>\
-			<div class=\"ui fluid input\">\
-				<input id=\"get-start-time\" type=\"datetime-local\" value=\"" + startTime + "\">\
-			</div>\
-			<h4 class=\"ui header\">\
-				设置结束时间\
-			</h4>\
-			<p></p>\
-			<div class=\"ui fluid input\">\
-				<input id=\"get-finish-time\" type=\"datetime-local\" value=\"" + finishTime + "\">\
-			</div>\
-			<h4 class=\"ui header\">\
-				参赛选手\
-				<i class=\"ui question circle icon helper\" id=\"getAccountInfo\"></i>\
-			</h4>\
-			<div class=\"ui popup top left transition hidden\" id=\"accountInfo\" style=\"width: 260px !important\">\
-				如果需要使用 CodeForces 账号，请使用 <code>&lt;AT账号&gt;(&lt;CF账号&gt;)</code> 的格式，如：<code>houzhiyuan(houzhiyuan123)</code>\
-			</div>\
-			<div class=\"ui fluid input\">\
-				<input id=\"get-players\" placeholder=\"以半角空格分隔\"/>\
-			</div>\
-			<h4 class=\"ui header\">\
-				比赛题目\
-			</h4>\
-			<div class=\"ui accordion\" id=\"id-sample\">\
-				<div class=\"title\">\
-					<i class=\"dropdown icon\"></i>\
-					格式说明\
-				</div>\
-				<div class=\"content\">\
-					<p>请填写题目链接内的 AtCoder 格式标识符（<code>atcoder.jp/<比赛标识符>/tasks/<题目标识符></code>），例如下：</p>\
-					<p><a href=\"https://atcoder.jp/contests/abc255/tasks/abc255_h\">ABC255Ex</a> 的标识符为 abc255_h；</p>\
-					<p><a href=\"https://atcoder.jp/contests/abc111/tasks/arc103_b\">ABC111D</a> 的标识符为 arc103_b；</p>\
-					<p><a href=\"https://atcoder.jp/contests/zone2021/tasks/zone2021_f\">ZONE2021F</a> 的标识符为 zone2021_f；</p>\
-					<p><a href=\"https://atcoder.jp/contests/code-festival-2017-qualc/tasks/code_festival_2017_qualc_f\">CF17QualcF</a> 的标识符为 code_festival_2017_qualc_f。</p>\
-					<p>同时支持 CodeForces 题目，格式为 'CFXXXI'（去掉引号），如 CF1A。</p>\
-					<p>在 AtCoder 赛制下可以为题目赋不同的权，格式为 <code><题目ID>(<分数>)</code> 的格式，如 <code>abc277_h(600)</code>。权默认为 1。</p>\
-				</div>\
-			</div>\
-			<p></p>\
-			<div class=\"ui fluid input\">\
-				<input id=\"get-problems\" placeholder=\"以半角空格分隔\"/>\
-			</div>\
-			<h4 class=\"ui header\">\
-				生成邀请码\
-			</h4>\
-			<div class=\"ui fluid input\">\
-				<input id=\"print-code\" placeholder=\"邀请码\"/>\
-				<button class=\"ui primary button\" onclick=\"printInviteCode()\" id=\"getCode\">\
-					获取邀请码\
-				</button>\
-			</div>\
-		</div>\
-	</div>");
+	document.getElementById("get-start-time").setAttribute("value", startTime);
+	document.getElementById("get-finish-time").setAttribute("value", finishTime);
 	let p = document.getElementById('rev-code');
 	if (window.localStorage.getItem('inv-code') != undefined)
 		p.value = window.localStorage.getItem('inv-code');
@@ -1220,125 +958,34 @@ function buildcontestpage() {
 	});
 	showjoinpage();
 }
-let curProb = [];
-function importUser() {
-	let prbStat = {}, usrList = document.getElementById("user-name").value.split(" ");
-	window.localStorage.setItem("default-user-list", document.getElementById("user-name").value);
-	for (let i in curProb) {
-		pcol[i] = "";
-	}
-	refreshList();
-	for (let i in usrList) {
-		let usr = usrList[i], cookie = window.localStorage.getItem("prob-stat-" + usr), lst = 0, usrNotFnd = 0, usrPrbStat = {};
-		if (usr == "")
-			continue;
-		if (cookie != undefined) {
-			cookie = JSON.parse(cookie);
-			usrPrbStat = cookie.value;
-			lst = cookie.lastFetchTime;
-		}
-		for (let i = lst; i != -1;) {
-			readTextFile("https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=" + usr + "&from_second=" + i.toString(), "json", function (txt, sta) {
-				if (sta == "200") {
-					let sub = JSON.parse(txt), cur = i;
-					if (sub == 0) {
-						if (i == 0) {
-							usrNotFnd = 1;
-							alert("未找到用户或者用户没有提交");
-						}
-						i = -1;
-						return;
-					}
-					for (let j in sub) {
-						if (!(sub[j].contest_id in contlist)) {
-							continue;
-						}
-						let isInContest = contlist[sub[j].contest_id].startTime <= sub[j].epoch_second && sub[j].epoch_second <= contlist[sub[j].contest_id].endTime,
-							subStat = (sub[j].result == "AC" ? "AC" : "UA") + (isInContest ? " in contest" : "");
-						if (getStatPriority(usrPrbStat[sub[j].problem_id]) < getStatPriority(subStat))
-							usrPrbStat[sub[j].problem_id] = subStat;
-						lst = i = sub[j].epoch_second + 1;
-					}
-					if (i == cur) {
-						i = -1;
-						return;
-					}
-				} else {
-					alert("导入用户提交失败，请重试");
-					i = -1;
-					return;
-				}
-			});
-			if (i == -1) {
-				break;
-			}
-			let w = Date.now();
-			while (Date.now() < w + 1000);
-		}
-		if (!usrNotFnd) {
-			window.localStorage.setItem("prob-stat-" + usr, JSON.stringify({
-				lastFetchTime: lst,
-				value: usrPrbStat
-			}));
-		}
-		for (let i in usrPrbStat) {
-			if (getStatPriority(prbStat[i]) < getStatPriority(usrPrbStat[i])) {
-				prbStat[i] = usrPrbStat[i];
-			}
-		}
-	}
-	curProb = [];
-	for (let i in prbStat) {
-		pcol[i] = prbStat[i];
-		curProb.push(i);
-	}
-	refreshList();
+function clearStorage() {
+	window.localStorage.clear();
+	location.reload();
 }
-
 function shownotyet() {
 	alert("in progress");
 }
 
-function buildw() {
-	document.write("\
-	<title>AtCoder 中文站</title>\
-	<div id=\"page-top\" class=\"display: inline;\"></div>\
-	<button class=\"circular ui icon button\" onclick=\"jumptotop()\" style=\"z-index: 999; position: fixed; right: 50; top: 50;\" id=\"button-top\">\
-		<i style=\"font-size: 1em;\" class=\"arrow up icon\">\
-		</i>\
-		<p style=\"font-size: 10px; display: inline-block;\">\
-			&nbsp;到顶部\
-		</p>\
-	</button>\
-	<button class=\"circular ui icon button\" onclick=\"jumptobottom()\" style=\"z-index: 999; position: fixed; right: 50; bottom: 80;\" id=\"button-end\">\
-		<i style=\"font-size: 1em;\" class=\"arrow down icon\">\
-		</i>\
-		<p style=\"font-size: 10px; display: inline-block;\">\
-			&nbsp;到底部\
-		</p>\
-	</button>\
-	<div class=\"ui large basic modal\" id=\"show-prob-list\">\
-	</div>\
-	<h1>\
-		<p align=\"center\">\
-			AtCoder 中文站\
-		</p>\
-	</h1>");
+function buildMainPage() {
+	$("#clear-storage").popup({
+		content: "在每次版本更新后，单击此键清空本地缓存用户数据",
+		on: "hover"
+	});
 	window.onscroll = function () {
 		let cur = $(document).scrollTop(), h = document.documentElement.clientHeight;
-		document.getElementById("button-top").setAttribute("style", cur - $("#page-top").offset().top < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
-		document.getElementById("button-end").setAttribute("style", $("#page-end").offset().top - h - cur < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
+		document.getElementById("button-top").style = cur - $("#page-top").offset().top < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;";
+		document.getElementById("button-end").style = $("#page-end").offset().top - h - cur < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;";
 	};
 	window.onclick = function () {
 		let cur = $(document).scrollTop(), h = document.documentElement.clientHeight;
-		document.getElementById("button-top").setAttribute("style", cur - $("#page-top").offset().top < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;");
-		document.getElementById("button-end").setAttribute("style", $("#page-end").offset().top - h - cur < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;");
+		document.getElementById("button-top").style = cur - $("#page-top").offset().top < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; top: 50;";
+		document.getElementById("button-end").style = $("#page-end").offset().top - h - cur < 500 ? "display: none;" : "z-index: 999; position: fixed; right: 50; bottom: 80;";
 	};
 	readTextFile("https://atcoder-for-chinese-developers.github.io/spiders/data.json", "json", function (text) {
 		try {
 			rawd = JSON.parse(text);
 		} catch {
-			alert("The spider does not work. Check your network connection or contact with the site owner.");
+			alert("The spider does not work. Check your network connection or contact with the site maintainer.");
 			return;
 		}
 	});
@@ -1352,88 +999,23 @@ function buildw() {
 		try {
 			tags = JSON.parse(text);
 		} catch {
-			tags = {};
-			alert("tags.json is not valid");
+			tags = [];
+			alert("tags.json is not valid. Check your network connection or contact with the site maintainer.");
 		}
 	});
 	readTextFile("src/tag-list.json", "json", function (text) {
 		tagList = JSON.parse(text);
 	});
-	document.write("\
-	<div class=\"ui pointing menu\">");
-	for (let i in labels) {
-		document.write("\
-		<a class=\"item\" onclick=\"labToggle('" + i + (labels[i].index == undefined ? "-lst" : "-table") + "')\">\
-			" + labels[i].name + "\
-		</a>");
-	}
-	document.write("\
-		<a class=\"item\" onclick=\"labToggle('prob-list')\">\
-			筛选\
-		</a>\
-		<a class=\"item\" onclick=\"labToggle('cont-page')\">\
-			比赛\
-		</a>\
-		<div class=\"right menu\">\
-			<div class=\"item\">\
-				<div class=\"ui transparent icon input\">\
-					<input type=\"text\" id=\"user-name\" placeholder=\"导入用户，多个用户用半角空格隔开\" style=\"width: 260px\"/>\
-					<i class=\"search link icon\" onclick=\"importUser()\"></i>\
-				</div>\
-			</div>\
-		</div>\
-	</div>");
+	initProbList(); `	`
 	$("#user-name").keydown(function (e) {
-		if (event.keyCode == 13) {
+		if (e.keyCode == 13) {
 			importUser();
 		}
 	});
-	for (let i in labels) {
-		if (labels[i].index == undefined) {
-			buildContList(i, labels[i].name, rawd[i]);
-		} else {
-			buildTable(i, labels[i].name, rawd[i], labels[i].index);
-		}
-	}
-	writeList(tagList);
-	buildcontestpage();
-
-	document.write("\
-	<div class=\"ui vertical footer segment\">\
-		<div class=\"ui center aligned container\">\
-			<div class=\"ui section divider\"></div>\
-				<div class=\"ui buttons\">\
-					<script>\
-						function jumplink1(){\
-							window.open(\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\");\
-						}\
-						function jumplink2(){\
-							window.open(\"https://atcoder.jp/\");\
-						}\
-						function jumplink3(){\
-							window.open(\"https://kenkoooo.com/atcoder/#/table/\");\
-						}\
-						function jumplink4(){\
-							window.open(\"https://semantic-ui.com/\");\
-						}\
-						function jumplink5(){\
-							window.open(\"https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B\");\
-						}\
-					</script>\
-					<button class=\"ui basic button\" onclick=\"jumplink1()\"><img src=\"images/logo1.png\"      class=\"ui centered mini image\"/></button>\
-					<button class=\"ui basic button\" onclick=\"jumplink2()\"><img src=\"images/atcoder.png\"    class=\"ui centered mini image\"/></button>\
-					<button class=\"ui basic button\" onclick=\"jumplink3()\"><img src=\"images/kenkoooo.png\"   class=\"ui centered mini image\"/></button>\
-					<button class=\"ui basic button\" onclick=\"jumplink4()\"><img src=\"images/semantic.png\"   class=\"ui centered mini image\"/></button>\
-					<button class=\"ui basic button\" onclick=\"jumplink5()\"><img src=\"images/greasyfork.png\" class=\"ui centered mini image\"/></button>\
-				</div>\
-				<p align=\"center\">\
-					Powered by <a href=\"https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese\">AtCoder for Chinese Develop Team</a>.\
-				</p>\
-		</div>\
-	</div>\
-	<div id=\"page-end\" style=\"display: inline;\"></div>");
-	labToggle('abc-table');
-	window.onclick();
+	buildList();
+	buildContestPage();
+	showjoinpage();
 	document.getElementById("user-name").value = window.localStorage.getItem("default-user-list");
 	importUser();
+	switchTable('abc');
 }
