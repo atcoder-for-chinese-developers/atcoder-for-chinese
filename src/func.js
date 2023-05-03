@@ -158,7 +158,7 @@ const statuses = [
 		color: "#9cf"
 	}
 ];
-let problist = [], contlist = [], rawd, traList, solList, tags = {}, prbs, tagList, probCell = {}, comboCell = {}, curProbs = [], probHTML = {};
+let problist = [], contlist = [], rawd, traList, solList, tags = {}, prbs, tagList, probCell = {}, curProbs = [], probHTML = {}, cmp = (a, b) => problist[b].time - problist[a].time;
 function transdiff(d) {
 	return d === null || d === undefined ? null : Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
 }
@@ -330,16 +330,19 @@ function initProbList() {
 	}
 }
 function switchTable(name) {
-	let prbIdx = labels[name].index, c = prbIdx.length, cnt = 0, cnte = 0, cnts = 0, cntt = 0, cnta = 0, cont = [], tbl = [], idxList = prbIdx.concat([]), data = rawd[name];
+	const prg = (i) => "<div class='ui top attached progress' id='" + i + "' style='position: relative !important'><div class='bar' style='background-color: #fff'></div><div class='bar' style='background-color: #ffeeba'></div><div class='bar' style='background-color: #fd9'></div><div class='bar' style='background-color: #c3e6cb'></div><div class='bar' style='background-color: #9ad59e'></div><div class='bar' style='background-color: #9cf'></div></div>";
+	let prbIdx = labels[name].index, c = prbIdx.length, cnt = 0, cnte = 0, cnts = 0, cntt = 0, cnta = 0, cont = [], tbl = [], idxList = prbIdx.concat([]), data = rawd[name], cntIdx = {}, cntCont = {};
 	document.getElementById("cont-data").innerHTML = "<div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div>";
 	for (let i in idxList) {
 		idxList[i] = prbIdx[i].split("/");
+		cntIdx[i] = [[0, 0, 0, 0, 0, 0], 0];
 	}
 	for (let i in data) {
 		cont.push(data[i]);
 	}
 	cont.sort((a, b) => b.start_epoch_second - a.start_epoch_second);
 	for (let i in cont) {
+		cntCont[i] = [[0, 0, 0, 0, 0, 0], 0];
 		let prb = new Array(c);
 		for (let j = 0; j < c; j++)
 			prb[j] = {
@@ -347,8 +350,10 @@ function switchTable(name) {
 			};
 		for (let j in cont[i].problems) {
 			let idx = cont[i].problems[j].problem_index, p = idxList.findIndex((t) => t.find((a) => a == idx) != undefined), cid = cont[i].id, pid = cont[i].problems[j].id, dif = transdiff(cont[i].problems[j].difficulty), uname = cont[i].id.toUpperCase() + "_" + idx, tag = problist[j].tag;
-			cnt++, cnta += problist[pid].stat > 2;
-			prb[p] = "<td id='cell-" + pid + "-" + cid + "' style='background-color: " + statuses[problist[pid].stat].color + "'><a href='https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "' class='diff-" + getColor(dif).name + "'><ta href='javascript:void(0)' title='难度：" + (dif ?? "暂未评定") + "'" + getDiffCirc(dif) + idx + "&nbsp;</ta></a>";
+			cnt++, cnta += problist[pid].stat > 2, sta = problist[pid].stat;
+			cntIdx[p][0][sta]++, cntIdx[p][1]++;
+			cntCont[i][0][sta]++, cntCont[i][1]++;
+			prb[p] = "<td id='cell-" + pid + "-" + cid + "' style='background-color: " + statuses[sta].color + "'><a href='https://atcoder.jp/contests/" + cid + "/tasks/" + pid + "' class='diff-" + getColor(dif).name + "'><ta href='javascript:void(0)' title='难度：" + (dif ?? "暂未评定") + "'" + getDiffCirc(dif) + idx + "&nbsp;</ta></a>";
 			if (problist[pid].tra) {
 				prb[p] += "<a class='link-black' href='javascript:void(0);' onclick='showProbModal(\"" + cid + "\", \"" + pid + "\", \"" + uname + "&nbsp;题面\", 0)'>题面</a>";
 				cnte++;
@@ -361,7 +366,7 @@ function switchTable(name) {
 				cnts++;
 			}
 			if (tag != 0) {
-				prb[p] += "<div onclick='tagToggle(" + pid + "-" + name + "')' style='position: relative; right: -5;'><a class='floating ui circular teal right label' style='background-color: #50d0d0!important'>" + tag.length + "</a></div><div id='tag-" + pid + "-" + name + "' style='display: none;'>";
+				prb[p] += "<div onclick='tagToggle(\"" + pid + "-" + name + "\")' style='position: relative'><a class='floating ui circular teal right label' style='background-color: #50d0d0!important'>" + tag.length + "</a></div><div id='tag-" + pid + "-" + name + "' style='display: none;'>";
 				for (let t in tag) {
 					prb[p] += "<p class='ui tag label'>" + tag[t] + "</p>";
 				}
@@ -382,20 +387,14 @@ function switchTable(name) {
 	let t = document.createElement("table"), s = "<thead class='full-width'><tr><th>比赛</th>";
 	t.className = "ui fixed celled definition table segment";
 	for (let i = 0; i < c; i++) {
-		s += "<th id='cell-" + i + "-" + name + "'>" + prbIdx[i] + "</th>";
-		comboCell["cell-" + i + "-" + name] = [];
+		s += "<th id='cell-" + i + "-" + name + "'><div class='ui segment clrstyle'>" + prg("prg-" + i) + "<div>" + prbIdx[i] + "</div></div></th>";
 	}
 	s += "</tr></thead><tbody>";
 	for (let i in cont) {
 		let cid = cont[i].id;
 		s += "<tr><td class='elipsed' id='cell-" + cid + "-" + name + "'><a href='https://atcoder.jp/contests/" + cid + "'>" + cid.toUpperCase() + "</a></td>";
-		comboCell["cell-" + cid + "-" + name] = [];
 		for (let j in tbl[i]) {
 			s += tbl[i][j].html;
-			if (tbl[i][j].html != "<td></td>") {
-				comboCell["cell-" + j + "-" + name].push(tbl[i][j].id);
-				comboCell["cell-" + cid + "-" + name].push(tbl[i][j].id);
-			}
 		}
 		s += "</tr>";
 	}
@@ -403,6 +402,12 @@ function switchTable(name) {
 	t.innerHTML = s;
 	document.getElementById("cont-data").innerHTML = "";
 	document.getElementById("cont-data").appendChild(t);
+	for (let i = 0; i < c; i++) {
+		$("#prg-" + i).progress({
+			total: cntIdx[i][1],
+			value: cntIdx[i][0]
+		});
+	}
 	$("#progress-tre").progress({
 		percent: cnte / cnt * 100,
 		text: {
@@ -459,7 +464,7 @@ function switchList(name) {
 				cnts++;
 			}
 			if (tag != 0) {
-				cur += "<div onclick='tagToggle(" + pid + "-" + name + "')' style='position: relative; right: -5;'><a class='floating ui circular teal right label' style='background-color: #50d0d0!important'>" + tag.length + "</a></div><div id='tag-" + pid + "-" + name + "' style='display: none;'>";
+				cur += "<div onclick='tagToggle(\"" + pid + "-" + name + "\")' style='position: relative; right: -5;'><a class='floating ui circular teal right label' style='background-color: #50d0d0!important'>" + tag.length + "</a></div><div id='tag-" + pid + "-" + name + "' style='display: none;'>";
 				for (let t in tag) {
 					cur += "<p class='ui tag label'>" + tag[t] + "</p>";
 				}
@@ -483,10 +488,8 @@ function switchList(name) {
 		let cid = cont[i].id, t = document.createElement("div"), s = "";
 		t.className = "ui segment";
 		s = "<div class='ui top attached large label elipsed' id='cell-" + cid + "'><a href='https://atcoder.jp/contests/" + cid + "'>" + cont[i].title + "（" + cid.toUpperCase() + "）</a></div><div style='overflow-x: " + (tbl[i].length < 10 ? "hidden" : "scroll") + ";'><div style='width: " + (tbl[i].length < 10 ? "auto" : 7 * tbl[i].length) + "em;'><table class='ui fixed celled table'><tbody><tr>";
-		comboCell["cell-" + cid] = [];
 		for (let j in tbl[i]) {
 			s += tbl[i][j].html;
-			comboCell["cell-" + cid].push(tbl[i][j].id);
 		}
 		s += "</tr></tbody></table></div></div></div>";
 		t.innerHTML = s;
@@ -623,6 +626,7 @@ function refreshChart() {
 	});
 }
 function setFilter() {
+	document.getElementById("rndprob").innerHTML = "";
 	document.getElementById("archive-show").innerHTML = "<tr><div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div></tr>";
 	curProbs = [];
 	let flt = function (p) {
@@ -633,7 +637,7 @@ function setFilter() {
 		dl = dl == "" || isNaN(Number(dl)) ? -10000 : Number(dl);
 		dr = dr == "" || isNaN(Number(dr)) ? 10000 : Number(dr);
 		utg = utg == '' ? 0 : utg.split(",");
-		if (p.diff != null && (p.diff < dl || p.diff > dr)) {
+		if ((p.diff != null && (p.diff < dl || p.diff > dr)) || (p.diff === null && ((p.diff != -10000 || p.diff != 10000)))) {
 			return 0;
 		}
 		if ($("#tag-combined-or").checkbox("is checked")) {
@@ -656,9 +660,25 @@ function setFilter() {
 			curProbs.push(i);
 		}
 	}
-	curProbs.sort((a, b) => problist[b].time - problist[a].time);
+	curProbs.sort(cmp);
 	refreshMenu(1);
 	refreshChart();
+}
+function setSortByTime(){
+	cmp = (a, b) => problist[b].time - problist[a].time;
+	setFilter();
+}
+function setSortByTitle(){
+	cmp = (a, b) => problist[a].title.localeCompare(problist[b].title);
+	setFilter();
+}
+function setSortByDiff(){
+	cmp = (a, b) => problist[b].diff - problist[a].diff;
+	setFilter();
+}
+function setSortByTags(){
+	cmp = (a, b) => problist[b].tag.length - problist[a].tag.length;
+	setFilter();
 }
 function clearFilter() {
 	for (let i in labels) {
@@ -747,81 +767,79 @@ function importUser() {
 	}
 	$("#sub-fetch-prog").progress("reset");
 	let recordUserSub = function (i, lst) {
-			window.localStorage.setItem("prob-stat-" + usrList[i], JSON.stringify({
-				lastFetchTime: lst,
-				value: usrPrbStat
-			}));
-			for (let i in usrPrbStat) {
-				if (i in problist) {
-					problist[i].stat = Math.max(problist[i].stat, usrPrbStat[i]);
-				}
+		window.localStorage.setItem("prob-stat-" + usrList[i], JSON.stringify({
+			lastFetchTime: lst,
+			value: usrPrbStat
+		}));
+		for (let i in usrPrbStat) {
+			if (i in problist) {
+				problist[i].stat = Math.max(problist[i].stat, usrPrbStat[i]);
 			}
-			$("#sub-fetch-prog").progress({
-				percent: (i + 1) / usrList.length * 100
-			});
-		}, fetchUserSub = function (i, lst, f) {
-			if (i >= usrList.length) {
-				return;
+		}
+		$("#sub-fetch-prog").progress({
+			percent: (i + 1) / usrList.length * 100
+		});
+	}, fetchUserSub = function (i, lst, f) {
+		if (i >= usrList.length) {
+			setFilter();
+			switchTable("abc");
+			return;
+		}
+		let usr = usrList[i];
+		if (usr === "") {
+			f(i + 1, 0, f);
+			return;
+		}
+		if (!lst) {
+			let cookie = window.localStorage.getItem("prob-stat-" + usr);
+			if (cookie != undefined) {
+				cookie = JSON.parse(cookie);
+				usrPrbStat = cookie.value;
+				lst = cookie.lastFetchTime;
 			}
-			let usr = usrList[i];
-			console.log(i, usr, lst);
-			if (usr === "") {
-				f(i + 1, 0, f);
-				return;
-			}
-			if (!lst) {
-				let cookie = window.localStorage.getItem("prob-stat-" + usr);
-				if (cookie != undefined) {
-					cookie = JSON.parse(cookie);
-					usrPrbStat = cookie.value;
-					lst = cookie.lastFetchTime;
-				}
-			}
-			readTextFile("https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=" + usr + "&from_second=" + lst, "json", function (txt, sta) {
-				console.log("req ", usr, lst);
-				if (sta == "200") {
-					setTimeout(function() {
-						let sub = JSON.parse(txt), cur = lst;
-						if (sub == 0) {
-							if (!lst) {
-								usrNotFnd = 1;
-								alert(usr + "：未找到用户或者用户没有提交");
-							} else {
-								recordUserSub(i, lst);
-							}
-							f(i + 1, 0, f);
-							return;
-						}
-						for (let j in sub) {
-							if (!(sub[j].contest_id in contlist)) {
-								continue;
-							}
-							let isInContest = contlist[sub[j].contest_id].startTime <= sub[j].epoch_second && sub[j].epoch_second <= contlist[sub[j].contest_id].endTime,
-								subStat = (sub[j].result == "AC" ? "AC" : "NA") + (isInContest ? "-during-Contest" : sub[j].epoch_second < contlist[sub[j].contest_id].startTime ? "-before-Contest" : "");
-							subStat = statuses.findIndex(x => x.name == subStat);
-							if (!usrPrbStat[sub[j].problem_id]) {
-								usrPrbStat[sub[j].problem_id] = 0;
-							}
-							usrPrbStat[sub[j].problem_id] = Math.max(usrPrbStat[sub[j].problem_id], subStat);
-							lst = sub[j].epoch_second + 1;
-						}
-						if (lst == cur) {
-							recordUserSub(i, lst);
-							usrPrbStat = {};
-							f(i + 1, 0, f);
+		}
+		readTextFile("https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=" + usr + "&from_second=" + lst, "json", function (txt, sta) {
+			if (sta == "200") {
+				setTimeout(function () {
+					let sub = JSON.parse(txt), cur = lst;
+					if (sub == 0) {
+						if (!lst) {
+							usrNotFnd = 1;
+							alert(usr + "：未找到用户或者用户没有提交");
 						} else {
-							f(i, lst, f);
+							recordUserSub(i, lst);
 						}
-					}, 999);
-				} else {
-					alert(usr + "：导入用户提交失败，请重试");
-					f(i + 1, 0, f);
-				}
-			}, 0);
-		};
+						f(i + 1, 0, f);
+						return;
+					}
+					for (let j in sub) {
+						if (!(sub[j].contest_id in contlist)) {
+							continue;
+						}
+						let isInContest = contlist[sub[j].contest_id].startTime <= sub[j].epoch_second && sub[j].epoch_second <= contlist[sub[j].contest_id].endTime,
+							subStat = (sub[j].result == "AC" ? "AC" : "NA") + (isInContest ? "-during-Contest" : sub[j].epoch_second < contlist[sub[j].contest_id].startTime ? "-before-Contest" : "");
+						subStat = statuses.findIndex(x => x.name == subStat);
+						if (!usrPrbStat[sub[j].problem_id]) {
+							usrPrbStat[sub[j].problem_id] = 0;
+						}
+						usrPrbStat[sub[j].problem_id] = Math.max(usrPrbStat[sub[j].problem_id], subStat);
+						lst = sub[j].epoch_second + 1;
+					}
+					if (lst == cur) {
+						recordUserSub(i, lst);
+						usrPrbStat = {};
+						f(i + 1, 0, f);
+					} else {
+						f(i, lst, f);
+					}
+				}, 999);
+			} else {
+				alert(usr + "：导入用户提交失败，请重试");
+				f(i + 1, 0, f);
+			}
+		}, 0);
+	};
 	fetchUserSub(0, 0, fetchUserSub);
-	setFilter();
-	switchTable("abc");
 }
 
 function jumptotop() {
