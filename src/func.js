@@ -361,7 +361,7 @@ function switchTable(name) {
 				cnts++;
 			}
 			if (tag != 0) {
-				prb[p] += "<div onclick='tagToggle('" + pid + "-" + name + "')' style='position: relative; right: -5;'><a class='floating ui circular teal right label' style='background-color: #50d0d0!important'>" + tag.length + "</a></div><div id='tag-" + pid + "-" + name + "' style='display: none;'>";
+				prb[p] += "<div onclick='tagToggle(" + pid + "-" + name + "')' style='position: relative; right: -5;'><a class='floating ui circular teal right label' style='background-color: #50d0d0!important'>" + tag.length + "</a></div><div id='tag-" + pid + "-" + name + "' style='display: none;'>";
 				for (let t in tag) {
 					prb[p] += "<p class='ui tag label'>" + tag[t] + "</p>";
 				}
@@ -459,7 +459,7 @@ function switchList(name) {
 				cnts++;
 			}
 			if (tag != 0) {
-				cur += "<div onclick='tagToggle('" + pid + "-" + name + "')' style='position: relative; right: -5;'><a class='floating ui circular teal right label' style='background-color: #50d0d0!important'>" + tag.length + "</a></div><div id='tag-" + pid + "-" + name + "' style='display: none;'>";
+				cur += "<div onclick='tagToggle(" + pid + "-" + name + "')' style='position: relative; right: -5;'><a class='floating ui circular teal right label' style='background-color: #50d0d0!important'>" + tag.length + "</a></div><div id='tag-" + pid + "-" + name + "' style='display: none;'>";
 				for (let t in tag) {
 					cur += "<p class='ui tag label'>" + tag[t] + "</p>";
 				}
@@ -523,6 +523,7 @@ function switchList(name) {
 	labToggle("cont-tbl");
 }
 function refreshMenu(x) {
+	document.getElementById("archive-show").innerHTML = "";
 	let cnt = Math.floor((curProbs.length + 9) / 10), html = "", p = 0;
 	if (x < 1 || x > cnt)
 		return;
@@ -545,7 +546,6 @@ function refreshMenu(x) {
 	}
 	html += "<a class='item' onclick='refreshMenu(" + cnt + ")'><i class='angle double right icon'></i></a>";
 	document.getElementById("prob-list-menu").innerHTML = html;
-	document.getElementById("archive-show").innerHTML = "";
 	for (let i in curProbs) {
 		if (x * 10 - 10 <= p && p < x * 10) {
 			let t = document.createElement("tr");
@@ -623,7 +623,7 @@ function refreshChart() {
 	});
 }
 function setFilter() {
-	document.getElementById("archive-show").innerHTML = "<tr><div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div></tr>";;
+	document.getElementById("archive-show").innerHTML = "<tr><div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div></tr>";
 	curProbs = [];
 	let flt = function (p) {
 		if (!$("#" + contlist[p.cid].type + "-checkbox").checkbox("is checked") || !$("#" + statuses[p.stat].name + "-checkbox").checkbox("is checked")) {
@@ -657,8 +657,8 @@ function setFilter() {
 		}
 	}
 	curProbs.sort((a, b) => problist[b].time - problist[a].time);
-	refreshChart();
 	refreshMenu(1);
+	refreshChart();
 }
 function clearFilter() {
 	for (let i in labels) {
@@ -740,81 +740,88 @@ function buildList() {
 	clearFilter();
 }
 function importUser() {
-	let usrList = document.getElementById("user-name").value.split(" "), cnt = 0;
+	let usrList = document.getElementById("user-name").value.split(" "), usrPrbStat = {};
 	window.localStorage.setItem("default-user-list", document.getElementById("user-name").value);
 	for (let i in problist) {
 		problist[i].stat = 0;
 	}
 	$("#sub-fetch-prog").progress("reset");
-	for (let i in usrList) {
-		let usr = usrList[i], cookie = window.localStorage.getItem("prob-stat-" + usr), lst = 0, usrNotFnd = 0, usrPrbStat = {};
-		if (usr == "")
-			continue;
-		if (cookie != undefined) {
-			cookie = JSON.parse(cookie);
-			usrPrbStat = cookie.value;
-			lst = cookie.lastFetchTime;
-		}
-		for (let i = lst; i != -1;) {
-			readTextFile("https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=" + usr + "&from_second=" + i, "json", function (txt, sta) {
-				if (sta == "200") {
-					let sub = JSON.parse(txt), cur = i;
-					if (sub == 0) {
-						if (i == 0) {
-							usrNotFnd = 1;
-							alert("未找到用户或者用户没有提交");
-						}
-						i = -1;
-						return;
-					}
-					for (let j in sub) {
-						if (!(sub[j].contest_id in contlist)) {
-							continue;
-						}
-						let isInContest = contlist[sub[j].contest_id].startTime <= sub[j].epoch_second && sub[j].epoch_second <= contlist[sub[j].contest_id].endTime,
-							subStat = (sub[j].result == "AC" ? "AC" : "UA") + (isInContest ? "-during-Contest" : sub[j].epoch_second < contlist[sub[j].contest_id].startTime ? "-before-Contest" : "");
-						subStat = statuses.findIndex(x => x.name == subStat);
-						if (!usrPrbStat[sub[j].problem_id]) {
-							usrPrbStat[sub[j].problem_id] = 0;
-						}
-						usrPrbStat[sub[j].problem_id] = Math.max(usrPrbStat[sub[j].problem_id], subStat);
-						lst = i = sub[j].epoch_second + 1;
-					}
-					if (i == cur) {
-						i = -1;
-						return;
-					}
-				} else {
-					alert("导入用户提交失败，请重试");
-					i = -1;
-					return;
-				}
-			});
-			if (i == -1) {
-				break;
-			}
-			for (let w = Date.now(); Date.now() < w + 1000;);
-		}
-		if (!usrNotFnd) {
-			window.localStorage.setItem("prob-stat-" + usr, JSON.stringify({
+	let recordUserSub = function (i, lst) {
+			window.localStorage.setItem("prob-stat-" + usrList[i], JSON.stringify({
 				lastFetchTime: lst,
 				value: usrPrbStat
 			}));
-		}
-		for (let i in usrPrbStat) {
-			if (i in problist) {
-				problist[i].stat = Math.max(problist[i].stat, usrPrbStat[i]);
+			for (let i in usrPrbStat) {
+				if (i in problist) {
+					problist[i].stat = Math.max(problist[i].stat, usrPrbStat[i]);
+				}
 			}
-		}
-		if (i == -1) {
-			break;
-		}
-		$("#sub-fetch-prog").progress({
-			percent: ++cnt / usrList.length * 100
-		});
-		for (let w = Date.now(); Date.now() < w + 1000;);
-	}
+			$("#sub-fetch-prog").progress({
+				percent: (i + 1) / usrList.length * 100
+			});
+		}, fetchUserSub = function (i, lst, f) {
+			if (i >= usrList.length) {
+				return;
+			}
+			let usr = usrList[i];
+			console.log(i, usr, lst);
+			if (usr === "") {
+				f(i + 1, 0, f);
+				return;
+			}
+			if (!lst) {
+				let cookie = window.localStorage.getItem("prob-stat-" + usr);
+				if (cookie != undefined) {
+					cookie = JSON.parse(cookie);
+					usrPrbStat = cookie.value;
+					lst = cookie.lastFetchTime;
+				}
+			}
+			readTextFile("https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=" + usr + "&from_second=" + lst, "json", function (txt, sta) {
+				console.log("req ", usr, lst);
+				if (sta == "200") {
+					setTimeout(function() {
+						let sub = JSON.parse(txt), cur = lst;
+						if (sub == 0) {
+							if (!lst) {
+								usrNotFnd = 1;
+								alert(usr + "：未找到用户或者用户没有提交");
+							} else {
+								recordUserSub(i, lst);
+							}
+							f(i + 1, 0, f);
+							return;
+						}
+						for (let j in sub) {
+							if (!(sub[j].contest_id in contlist)) {
+								continue;
+							}
+							let isInContest = contlist[sub[j].contest_id].startTime <= sub[j].epoch_second && sub[j].epoch_second <= contlist[sub[j].contest_id].endTime,
+								subStat = (sub[j].result == "AC" ? "AC" : "NA") + (isInContest ? "-during-Contest" : sub[j].epoch_second < contlist[sub[j].contest_id].startTime ? "-before-Contest" : "");
+							subStat = statuses.findIndex(x => x.name == subStat);
+							if (!usrPrbStat[sub[j].problem_id]) {
+								usrPrbStat[sub[j].problem_id] = 0;
+							}
+							usrPrbStat[sub[j].problem_id] = Math.max(usrPrbStat[sub[j].problem_id], subStat);
+							lst = sub[j].epoch_second + 1;
+						}
+						if (lst == cur) {
+							recordUserSub(i, lst);
+							usrPrbStat = {};
+							f(i + 1, 0, f);
+						} else {
+							f(i, lst, f);
+						}
+					}, 999);
+				} else {
+					alert(usr + "：导入用户提交失败，请重试");
+					f(i + 1, 0, f);
+				}
+			}, 0);
+		};
+	fetchUserSub(0, 0, fetchUserSub);
 	setFilter();
+	switchTable("abc");
 }
 
 function jumptotop() {
@@ -1006,7 +1013,7 @@ function buildMainPage() {
 	readTextFile("src/tag-list.json", "json", function (text) {
 		tagList = JSON.parse(text);
 	});
-	initProbList(); `	`
+	initProbList();
 	$("#user-name").keydown(function (e) {
 		if (e.keyCode == 13) {
 			importUser();
