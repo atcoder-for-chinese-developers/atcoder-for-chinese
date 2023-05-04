@@ -1,0 +1,63 @@
+<head>
+    <meta charset="UTF-8" />
+    <meta name="referrer" content="no-referrer" />
+    <link rel="stylesheet" href="../src/style.css" />
+    <link rel="shortcut icon" href="../images/favicon.ico" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/themes/prism.min.css"
+        integrity="sha512-/mZ1FHPkg6EKcxo0fKXF51ak6Cr2ocgDi5ytaTBjsQZIH/RNs6GF6+oId/vPe3eJB836T36nXwVh/WBl/cWT4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/prism/9000.0.1/plugins/line-numbers/prism-line-numbers.min.css"
+        integrity="sha512-3/cdM9qaJ5lBlzRKqwhMw+ZcNCVonz66BO6HgJudG/P1azm9wFrru31SsBa4T4Ew1AOH8HfDXSWS6emWwPl42A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.3/katex.min.css"
+        integrity="sha512-6VMVcy7XQNyarhVuiL50FzpgCFKsyTd6YO93aaQEyET+BNaWvj0IgKR86Bf6+AmWczxAcSnL+JGjo+iStgO1gQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css"
+        integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A=="
+        crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+        integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"
+        integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/highcharts.min.js"
+        integrity="sha512-AuSt9Vn4P8B4rNTBOOJGGqI89ktzlGugnty4mZa+dR7koM6sJCJVFwtRiM6lIVmFwHOGIdSCyY1l6UcD78CaBA=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/exporting.min.js"
+        integrity="sha512-r0RhVDm8cW1TRmbiQN1wnfXBRxUkoao6eMPEDs+HpL5QyDdmwKKFTfztgOdtgzDqkYC60C116MWKtkT76F0IAg=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/export-data.min.js"
+        integrity="sha512-empeVXImIgoDsUiZt8rvDYuIULbNE1s1c51wKGBo0fRn6LU8XT3rA/48WPWfnG1CaonZyIEk4P8qDIdtBOmVHA=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/10.2.1/modules/accessibility.min.js"
+        integrity="sha512-3v4MQPK+fT3z2i57H073Q3Emgd0TCeq+rvAFeDCd9vZ4VnYmtGU25LI5cni1ryxfHA8KDPg5MMTIqQLfabQlhA=="
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <noscript> You need to enable JavaScript to view the page. </noscript>
+    <div class="mdpagetop">
+        <a href="..">
+            <img src="../images/logo2.png" class="mdpageicon" />
+        </a>
+        <span class="mdpagetop title"> </span>
+        <button class="ui animated right button" onclick="jumpLink2()" style="right: 0; top: 5px; position: absolute">
+            <div class="visible content">原题链接</div>
+            <div class="hidden content"></div>
+        </button>
+    </div>
+    <div class="mdpage">
+        <div style="top: -25px; position: relative">
+            <button class="ui grey label" onclick="tagToggle()">
+                切换标签显示
+            </button>
+            <div id="tags" style="position: relative; display: none">
+                获取中
+            </div>
+        </div>
+        <div id="content"></div>
+    </div>
+    <script src="./page.js"></script>
+</body>
