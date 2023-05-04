@@ -684,10 +684,13 @@ function clearFilter() {
 	for (let i in labels) {
 		$("#" + i + "-checkbox").checkbox("set checked");
 	}
-	document.getElementById("diflb").value = "";
-	document.getElementById("difrb").value = "";
+	for (let i in statuses) {
+		$("#" + statuses[i].name + "-checkbox").checkbox("set checked");
+	}
+	document.getElementById("diflb").value = document.getElementById("difrb").value = "";
 	$(".ui.dropdown").dropdown("clear");
 	$("#tag-combined-or").checkbox("uncheck");
+	setSortByTime();
 	setFilter();
 }
 function getRandProblem() {
