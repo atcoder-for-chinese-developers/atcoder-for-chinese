@@ -1,3 +1,10 @@
+/**
+ * Read files from the web.
+ * @param {string} file file name
+ * @param {string} ext file extension
+ * @param {function} callback callback function after the file fetches down
+ * @param {boolean} isLocked set to true if the statement locks following statements
+ */
 function readTextFile(file, ext, callback, isLocked = true) {
 	let xhr = new XMLHttpRequest();
 	xhr.overrideMimeType("application/" + ext);
@@ -13,6 +20,10 @@ function readTextFile(file, ext, callback, isLocked = true) {
 	}
 }
 
+/**
+ * Copy texts to system clipboard.
+ * @param {string} txt the text.
+ */
 function copyToClipboard(txt) {
 	const t = document.createElement('textarea');
 	t.value = txt;
@@ -22,6 +33,9 @@ function copyToClipboard(txt) {
 	document.body.removeChild(t);
 }
 
+/**
+ * Create an object that can encode and decode base64.
+ */
 function Base64() {
 	_keyStr = "Csa56TWEOMFkpGH2cmb4Xi8vzYJo3efghldnSwDjNx9PVrI1uKBtRAZQ0qL7yU/+=";
 	this.encode = function (input) {
@@ -159,18 +173,36 @@ const statuses = [
 	}
 ];
 let problist = [], contlist = [], rawd, traList, solList, tags = {}, prbs, tagList, probCell = {}, curProbs = [], probHTML = {}, cmp = (a, b) => problist[b].time - problist[a].time;
+/**
+ * Transfer kenkoooo api difficulty to shown difficulty.
+ * @param {number} d the difficulty from api.
+ * @returns {number} null if d is not a number. Otherwise a number representing shown difficulty.
+ */
 function transdiff(d) {
 	return d === null || d === undefined ? null : Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
 }
+/**
+ * Toggle menu labs.
+ * @param {string} name target lab
+ */
 function labToggle(name) {
 	document.getElementById("cont-tbl").style.display = "none";
 	document.getElementById("prob-archive").style.display = "none";
 	document.getElementById("cont-page").style.display = "none";
 	document.getElementById(name).style.display = "block";
 }
+/**
+ * Toggle problem tags to show or hide.
+ * @param {string} id id of the problem.
+ */
 function tagToggle(id) {
 	document.getElementById("tag-" + id).setAttribute("style", document.getElementById("tag-" + id).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
 }
+/**
+ * Returns color info of the problem difficulty.
+ * @param {number} k difficulty.
+ * @returns {object} an object with rgb code, color name and filling percent.
+ */
 function getColor(k) {
 	if (k == null) {
 		return {
@@ -228,6 +260,11 @@ function getColor(k) {
 		};
 	}
 }
+/**
+ * Return html code of diff circle.
+ * @param {*} d difficulty.
+ * @returns {string} A string with html code of the d-difficulty circle.
+ */
 function getDiffCirc(d) {
 	let t = getColor(d);
 	if (d == null) {
@@ -244,6 +281,12 @@ function getDiffCirc(d) {
 		alert("!");
 	}
 }
+/**
+ * Time formatter.
+ * @param {object} s string or number or other objects representing time.
+ * @param {string} fmt format of time
+ * @returns {string} A string with formatted time.
+ */
 function formatDate(s, fmt = "yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒") {
 	if (s == "")
 		return "";
@@ -270,6 +313,13 @@ function formatDate(s, fmt = "yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒") {
 	let t = new Date(s).format(fmt);
 	return t.toString();
 }
+/**
+ * Show Modal of tra/sol data of the problem.
+ * @param {string} cid contest id
+ * @param {string} pid problem id
+ * @param {string} title the title of modal
+ * @param {boolean} op true if showing translations data. solutions data otherwise.
+ */
 function showProbModal(cid, pid, title, op) {
 	let list = (op ? solList : traList)[cid][pid], content = "<div class='ui segment'><h2 class='ui medium block top attached header'>" + title + "</h2>";
 	if (list == 0) {
@@ -286,6 +336,9 @@ function showProbModal(cid, pid, title, op) {
 	$("#show-prob-list").modal("show");
 }
 
+/**
+ * Init 'problist' object from fetched data.
+ */
 function initProbList() {
 	for (let i in labels) {
 		let data = rawd[i];
@@ -329,6 +382,10 @@ function initProbList() {
 		}
 	}
 }
+/**
+ * Show problems table of a contest type.
+ * @param {string} name contest type
+ */
 function switchTable(name) {
 	const prg = (i) => "<div class='ui top attached progress' id='" + i + "' style='position: relative !important'><div class='bar' style='background-color: #fff'></div><div class='bar' style='background-color: #ffeeba'></div><div class='bar' style='background-color: #fd9'></div><div class='bar' style='background-color: #c3e6cb'></div><div class='bar' style='background-color: #9ad59e'></div><div class='bar' style='background-color: #9cf'></div></div>";
 	let prbIdx = labels[name].index, c = prbIdx.length, cnt = 0, cnte = 0, cnts = 0, cntt = 0, cnta = 0, cont = [], tbl = [], idxList = prbIdx.concat([]), data = rawd[name], cntIdx = {}, cntCont = {};
@@ -438,6 +495,10 @@ function switchTable(name) {
 	});
 	labToggle("cont-tbl");
 }
+/**
+ * Show problems list of a contest type.
+ * @param {string} name contest type
+ */
 function switchList(name) {
 	let cnt = 0, cnte = 0, cnts = 0, cntt = 0, cnta = 0, cont = [], tbl = [], data = rawd[name];
 	document.getElementById("cont-data").innerHTML = "<div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div>";
@@ -525,6 +586,11 @@ function switchList(name) {
 	});
 	labToggle("cont-tbl");
 }
+/**
+ * Jump to page x in the menu and refresh the menu.
+ * @param {page} x page number
+ * @returns null
+ */
 function refreshMenu(x) {
 	document.getElementById("archive-show").innerHTML = "";
 	let cnt = Math.floor((curProbs.length + 9) / 10), html = "", p = 0;
@@ -559,6 +625,9 @@ function refreshMenu(x) {
 		p++;
 	}
 }
+/**
+ * Refresh highchart-chart under the constraints.
+ */
 function refreshChart() {
 	let ctg = new Array(44), cnt = new Array(44);
 	for (let i = 0; i < 44; i++)
@@ -625,6 +694,9 @@ function refreshChart() {
 		]
 	});
 }
+/**
+ * Refresh all the filter page under the constraints.
+ */
 function setFilter() {
 	document.getElementById("rndprob").innerHTML = "";
 	document.getElementById("archive-show").innerHTML = "<tr><div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div></tr>";
@@ -664,22 +736,37 @@ function setFilter() {
 	refreshMenu(1);
 	refreshChart();
 }
-function setSortByTime(){
+/**
+ * set menu sort by time (late to early).
+ */
+function setSortByTime() {
 	cmp = (a, b) => problist[b].time - problist[a].time;
 	setFilter();
 }
-function setSortByTitle(){
+/**
+ * set menu sort by title (lexicographically small to large).
+ */
+function setSortByTitle() {
 	cmp = (a, b) => problist[a].title.localeCompare(problist[b].title);
 	setFilter();
 }
-function setSortByDiff(){
+/**
+ * set menu sort by difficulty (hard to easy).
+ */
+function setSortByDiff() {
 	cmp = (a, b) => problist[b].diff - problist[a].diff;
 	setFilter();
 }
-function setSortByTags(){
+/**
+ * set menu sort by tags (many to few/none).
+ */
+function setSortByTags() {
 	cmp = (a, b) => problist[b].tag.length - problist[a].tag.length;
 	setFilter();
 }
+/**
+ * Clear filters set by user.
+ */
 function clearFilter() {
 	for (let i in labels) {
 		$("#" + i + "-checkbox").checkbox("set checked");
@@ -693,6 +780,10 @@ function clearFilter() {
 	setSortByTime();
 	setFilter();
 }
+/**
+ * Get a random problem from the selected problems.
+ * @returns null
+ */
 function getRandProblem() {
 	document.getElementById("rndprob").innerHTML = "";
 	if (curProbs == 0)
@@ -706,6 +797,9 @@ function getRandProblem() {
 		}
 	}
 }
+/**
+ * Build the problem list page.
+ */
 function buildList() {
 	for (let i in labels) {
 		let t = document.createElement("div");
@@ -762,6 +856,9 @@ function buildList() {
 	});
 	clearFilter();
 }
+/**
+ * Import user problem statuses.
+ */
 function importUser() {
 	let usrList = document.getElementById("user-name").value.split(" "), usrPrbStat = {};
 	window.localStorage.setItem("default-user-list", document.getElementById("user-name").value);
@@ -811,6 +908,7 @@ function importUser() {
 							alert(usr + "：未找到用户或者用户没有提交");
 						} else {
 							recordUserSub(i, lst);
+							usrPrbStat = {};
 						}
 						f(i + 1, 0, f);
 						return;
@@ -844,13 +942,18 @@ function importUser() {
 	};
 	fetchUserSub(0, 0, fetchUserSub);
 }
-
+/** 
+ * Jump to the top of the page.
+ */
 function jumptotop() {
 	window.scrollTo({
 		top: 0,
 		behavior: "smooth"
 	});
 }
+/**
+ * Jump to the buttom of the page.
+ */
 function jumptobottom() {
 	window.scrollTo({
 		top: $("#page-end").offset().top,
@@ -858,6 +961,10 @@ function jumptobottom() {
 	});
 }
 
+/**
+ * Redirect to the individual contest page.
+ * @returns null
+ */
 function redr() {
 	let trans = new Base64(), invCode = document.getElementById("rev-code").value;
 	try {
@@ -869,18 +976,24 @@ function redr() {
 	window.localStorage.setItem('inv-code', document.getElementById("rev-code").value);
 	window.location.href = "contest.html?id=" + escape(document.getElementById("rev-code").value);
 }
-function closecontestpage() {
-	document.getElementById("join-page").style.display = "none";
+/**
+ * Show 'join contest' page in the contest lab.
+ */
+function showjoinpage() {
+	document.getElementById("join-page").style.display = "block";
 	document.getElementById("create-page").style.display = "none";
 }
-function showjoinpage() {
-	closecontestpage();
-	document.getElementById("join-page").style.display = "block";
-}
+/**
+ * Show 'create contest' page in the contest lab.
+ */
 function showcreatepage() {
-	closecontestpage();
+	document.getElementById("join-page").style.display = "none";
 	document.getElementById("create-page").style.display = "block";
 }
+/**
+ * Print invite code to input and clipboard.
+ * @returns null
+ */
 function printInviteCode() {
 	let res = "", trans = new Base64();
 	res += '{"title":"' + document.getElementById("get-title").value + '","mod":';
@@ -954,6 +1067,9 @@ function printInviteCode() {
 	document.getElementById("print-code").value = trans.encode(res);
 	copyToClipboard(trans.encode(res));
 }
+/**
+ * Build the contest page.
+ */
 function buildContestPage() {
 	let stTime = new Date(), edTime = new Date(Number(stTime) + 7200000),
 		startTime = formatDate(stTime, "yyyy-MM-ddThh:mm"),
@@ -986,14 +1102,16 @@ function buildContestPage() {
 	});
 	showjoinpage();
 }
+/**
+ * Clear datas in localStorage.
+ */
 function clearStorage() {
 	window.localStorage.clear();
 	location.reload();
 }
-function shownotyet() {
-	alert("in progress");
-}
-
+/** 
+ * Main function. Build the site.
+*/
 function buildMainPage() {
 	$("#clear-storage").popup({
 		content: "在每次版本更新后，单击此键清空本地缓存用户数据",

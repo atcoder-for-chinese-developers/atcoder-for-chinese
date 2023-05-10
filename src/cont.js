@@ -224,7 +224,7 @@ function rankfresh(data) {
 		for (let t = 0; t < sub.length; t++) {
 			let c = sub[t]
 			if (Number(c.epoch_second) * 1000 >= end)
-				continue	
+				continue
 			for (var j = 0; j < data.problems.length; j++)
 				if (c.problem_id == data.problems[j]) {
 					if (c.result == 'AC') {
@@ -321,7 +321,7 @@ function rankfresh(data) {
 		let i = id[t];
 		res += ('<tr><td>(' + (t + 1) + ') <a href=\"https://atcoder.jp/users/' + data.players[i] + "\">" + data.players[i] + '</a></td>');
 		let dr = Math.floor(getp(i));
-		let	hours = Math.floor(dr / 3600),
+		let hours = Math.floor(dr / 3600),
 			minu = Math.floor(dr % 3600 / 60),
 			seco = dr % 60;
 		res += '<td> ' + acc[i] + '</td>'
@@ -369,7 +369,7 @@ function buildpage() {
 		let start = new Date(beg), finish = new Date(end);
 		beg = Number(data.st), end = Number(data.ed);
 		start = new Date(beg), finish = new Date(end);
-		
+
 		document.write("<p></p><div><h1 style=\"display: inline;\">" + data['title'] + "</h1><i class=\"ui home link icon\" style=\"font-size: 1.5em; float: right;\" onclick=\"jumplink1()\"></i></div>");
 		document.write("<div class=\"ui divided selection list\">");
 		document.write('<a class=\"item\"><div class=\"ui red horizontal label\">开始时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(start) + '</p>');
@@ -411,7 +411,7 @@ function buildpage() {
 		rankfresh(data);
 		setInterval(rankfresh, 1000 * 120, data);
 		$(function () {
-			setInterval(function() {
+			setInterval(function () {
 				refreshtime();
 			}, 500);
 		})
