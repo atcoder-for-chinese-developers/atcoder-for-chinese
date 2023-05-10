@@ -204,7 +204,7 @@ function tagToggle(id) {
  * @returns {object} an object with rgb code, color name and filling percent.
  */
 function getColor(k) {
-	if (k == null) {
+	if (k === null) {
 		return {
 			rgb: "rgb(0,0,0)",
 			val: "0",
@@ -267,7 +267,7 @@ function getColor(k) {
  */
 function getDiffCirc(d) {
 	let t = getColor(d);
-	if (d == null) {
+	if (d === null) {
 		return "<ta href='' title='难度：暂未评定'><span class='diff-unavailable'>?</span></ta>";
 	} else if (d < 3200) {
 		return "<ta href='' title='难度：" + d + "'><span class='difficulty-circle' style='border-color: " + t.rgb + "; background: linear-gradient(to top, " + t.rgb + " " + t.val + "%, rgba(0, 0, 0, 0) " + t.val + "%) border-box;'></span></ta>";
@@ -637,7 +637,7 @@ function refreshChart() {
 		};
 	for (let i in curProbs) {
 		let p = problist[curProbs[i]].diff;
-		if (p != null && p < 4400) {
+		if (p !== null && p < 4400) {
 			cnt[Math.floor(p / 100)].y++;
 		}
 	}
@@ -709,7 +709,7 @@ function setFilter() {
 		dl = dl == "" || isNaN(Number(dl)) ? -10000 : Number(dl);
 		dr = dr == "" || isNaN(Number(dr)) ? 10000 : Number(dr);
 		utg = utg == '' ? 0 : utg.split(",");
-		if ((p.diff != null && (p.diff < dl || p.diff > dr)) || (p.diff === null && ((p.diff != -10000 || p.diff != 10000)))) {
+		if ((p.diff !== null && (p.diff < dl || p.diff > dr)) || (p.diff === null && ((p.diff != -10000 || p.diff != 10000)))) {
 			return 0;
 		}
 		if ($("#tag-combined-or").checkbox("is checked")) {

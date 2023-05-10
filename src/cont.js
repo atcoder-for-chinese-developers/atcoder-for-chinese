@@ -301,7 +301,7 @@ function rankfresh(data) {
 		res += '<th>罚时</th>'
 	for (let i = 0; i < data.problems.length; i++) {
 		let p = data.problems[i].lastIndexOf('_'), con = data.problems[i].substr(0, p)
-		while (con.match("_") != null)
+		while (con.match("_") !== null)
 			con = con.replace("_", "-")
 		if (data.problems[i].substr(0, 2) != 'CF')
 			res += ('<th>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + (i + 1) + '</a></th>');
@@ -359,9 +359,9 @@ function buildpage() {
 			document.getElementById('inv-code').value = window.localStorage.getItem('inv-code')
 		document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
 	} else {
-		while (s.match('%22') != null)
+		while (s.match('%22') !== null)
 			s = s.replace('%22', '"');
-		while (s.match('%3D') != null)
+		while (s.match('%3D') !== null)
 			s = s.replace('%3D', '=');
 		s = trans.decode(s.split('?')[1].substr(3));
 		let data = JSON.parse(s);
@@ -387,7 +387,7 @@ function buildpage() {
 		document.write("<th>题目标题</th></tr></thead><tbody>");
 		for (let i in data.problems) {
 			let p = data.problems[i].lastIndexOf('_'), con = data.problems[i].substr(0, p);
-			while (con.match("_") != null)
+			while (con.match("_") !== null)
 				con = con.replace("_", "-");
 			let ext = ""
 			if (data.mod == 'atcoder') ext = '<td>' + data.score[i] + '</td>';
