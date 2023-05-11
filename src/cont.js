@@ -9,7 +9,7 @@ function readTextFile(file, ext, callback) {
 	xhr.send();
 }
 function Base64() {
-	_keyStr = "Csa56TWEOMFkpGH2cmb4Xi8vzYJo3efghldnSwDjNx9PVrI1uKBtRAZQ0qL7yU/+=";
+	const _keyStr = "Csa56TWEOMFkpGH2cmb4Xi8vzYJo3efghldnSwDjNx9PVrI1uKBtRAZQ0qL7yU/+=";
 	this.encode = function (input) {
 		let output = "", chr1, chr2, chr3, enc1, enc2, enc3, enc4, i = 0;
 		input = _utf8_encode(input);

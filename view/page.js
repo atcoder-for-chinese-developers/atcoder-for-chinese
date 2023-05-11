@@ -1,5 +1,4 @@
 function readTextFile(file, ext, callback) {
-	console.log(file, ext);
 	let xhr = new XMLHttpRequest();
 	xhr.overrideMimeType("application/" + ext);
 	xhr.open("GET", file, false);
@@ -207,8 +206,7 @@ function buildPage(content) {
 			if (stat == "200") {
 				buildPage(text);
 			} else {
-				console.log("page error: ", stat);
-				alert("没有找到这篇翻译");
+				alert("没有找到这篇翻译\n错误: " + stat);
 				window.location.href = "index.html";
 			}
 		});
@@ -218,8 +216,7 @@ function buildPage(content) {
 			if (stat == "200") {
 				buildPage(text);
 			} else {
-				console.log("page error: ", stat);
-				alert("没有找到这篇题解");
+				alert("没有找到这篇题解\n错误: " + stat);
 				window.location.href = "index.html";
 			}
 		});
