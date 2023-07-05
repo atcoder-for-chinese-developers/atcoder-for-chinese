@@ -1,3 +1,10 @@
+/**
+ * Read files from the web.
+ * @param {string} file file name
+ * @param {string} ext file extension
+ * @param {function} callback callback function after the file fetches down
+ * @param {boolean} isLocked set to true if the statement locks following statements
+ */
 function readTextFile(file, ext, callback) {
 	let xhr = new XMLHttpRequest();
 	xhr.overrideMimeType("application/" + ext);
@@ -13,14 +20,26 @@ function readTextFile(file, ext, callback) {
 		alert("[Error] Can't fetch resource: " + file + "");
 	}
 }
+/**
+ * Get the name of contest shown by current page.
+ * @returns {string} A string with name.
+ */
 function getContName() {
 	let w = escape(window.location.href);
 	return w.slice(w.indexOf("%3Fpage%3D") + 10).split('.')[0].slice(1);
 }
+/**
+ * Get the name of problem shown by current page.
+ * @returns {string} A string with name.
+ */
 function getProbName() {
 	let w = escape(window.location.href);
 	return w.slice(w.indexOf("%3Fpage%3D") + 10).split('.')[1];
 }
+/**
+ * Get the displayed name of problem shown by current page.
+ * @returns {string} A string with name.
+ */
 function getProbName_u() {
 	let w = getProbName().toUpperCase();
 	if (w[0] == 'A' && w[2] == 'C' && Number(w.slice(3, 3)) > 232)
@@ -29,13 +48,18 @@ function getProbName_u() {
 		w = w.split("_")[0] + "_" + String.fromCharCode(Number(w.split("_")[1]) + 64);
 	return w;
 }
+/**
+ * Get the link of problem shown by current page.
+ * @returns {string} A string with link.
+ */
 function getProbLink() {
 	let w = getProbName();
 	return "https://atcoder.jp/contests/" + w.split("_")[0] + "/tasks/" + w;
 }
-function jumpLink2() {
-	window.open(getProbLink());
-}
+/**
+ * Get the title of the page.
+ * @returns {string} A string with title name.
+ */
 function getTitle() {
 	let t = escape(window.location.href);
 	if (t.indexOf("%3Fpage%3D") == -1)
@@ -43,6 +67,11 @@ function getTitle() {
 	t = t.slice(t.lastIndexOf("%3Fpage%3D") + 10);
 	return getProbName_u().replace("_", "") + (t[0] == 'T' ? " 翻译" : " 题解");
 }
+/**
+ * Returns color info of the problem difficulty.
+ * @param {number} k difficulty.
+ * @returns {object} an object with rgb code, color name and filling percent.
+ */
 function getColor(k) {
 	if (k == 100000) {
 		return {
@@ -100,14 +129,26 @@ function getColor(k) {
 		};
 	}
 }
+/**
+ * Transfer kenkoooo api difficulty to shown difficulty.
+ * @param {number} d the difficulty from api.
+ * @returns {number} null if d is not a number. Otherwise a number representing shown difficulty.
+ */
 function transdiff(d) {
 	return Math.round(d >= 400 ? d : 400 / Math.exp(1.0 - d / 400));
 }
+/**
+ * Toggle problem tags to show or hide.
+ */
 function tagToggle() {
 	document.getElementById("tags").style.position = "relative";
 	document.getElementById("tags").style.display == document.getElementById("tags").style.display == "none" ? "inline-block" : "none";
 }
 
+/**
+ * Build the current page with 'contest'
+ * @param {string} content Contest filling to the page.
+ */
 function buildPage(content) {
 	let tg = [];
 	readTextFile("https://kenkoooo.com/atcoder/resources/problems.json", "json", function (txt, sta) {

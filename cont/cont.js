@@ -1,3 +1,10 @@
+/**
+ * Read files from the web.
+ * @param {string} file file name
+ * @param {string} ext file extension
+ * @param {function} callback callback function after the file fetches down
+ * @param {boolean} isLocked set to true if the statement locks following statements
+ */
 function readTextFile(file, ext, callback) {
 	let xhr = new XMLHttpRequest();
 	xhr.overrideMimeType("application/" + ext);
@@ -8,6 +15,9 @@ function readTextFile(file, ext, callback) {
 	}
 	xhr.send();
 }
+/**
+ * Create an object that can encode and decode base64.
+ */
 function Base64() {
 	const _keyStr = "Csa56TWEOMFkpGH2cmb4Xi8vzYJo3efghldnSwDjNx9PVrI1uKBtRAZQ0qL7yU/+=";
 	this.encode = function (input) {
@@ -92,20 +102,8 @@ function Base64() {
 		return string;
 	}
 }
-function sleep(time) {
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			resolve();
-		}, time);
-	});
-}
 function ext2(con) {
 	return (Math.floor(con / 10)).toString() + (con % 10).toString();
-}
-function redr() {
-	if (window.localStorage.getItem('inv-code') == undefined)
-		window.localStorage.setItem('inv-code', document.getElementById("inv-code").value);
-	window.location.href = "?id=" + escape(document.getElementById("inv-code").value);
 }
 function closeall() {
 	document.getElementById("list").setAttribute("style", "display: none;");
@@ -167,9 +165,6 @@ function timeToString(t) {
 	}
 	let cur = new Date(t).format("y M d h m s")
 	return cur.toString()
-}
-function jumplink1() {
-	window.open("https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/")
 }
 function getpercent() {
 	let cur = new Date()
@@ -294,7 +289,7 @@ function rankfresh(data) {
 		else
 			return acc[b] - acc[a]
 	})
-	res = '<thead><tr><th>选手列表</th>'
+	let res = '<thead><tr><th>选手列表</th>'
 	if (data.mod == 'atcoder') res += '<th>分数</th>'
 	else res += '<th>过题数</th>'
 	if (data.mod == undefined || data.mod != "practice")
@@ -352,68 +347,47 @@ function rankfresh(data) {
 
 function buildpage() {
 	let s = window.location.href, trans = new Base64();
-	if (s.split('?id=').length == 1) {
-		document.write("<div class=\"ui container\">");
-		document.write("<div class=\"ui input\"><input id=\"inv-code\" style=\"width: 150;\" placeholder=\"输入邀请码\"></input></div>");
-		if (window.localStorage.getItem('inv-code') != undefined)
-			document.getElementById('inv-code').value = window.localStorage.getItem('inv-code')
-		document.write("<button class=\"ui button\" onclick=\"redr()\">跳转到比赛界面</button>");
-	} else {
-		while (s.match('%22') !== null)
-			s = s.replace('%22', '"');
-		while (s.match('%3D') !== null)
-			s = s.replace('%3D', '=');
-		s = trans.decode(s.split('?')[1].substr(3));
-		let data = JSON.parse(s);
-		beg = Number(data.st), end = Number(data.ed);
-		let start = new Date(beg), finish = new Date(end);
-		beg = Number(data.st), end = Number(data.ed);
-		start = new Date(beg), finish = new Date(end);
+	while (s.match('%22') !== null)
+		s = s.replace('%22', '"');
+	while (s.match('%3D') !== null)
+		s = s.replace('%3D', '=');
+	s = trans.decode(s.split('?')[1].substr(3));
+	let data = JSON.parse(s);
+	beg = Number(data.st), end = Number(data.ed);
+	let start = new Date(beg), finish = new Date(end);
+	beg = Number(data.st), end = Number(data.ed);
+	start = new Date(beg), finish = new Date(end);
 
-		document.write("<p></p><div><h1 style=\"display: inline;\">" + data['title'] + "</h1><i class=\"ui home link icon\" style=\"font-size: 1.5em; float: right;\" onclick=\"jumplink1()\"></i></div>");
-		document.write("<div class=\"ui divided selection list\">");
-		document.write('<a class=\"item\"><div class=\"ui red horizontal label\">开始时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(start) + '</p>');
-		document.write('<a class=\"item\"><div class=\"ui green horizontal label\">结束时间</div><p style=\"color: #000; display: inline-block\">' + dateToString(finish) + '</p>');
-		document.write('<a class=\"item\"><div class=\"ui yellow horizontal label\">持续时间</div><p style=\"color: #000; display: inline-block\">' + timeToString(new Date(Number(finish) - Number(start))) + '</p>');
-		document.write('<a class=\"item\"><div class=\"ui blue horizontal label\">倒计时</div><p style=\"color: #000; display: inline-block\" id=\"remain-time\"></p></div>');
-		document.write("<div class=\"ui top attached indicating progress\" id=\"timeprog\"><div class=\"bar\"></div></div>")
-		document.write("<div class=\"ui menu\">");
-		document.write("<a class=\"item\" onclick=\"showlist()\">题目列表</a>");
-		document.write("<a class=\"item\" onclick=\"showtable()\">排行榜</a></div>");
-
-		document.write("<table class=\"ui celled table\" id=\"list\">");
-		document.write("<thead><tr><th>题目编号</th>");
-		if (data.mod == "atcoder") document.write("<th  class=\"collapsing\">题目分数</th>");
-		document.write("<th>题目标题</th></tr></thead><tbody>");
-		for (let i in data.problems) {
-			let p = data.problems[i].lastIndexOf('_'), con = data.problems[i].substr(0, p);
-			while (con.match("_") !== null)
-				con = con.replace("_", "-");
-			let ext = ""
-			if (data.mod == 'atcoder') ext = '<td>' + data.score[i] + '</td>';
-			if (data.problems[i].substr(0, 2) != 'CF')
-				document.write('<tr><td>' + (Number(i) + 1) + '</td>' + ext + '<td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
-			else {
-				let c = data.problems[i].substr(2), p, q, pos = 0;
-				for (let j = 0; j < c.length; j++)
-					if (c[j] >= 'A') {
-						pos = j;
-						break;
-					}
-				p = c.substr(0, pos), q = c.substr(pos);
-				document.write('<tr><td>' + (Number(i) + 1) + '</td>' + ext + '<td>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + c + '</a></td></tr>');
-			}
+	document.getElementById("title-name").innerText = data['title'];
+	document.getElementById("start-time").innerText = dateToString(start);
+	document.getElementById("finish-time").innerText = dateToString(finish);
+	document.getElementById("duration-time").innerText = timeToString(new Date(Number(finish) - Number(start)));
+	document.getElementById("heading").innerHTML = "<th>题目编号</th>" + (data.mod === "atcoder" ? "<th class='collapsing'>题目分数</th>" : "") + "<th>题目标题</th>";
+	for (let i in data.problems) {
+		let p = data.problems[i].lastIndexOf('_'), con = data.problems[i].substr(0, p);
+		while (con.match("_") !== null)
+			con = con.replace("_", "-");
+		let ext = "", t = document.createElement("tr");
+		if (data.mod === 'atcoder') ext = '<td>' + data.score[i] + '</td>';
+		if (data.problems[i].substr(0, 2) !== 'CF')
+			t.innerHTML = ('<tr><td>' + (Number(i) + 1) + '</td>' + ext + '<td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
+		else {
+			let c = data.problems[i].substr(2), p, q, pos = 0;
+			for (let j = 0; j < c.length; j++)
+				if (c[j] >= 'A') {
+					pos = j;
+					break;
+				}
+			p = c.substr(0, pos), q = c.substr(pos);
+			t.innerHTML = '<tr><td>' + (Number(i) + 1) + '</td>' + ext + '<td>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + c + '</a></td></tr>';
 		}
-		document.write("</tbody></table>");
-		document.write('<table class="ui fixed celled table" id="table">');
-		document.write('</table>');
-		showlist();
-		rankfresh(data);
-		setInterval(rankfresh, 1000 * 120, data);
-		$(function () {
-			setInterval(function () {
-				refreshtime();
-			}, 500);
-		})
 	}
+	showlist();
+	rankfresh(data);
+	setInterval(rankfresh, 1000 * 120, data);
+	$(function () {
+		setInterval(function () {
+			refreshtime();
+		}, 500);
+	})
 }
