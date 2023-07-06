@@ -372,6 +372,7 @@ function rankfresh(data) {
 /**
  * Main function. Build the contest page.
  */
+var data;
 function buildPage() {
 	let s = window.location.href, trans = new Base64();
 	while (s.match('%22') !== null)
@@ -379,7 +380,7 @@ function buildPage() {
 	while (s.match('%3D') !== null)
 		s = s.replace('%3D', '=');
 	s = trans.decode(s.split('?')[1].substr(3));
-	let data = JSON.parse(s);
+	data = JSON.parse(s);
 	beg = Number(data.st), end = Number(data.ed);
 	let start = new Date(beg), finish = new Date(end);
 	beg = Number(data.st), end = Number(data.ed);
