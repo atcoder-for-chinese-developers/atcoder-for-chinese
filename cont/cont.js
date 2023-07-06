@@ -102,26 +102,32 @@ function Base64() {
 		return string;
 	}
 }
-function ext2(con) {
-	return (Math.floor(con / 10)).toString() + (con % 10).toString();
-}
-function closeall() {
-	document.getElementById("list").setAttribute("style", "display: none;");
-	document.getElementById("table").setAttribute("style", "display: none;");
-}
 let beg = 0, end = 0, flgshow = 0;
+/**
+ * Show problem list in current page.
+ */
 function showlist() {
-	closeall();
+	$("#list").css("display", "none");
+	$("#table").css("display", "none");
 	let cur = new Date();
 	if (Number(cur) >= Number(beg))
-		document.getElementById("list").setAttribute("style", "");
+		$("#list").css("display", "");
 }
+/**
+ * Show ranking table in current page.
+ */
 function showtable() {
-	closeall();
+	$("#list").css("display", "none");
+	$("#table").css("display", "none");
 	let cur = new Date();
 	if (Number(cur) >= Number(beg))
-		document.getElementById("table").setAttribute("style", "");
+		$("#table").css("display", "");
 }
+/**
+ * Time formatter. Using the folloing format: "yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒"
+ * @param {object} A Date object.
+ * @returns {string} A string with formatted time.
+ */
 function dateToString(t) {
 	Date.prototype.format = function (fmt) {
 		let o = {
@@ -141,11 +147,16 @@ function dateToString(t) {
 				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
 			}
 		}
-		return fmt
+		return fmt;
 	}
-	let cur = new Date(t).format("yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒")
-	return cur.toString()
+	let cur = new Date(t).format("yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒");
+	return cur.toString();
 }
+/**
+ * Time formatter. Using the folloing format: "y M d h m s"
+ * @param {number} A number representing time.
+ * @returns {string} A string with formatted time.
+ */
 function timeToString(t) {
 	Date.prototype.format = function (fmt) {
 		let o = {
@@ -161,113 +172,93 @@ function timeToString(t) {
 				fmt = fmt.replace(RegExp.$1, o[k]);
 			}
 		}
-		return fmt
+		return fmt;
 	}
-	let cur = new Date(t).format("y M d h m s")
-	return cur.toString()
+	let cur = new Date(t).format("y M d h m s");
+	return cur.toString();
 }
+/**
+ * Get the percentage of time passed in the contest.
+ * @returns {number} The precentage.
+ */
 function getpercent() {
-	let cur = new Date()
-	return Math.max((Math.min(end, cur) - beg) / (end - beg), 0.0)
+	let cur = new Date();
+	return Math.max((Math.min(end, cur) - beg) / (end - beg), 0.0);
 }
+/**
+ * Refresh the timing.
+ */
 function refreshtime() {
-	let cur = new Date(), tst = (Number(beg) - Number(cur)) / 1000., rem = (Number(end) - Number(cur)) / 1000.
+	let cur = new Date(), tst = (Number(beg) - Number(cur)) / 1000., rem = (Number(end) - Number(cur)) / 1000.;
 	if (tst > 0)
-		rem = tst
-	let da = Math.floor(rem / 86400), ho = Math.floor(rem % 86400 / 3600), mi = Math.floor(rem % 3600 / 60), se = rem % 60
+		rem = tst;
+	let da = Math.floor(rem / 86400), ho = Math.floor(rem % 86400 / 3600), mi = Math.floor(rem % 3600 / 60), se = rem % 60;
 	if (!flgshow && cur > beg)
-		showlist(), flgshow = 1
-	document.getElementById("remain-time").innerText = cur < beg ? "距离比赛开始 " + ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : "")) : cur > end ? "已结束" : ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : ""))
+		showlist(), flgshow = 1;
+	$("#remain-time").text(cur < beg ? "距离比赛开始 " + ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : "")) : cur > end ? "已结束" : ((da ? da.toString() + " 天 " : "") + (ho ? ho.toString() + " 时 " : "") + (mi ? mi.toString() + " 分 " : "") + (se ? Math.floor(se).toFixed(0).toString() + " 秒 " : "")));
 	$("#timeprog").progress({
 		percent: getpercent() * 100
 	});
 }
-
+/**
+ * Refresh the ranking table.
+ */
 function rankfresh(data) {
-	beg = Number(data.st), end = Number(data.ed)
-	let subs = {}, acc = [], ple = [], id = [], hascf = 0, extp = []
+	beg = Number(data.st), end = Number(data.ed);
+	let subs = {}, acc = [], ple = [], id = [], hascf = 0, extp = [], cfid = [];
 	for (let i = 0; i < data.players.length; i++)
-		acc.push(0), ple.push(0), id.push(i), extp.push(0)
+		acc.push(0), ple.push(0), id.push(i), extp.push(0);
 	for (let i in data.problems)
-		if (data.problems[i].substr(0, 2) == 'CF')
-			hascf = 1
-	let cfid = []
-	for (var i in data.players) {
-		var li = data.players[i].split('(')
+		hascf |= data.problems[i].substr(0, 2) === 'CF';
+	for (let i in data.players) {
+		let li = data.players[i].split('(');
 		if (li.length == 2)
 			data.players[i] = li[0], cfid.push(li[1].substr(0, li[1].length - 1));
-		else cfid.push(data.players[i])
+		else cfid.push(data.players[i]);
 	}
-	for (let i = 0; i < data.players.length; i++) {
-		let sub, cfsub;
-		readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
-			data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
-				sub = JSON.parse(text)
-			})
-		if (hascf == 1) {
-			readTextFile('https://codeforces.com/api/user.status?handle=' + cfid[i] + '&from=1&count=100', 'json', function (text) {
-				cfsub = JSON.parse(text)
-			})
-			cfsub = cfsub.result
-		}
-		subs[i] = {
-			ac: {},
-			pl: {},
-			tm: {},
-			wj: {}
-		}
-		for (let t = 0; t < sub.length; t++) {
-			let c = sub[t]
-			if (Number(c.epoch_second) * 1000 >= end)
-				continue
-			for (var j = 0; j < data.problems.length; j++)
-				if (c.problem_id == data.problems[j]) {
-					if (c.result == 'AC') {
-						subs[i].wj = 0
-						if (subs[i].ac[data.problems[j]] != 1) {
-							if (data.mod == 'atcoder') acc[i] += data.score[j];
-							else acc[i] += 1;
-						}
-						subs[i].ac[data.problems[j]] = 1
-						subs[i].tm[data.problems[j]] = c.epoch_second
-						if (subs[i].pl[data.problems[j]] == undefined)
-							subs[i].pl[data.problems[j]] = 0
-						if (data.mod == undefined || data.mod == "ICPC") ple[i] += (c.epoch_second * 1000 - beg) / 1000
-						else if (data.mod == "atcoder") ple[i] = Math.max(ple[i], (c.epoch_second * 1000 - beg) / 1000);
-					} else if (47 < c.result[0] || c.result[0] < 58 || c.result == 'WJ') {
-						subs[i].wj = 1
-					} else if (c.result != 'CE') {
-						subs[i].wj = 0
-						if (subs[i].pl[data.problems[j]] == undefined)
-							subs[i].pl[data.problems[j]] = 0
-						subs[i].pl[data.problems[j]] += 1
-						if (subs[i].ac[data.problems[j]]) extp[i] += 300;
-					}
-				}
-		}
-		if (hascf) {
-			for (let t = 0; t < cfsub.length; t++) {
-				let c = cfsub[t];
-				if (Number(c.creationTimeSeconds) * 1000 >= end)
+	new Promise(function(resolve, reject){
+		!function(i) {
+			if (i === data.players.length) {
+				return;
+			}
+			let sub, cfsub;
+			readTextFile('https://kenkoooo.com/atcoder/atcoder-api/v3/user/submissions?user=' +
+				data.players[i] + '&from_second=' + Math.floor(beg / 1000), 'json', function (text) {
+					sub = JSON.parse(text);
+				});
+			if (hascf == 1) {
+				readTextFile('https://codeforces.com/api/user.status?handle=' + cfid[i] + '&from=1&count=100', 'json', function (text) {
+					cfsub = JSON.parse(text);
+				});
+				cfsub = cfsub.result;
+			}
+			subs[i] = {
+				ac: {},
+				pl: {},
+				tm: {},
+				wj: {}
+			};
+			for (let t = 0; t < sub.length; t++) {
+				let c = sub[t];
+				if (Number(c.epoch_second) * 1000 >= end)
 					continue;
-				for (let j = 0; j < data.problems.length; j++) {
-					let problem_id = c.problem.contestId + c.problem.index;
-					if (problem_id == data.problems[j].substr(2)) {
-						if (c.verdict == 'OK') {
+				for (var j = 0; j < data.problems.length; j++)
+					if (c.problem_id == data.problems[j]) {
+						if (c.result == 'AC') {
 							subs[i].wj = 0;
 							if (subs[i].ac[data.problems[j]] != 1) {
 								if (data.mod == 'atcoder') acc[i] += data.score[j];
 								else acc[i] += 1;
 							}
 							subs[i].ac[data.problems[j]] = 1;
-							subs[i].tm[data.problems[j]] = c.creationTimeSeconds;
+							subs[i].tm[data.problems[j]] = c.epoch_second;
 							if (subs[i].pl[data.problems[j]] == undefined)
 								subs[i].pl[data.problems[j]] = 0;
-							if (data.mod == undefined || data.mod == "ICPC") ple[i] += (c.creationTimeSeconds * 1000 - beg) / 1000
-							else if (data.mod == "atcoder") ple[i] = Math.max(ple[i], (c.creationTimeSeconds * 1000 - beg) / 1000);
-						} else if (c.verdict == 'TESTING') {
+							if (data.mod == undefined || data.mod == "ICPC") ple[i] += (c.epoch_second * 1000 - beg) / 1000;
+							else if (data.mod == "atcoder") ple[i] = Math.max(ple[i], (c.epoch_second * 1000 - beg) / 1000);
+						} else if (47 < c.result[0] || c.result[0] < 58 || c.result == 'WJ') {
 							subs[i].wj = 1;
-						} else if (c.verdict != 'COMPILATION_ERROR') {
+						} else if (c.result != 'CE') {
 							subs[i].wj = 0;
 							if (subs[i].pl[data.problems[j]] == undefined)
 								subs[i].pl[data.problems[j]] = 0;
@@ -275,77 +266,113 @@ function rankfresh(data) {
 							if (subs[i].ac[data.problems[j]]) extp[i] += 300;
 						}
 					}
+			}
+			if (hascf) {
+				for (let t = 0; t < cfsub.length; t++) {
+					let c = cfsub[t];
+					if (Number(c.creationTimeSeconds) * 1000 >= end)
+						continue;
+					for (let j = 0; j < data.problems.length; j++) {
+						let problem_id = c.problem.contestId + c.problem.index;
+						if (problem_id == data.problems[j].substr(2)) {
+							if (c.verdict == 'OK') {
+								subs[i].wj = 0;
+								if (subs[i].ac[data.problems[j]] != 1) {
+									if (data.mod == 'atcoder') acc[i] += data.score[j];
+									else acc[i] += 1;
+								}
+								subs[i].ac[data.problems[j]] = 1;
+								subs[i].tm[data.problems[j]] = c.creationTimeSeconds;
+								if (subs[i].pl[data.problems[j]] == undefined)
+									subs[i].pl[data.problems[j]] = 0;
+								if (data.mod == undefined || data.mod == "ICPC") ple[i] += (c.creationTimeSeconds * 1000 - beg) / 1000;
+								else if (data.mod == "atcoder") ple[i] = Math.max(ple[i], (c.creationTimeSeconds * 1000 - beg) / 1000);
+							} else if (c.verdict == 'TESTING') {
+								subs[i].wj = 1;
+							} else if (c.verdict != 'COMPILATION_ERROR') {
+								subs[i].wj = 0;
+								if (subs[i].pl[data.problems[j]] == undefined)
+									subs[i].pl[data.problems[j]] = 0;
+								subs[i].pl[data.problems[j]] += 1;
+								if (subs[i].ac[data.problems[j]]) extp[i] += 300;
+							}
+						}
+					}
 				}
 			}
-		}
-		let w = Date.now()
-		while (Date.now() < w + 1000);
-	}
-	function getp(x) { return ple[x] + extp[x]; }
-	id.sort(function (a, b) {
-		if (acc[a] == acc[b]) {
-			return getp(a) - getp(b);
-		}
-		else
-			return acc[b] - acc[a]
-	})
-	let res = '<thead><tr><th>选手列表</th>'
-	if (data.mod == 'atcoder') res += '<th>分数</th>'
-	else res += '<th>过题数</th>'
-	if (data.mod == undefined || data.mod != "practice")
-		res += '<th>罚时</th>'
-	for (let i = 0; i < data.problems.length; i++) {
-		let p = data.problems[i].lastIndexOf('_'), con = data.problems[i].substr(0, p)
-		while (con.match("_") !== null)
-			con = con.replace("_", "-")
-		if (data.problems[i].substr(0, 2) != 'CF')
-			res += ('<th>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + (i + 1) + '</a></th>');
-		else {
-			let c = data.problems[i].substr(2), p, q, pos = 0;
-			for (let j = 0; j < c.length; j++)
-				if (c[j] >= 'A') {
-					pos = j;
-					break;
-				}
-			p = c.substr(0, pos), q = c.substr(pos);
-			res += ('<th>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + (i + 1) + '</a></th>');
-		}
-	}
-	res += ('</tr></thead><tbody>');
-	for (let t = 0; t < data.players.length; t++) {
-		let i = id[t];
-		res += ('<tr><td>(' + (t + 1) + ') <a href=\"https://atcoder.jp/users/' + data.players[i] + "\">" + data.players[i] + '</a></td>');
-		let dr = Math.floor(getp(i));
-		let hours = Math.floor(dr / 3600),
-			minu = Math.floor(dr % 3600 / 60),
-			seco = dr % 60;
-		res += '<td> ' + acc[i] + '</td>'
-		if (data.mod == undefined || data.mod != "practice") res += ('<td> ' + ext2(hours) + ':' + ext2(minu) + ':' + ext2(seco) + '</td>');
-		for (let j = 0; j < data.problems.length; j++) {
-			if (subs[i].wj[data.problems[j]] == 1) {
-				res += ("<td class=\"warning\"><i class=\"icon hourglass half\"></i>");
-			} else if (subs[i].ac[data.problems[j]] == 1) {
-				res += ('<td class="positive"><i class="icon checkmark"></i>');
-			} else if (subs[i].pl[data.problems[j]] != 0 && subs[i].pl[data.problems[j]] != undefined) {
-				res += ('<td class="negative"><i class="icon close"></i>');
-			} else
-				res += ('<td>-');
-			if (subs[i].ac[data.problems[j]] == 1) {
-				let dr = Math.floor((Number(subs[i].tm[data.problems[j]]) * 1000 - beg) / 1000),
-					h = Math.floor(dr / 3600), m = Math.floor(dr % 3600 / 60), s = dr % 60;
-				res += (' ' + ext2(h) + ':' + ext2(m) + ':' + ext2(s));
+			setTimeout(arguments.callee(i + 1), 1000);
+		}(0);
+	}).then(!function() {
+		function getp(x) { return ple[x] + extp[x]; }
+		id.sort(function (a, b) {
+			if (acc[a] == acc[b]) {
+				return getp(a) - getp(b);
 			}
-			if (subs[i].pl[data.problems[j]])
-				res += (' (' + subs[i].pl[data.problems[j]] + ')');
-			res += ('</td>');
+			else
+				return acc[b] - acc[a]
+		})
+		let res = '<thead><tr><th>选手列表</th>';
+		if (data.mod === 'atcoder') res += '<th>分数</th>';
+		else res += '<th>过题数</th>';
+		if (data.mod === undefined || data.mod !== 'practice')
+			res += '<th>罚时</th>';
+		for (let i = 0; i < data.problems.length; i++) {
+			let p = data.problems[i].lastIndexOf('_'), con = data.problems[i].substr(0, p);
+			while (con.match("_") !== null)
+				con = con.replace("_", "-");
+			if (data.problems[i].substr(0, 2) != 'CF')
+				res += '<th>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + (i + 1) + '</a></th>';
+			else {
+				let c = data.problems[i].substr(2), p, q, pos = 0;
+				for (let j = 0; j < c.length; j++)
+					if (c[j] >= 'A') {
+						pos = j;
+						break;
+					}
+				p = c.substr(0, pos), q = c.substr(pos);
+				res += '<th>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + (i + 1) + '</a></th>';
+			}
 		}
-		res += ('</tr>')
-	}
-	res += ('<tbody>');
-	document.getElementById('table').innerHTML = res;
+		res += '</tr></thead><tbody>';
+		for (let t = 0; t < data.players.length; t++) {
+			let i = id[t];
+			res += '<tr><td>(' + (t + 1) + ') <a href=\"https://atcoder.jp/users/' + data.players[i] + "\">" + data.players[i] + '</a></td>';
+			let dr = Math.floor(getp(i)), hours = Math.floor(dr / 3600), minu = Math.floor(dr % 3600 / 60), seco = dr % 60;
+			res += '<td> ' + acc[i] + '</td>';
+			function z2(x) {
+				return String(x).padStart(2, '0');
+			}
+			if (data.mod === undefined || data.mod != "practice") res += '<td> ' + z2(hours) + ':' + z2(minu) + ':' + z2(seco) + '</td>';
+			for (let j = 0; j < data.problems.length; j++) {
+				if (subs[i].wj[data.problems[j]] == 1) {
+					res += '<td class="warning"><i class="icon hourglass half"></i>';
+				} else if (subs[i].ac[data.problems[j]] == 1) {
+					res += '<td class="positive"><i class="icon checkmark"></i>';
+				} else if (subs[i].pl[data.problems[j]] != 0 && subs[i].pl[data.problems[j]] != undefined) {
+					res += '<td class="negative"><i class="icon close"></i>';
+				} else {
+					res += '<td>-';
+				}
+				if (subs[i].ac[data.problems[j]] == 1) {
+					let dr = Math.floor((Number(subs[i].tm[data.problems[j]]) * 1000 - beg) / 1000),
+						h = Math.floor(dr / 3600), m = Math.floor(dr % 3600 / 60), s = dr % 60;
+					res += ' ' + z2(h) + ':' + z2(m) + ':' + z2(s);
+				}
+				if (subs[i].pl[data.problems[j]])
+					res += ' (' + subs[i].pl[data.problems[j]] + ')';
+				res += '</td>';
+			}
+			res += '</tr>'
+		}
+		res += '<tbody>';
+		$("#table").html(res);
+	}());
 }
 
-function buildpage() {
+/**
+ * Main function. Build the contest page.
+ */
+function buildPage() {
 	let s = window.location.href, trans = new Base64();
 	while (s.match('%22') !== null)
 		s = s.replace('%22', '"');
@@ -357,12 +384,11 @@ function buildpage() {
 	let start = new Date(beg), finish = new Date(end);
 	beg = Number(data.st), end = Number(data.ed);
 	start = new Date(beg), finish = new Date(end);
-
-	document.getElementById("title-name").innerText = data['title'];
-	document.getElementById("start-time").innerText = dateToString(start);
-	document.getElementById("finish-time").innerText = dateToString(finish);
-	document.getElementById("duration-time").innerText = timeToString(new Date(Number(finish) - Number(start)));
-	document.getElementById("heading").innerHTML = "<th>题目编号</th>" + (data.mod === "atcoder" ? "<th class='collapsing'>题目分数</th>" : "") + "<th>题目标题</th>";
+	$("#title-name").text(data.title);
+	$("#start-time").text(dateToString(start));
+	$("#finish-time").text(dateToString(finish));
+	$("#duration-time").text(timeToString(new Date(Number(finish) - Number(start))));
+	$("#heading").html("<th>题目编号</th>" + (data.mod === "atcoder" ? "<th class='collapsing'>题目分数</th>" : "") + "<th>题目标题</th>");
 	for (let i in data.problems) {
 		let p = data.problems[i].lastIndexOf('_'), con = data.problems[i].substr(0, p);
 		while (con.match("_") !== null)
@@ -370,7 +396,7 @@ function buildpage() {
 		let ext = "", t = document.createElement("tr");
 		if (data.mod === 'atcoder') ext = '<td>' + data.score[i] + '</td>';
 		if (data.problems[i].substr(0, 2) !== 'CF')
-			t.innerHTML = ('<tr><td>' + (Number(i) + 1) + '</td>' + ext + '<td>' + '<a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>');
+			t.innerHTML = '<tr><td>' + (Number(i) + 1) + '</td>' + ext + '<td><a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>';
 		else {
 			let c = data.problems[i].substr(2), p, q, pos = 0;
 			for (let j = 0; j < c.length; j++)
@@ -378,16 +404,16 @@ function buildpage() {
 					pos = j;
 					break;
 				}
-			p = c.substr(0, pos), q = c.substr(pos);
-			t.innerHTML = '<tr><td>' + (Number(i) + 1) + '</td>' + ext + '<td>' + '<a href="https://codeforces.com/problemset/problem/' + p + '/' + q + '">' + c + '</a></td></tr>';
+			t.innerHTML = '<td>' + (Number(i) + 1) + '</td>' + ext + '<td><a href="https://codeforces.com/problemset/problem/' + c.substr(0, pos) + '/' + c.substr(pos) + '">' + c + '</a></td>';
 		}
+		$("#probs").append(t);
 	}
 	showlist();
 	rankfresh(data);
-	setInterval(rankfresh, 1000 * 120, data);
+	setInterval(rankfresh, 120000, data);
 	$(function () {
 		setInterval(function () {
 			refreshtime();
 		}, 500);
-	})
+	});
 }
