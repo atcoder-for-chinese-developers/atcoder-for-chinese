@@ -1,0 +1,75 @@
+<head>
+	<meta charset="UTF-8" />
+	<title>AtCoder 中文站（比赛界面）</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css"
+		integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A=="
+		crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+		integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"
+		integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw=="
+		crossorigin="anonymous"></script>
+	<script src="cont.js"></script>
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PN5MKWERQW"></script>
+<script>
+	window.dataLayer = window.dataLayer || [];
+	function gtag() { dataLayer.push(arguments); }
+	gtag('js', new Date());
+	gtag('config', 'G-PN5MKWERQW');
+</script>
+<body>
+	<noscript> You need to enable JavaScript to view the page. </noscript>
+	<div class="ui container">
+		<br/>
+		<div>
+			<h1 style="display: inline;" id="title-name"></h1>
+			<i class="ui home link icon"
+				style="font-size: 1.5em; float: right;"
+				onclick="javascript:window.open('..')"></i>
+			<i class="ui sync link icon"
+				style="font-size: 1.5em; float: right;"
+				onclick="javascript:rankfresh(data)"></i>
+		</div>
+		<div class="ui divided selection list">
+			<a class="item">
+				<div class="ui red horizontal label">开始时间</div>
+				<p style="color: #000; display: inline-block" id="start-time"></p>
+			</a>
+			<a class="item">
+				<div class="ui green horizontal label">结束时间</div>
+				<p style="color: #000; display: inline-block" id="finish-time"></p>
+			</a>
+			<a class="item">
+				<div class="ui yellow horizontal label">持续时间</div>
+				<p style="color: #000; display: inline-block" id="duration-time"></p>
+			</a>
+			<a class="item">
+				<div class="ui blue horizontal label">倒计时</div>
+				<p style="color: #000; display: inline-block" id="remain-time"></p>
+			</a>
+		</div>
+		<div class="ui top attached indicating progress" id="timeprog">
+			<div class="bar"></div>
+		</div>
+		<div class="ui menu">
+			<a class="item" onclick="showlist()">题目列表</a>
+			<a class="item" onclick="showtable()">排行榜</a>
+		</div>
+		<table class="ui celled table" id="list">
+			<thead>
+				<tr id="heading">
+				</tr>
+			</thead>
+			<tbody id="probs">
+			</tbody>
+		</table>
+		<table class="ui fixed celled table" id="table">
+		</table>
+	</div>
+	<script>
+		window.onload = buildPage();
+	</script>
+</body>

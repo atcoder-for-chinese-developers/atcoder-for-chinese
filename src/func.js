@@ -986,9 +986,9 @@ function showjoinpage() {
 /**
  * Show 'create contest' page in the contest lab.
  */
-function showcreatepage() {
-	document.getElementById("join-page").style.display = "none";
-	document.getElementById("create-page").style.display = "block";
+function showCreatePage() {
+	$("#join-page").css("display", "none");
+	$("#create-page").css("display", "block");
 }
 /**
  * Print invite code to input and clipboard.
@@ -1026,8 +1026,8 @@ function printInviteCode() {
 		return;
 	}
 	res += '"' + ed + '","problems":[';
-	let prblist = document.getElementById("get-problems").value.split(' '), scr = [];
-	if (document.getElementById("get-problems").value == "") {
+	let prblist = $("#get-problems").val().split(' '), scr = [];
+	if ($("#get-problems").val() == "") {
 		alert("没有题目");
 		return;
 	}
@@ -1066,6 +1066,7 @@ function printInviteCode() {
 	res += "]}";
 	document.getElementById("print-code").value = trans.encode(res);
 	copyToClipboard(trans.encode(res));
+	$("#getCode").popup("show");
 }
 /**
  * Build the contest page.
@@ -1096,9 +1097,10 @@ function buildContestPage() {
 		popup: $("#atcoderContestInfo"),
 		on: "hover"
 	});
+	
 	$("#getCode").popup({
 		content: "邀请码已复制到剪贴板",
-		on: "click"
+		on: "manual"
 	});
 	showjoinpage();
 }
