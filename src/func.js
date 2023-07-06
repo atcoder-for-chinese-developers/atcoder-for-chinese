@@ -186,17 +186,17 @@ function transdiff(d) {
  * @param {string} name target lab
  */
 function labToggle(name) {
-	document.getElementById("cont-tbl").style.display = "none";
-	document.getElementById("prob-archive").style.display = "none";
-	document.getElementById("cont-page").style.display = "none";
-	document.getElementById(name).style.display = "block";
+	$("#cont-tbl").css("display", "none");
+	$("#prob-archive").css("display", "none");
+	$("#cont-page").css("display", "none");
+	$("#" + name).css("display", "block");
 }
 /**
  * Toggle problem tags to show or hide.
  * @param {string} id id of the problem.
  */
 function tagToggle(id) {
-	document.getElementById("tag-" + id).setAttribute("style", document.getElementById("tag-" + id).getAttribute("style") == "display: block;" ? "display: none;" : "display: block;");
+	$("#tag-" + id).css("display", $("#tag-" + id).css("display") === "none" ? "block" : "none");
 }
 /**
  * Returns color info of the problem difficulty.
@@ -332,7 +332,7 @@ function showProbModal(cid, pid, title, op) {
 		}
 		content += "</tbody></table></div></div>";
 	}
-	document.getElementById("show-prob-list").innerHTML = content;
+	$("#show-prob-list").html(content);
 	$("#show-prob-list").modal("show");
 }
 
@@ -389,7 +389,7 @@ function initProbList() {
 function switchTable(name) {
 	const prg = (i) => "<div class='ui top attached progress' id='" + i + "' style='position: relative !important'><div class='bar' style='background-color: #fff'></div><div class='bar' style='background-color: #ffeeba'></div><div class='bar' style='background-color: #fd9'></div><div class='bar' style='background-color: #c3e6cb'></div><div class='bar' style='background-color: #9ad59e'></div><div class='bar' style='background-color: #9cf'></div></div>";
 	let prbIdx = labels[name].index, c = prbIdx.length, cnt = 0, cnte = 0, cnts = 0, cntt = 0, cnta = 0, cont = [], tbl = [], idxList = prbIdx.concat([]), data = rawd[name], cntIdx = {}, cntCont = {};
-	document.getElementById("cont-data").innerHTML = "<div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div>";
+	$("#cont-data").html("<div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div>");
 	for (let i in idxList) {
 		idxList[i] = prbIdx[i].split("/");
 		cntIdx[i] = [[0, 0, 0, 0, 0, 0], 0];
@@ -457,8 +457,8 @@ function switchTable(name) {
 	}
 	s += "</tbody>";
 	t.innerHTML = s;
-	document.getElementById("cont-data").innerHTML = "";
-	document.getElementById("cont-data").appendChild(t);
+	$("#cont-data").html("");
+	$("#cont-data").append(t);
 	for (let i = 0; i < c; i++) {
 		$("#prg-" + i).progress({
 			total: cntIdx[i][1],
@@ -501,7 +501,7 @@ function switchTable(name) {
  */
 function switchList(name) {
 	let cnt = 0, cnte = 0, cnts = 0, cntt = 0, cnta = 0, cont = [], tbl = [], data = rawd[name];
-	document.getElementById("cont-data").innerHTML = "<div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div>";
+	$("#cont-data").html("<div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div>");
 	labToggle("cont-tbl");
 	for (let i in data) {
 		cont.push(data[i]);
@@ -544,7 +544,7 @@ function switchList(name) {
 		}
 		tbl.push(prb);
 	}
-	document.getElementById("cont-data").innerHTML = "";
+	$("#cont-data").html("");
 	for (let i in cont) {
 		let cid = cont[i].id, t = document.createElement("div"), s = "";
 		t.className = "ui segment";
@@ -554,7 +554,7 @@ function switchList(name) {
 		}
 		s += "</tr></tbody></table></div></div></div>";
 		t.innerHTML = s;
-		document.getElementById("cont-data").appendChild(t);
+		$("#cont-data").append(t);
 	}
 	$("#progress-tre").progress({
 		percent: cnte / cnt * 100,
@@ -592,7 +592,7 @@ function switchList(name) {
  * @returns null
  */
 function refreshMenu(x) {
-	document.getElementById("archive-show").innerHTML = "";
+	$("#archive-show").html("");
 	let cnt = Math.floor((curProbs.length + 9) / 10), html = "", p = 0;
 	if (x < 1 || x > cnt)
 		return;
@@ -614,13 +614,13 @@ function refreshMenu(x) {
 		html += "<a class='item' onclick='refreshMenu(" + (x + 1) + ")'><i class='caret right icon'></i></a>";
 	}
 	html += "<a class='item' onclick='refreshMenu(" + cnt + ")'><i class='angle double right icon'></i></a>";
-	document.getElementById("prob-list-menu").innerHTML = html;
+	$("#prob-list-menu").html(html);
 	for (let i in curProbs) {
 		if (x * 10 - 10 <= p && p < x * 10) {
 			let t = document.createElement("tr");
 			t.innerHTML = probHTML[curProbs[i]];
 			t.style.backgroundColor = statuses[problist[curProbs[i]].stat].color;
-			document.getElementById("archive-show").appendChild(t);
+			$("#archive-show").append(t);
 		}
 		p++;
 	}
@@ -646,14 +646,14 @@ function refreshChart() {
 			type: "column",
 			events: {
 				click: function (event) {
-					let p = Math.round(event.xAxis[0].value), lv = document.getElementById("diflb").value, rv = document.getElementById("difrb").value;
+					let p = Math.round(event.xAxis[0].value), lv = $("#diflb").val(), rv = $("#difrb").val();
 					if (lv != p * 100 || rv != p * 100 + 99) {
 						lv = p * 100, rv = p * 100 + 99;
 					} else {
 						lv = rv = "";
 					}
-					document.getElementById("diflb").value = lv;
-					document.getElementById("difrb").value = rv;
+					$("#diflb").val(lv);
+					$("#difrb").val(rv);
 					setFilter();
 				}
 			}
@@ -698,14 +698,14 @@ function refreshChart() {
  * Refresh all the filter page under the constraints.
  */
 function setFilter() {
-	document.getElementById("rndprob").innerHTML = "";
-	document.getElementById("archive-show").innerHTML = "<tr><div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div></tr>";
+	$("#rndprob").html("");
+	$("#archive-show").html("<tr><div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div></tr>");
 	curProbs = [];
 	let flt = function (p) {
 		if (!$("#" + contlist[p.cid].type + "-checkbox").checkbox("is checked") || !$("#" + statuses[p.stat].name + "-checkbox").checkbox("is checked")) {
 			return 0;
 		}
-		let dl = document.getElementById("diflb").value, dr = document.getElementById("difrb").value, utg = $(".ui.dropdown").dropdown("get value");
+		let dl = $("#diflb").val(), dr = $("#difrb").val(), utg = $(".ui.dropdown").dropdown("get value");
 		dl = dl == "" || isNaN(Number(dl)) ? -10000 : Number(dl);
 		dr = dr == "" || isNaN(Number(dr)) ? 10000 : Number(dr);
 		utg = utg == '' ? 0 : utg.split(",");
@@ -774,7 +774,8 @@ function clearFilter() {
 	for (let i in statuses) {
 		$("#" + statuses[i].name + "-checkbox").checkbox("set checked");
 	}
-	document.getElementById("diflb").value = document.getElementById("difrb").value = "";
+	$("#diflb").val("");
+	$("#difrb").val("");
 	$(".ui.dropdown").dropdown("clear");
 	$("#tag-combined-or").checkbox("uncheck");
 	setSortByTime();
@@ -785,14 +786,14 @@ function clearFilter() {
  * @returns null
  */
 function getRandProblem() {
-	document.getElementById("rndprob").innerHTML = "";
+	$("#rndprob").html("");
 	if (curProbs == 0)
 		return;
 	let cnt = curProbs.length, p = Math.floor(Math.random() * cnt);
 	for (let i in curProbs) {
 		if (!p--) {
-			document.getElementById("rndprob").innerHTML = probHTML[curProbs[i]];
-			document.getElementById("rndprob").style.backgroundColor = statuses[problist[curProbs[i]].stat].color;
+			$("#rndprob").html(probHTML[curProbs[i]]);
+			$("#rndprob").css("backgroundColor", statuses[problist[curProbs[i]].stat].color);
 			break;
 		}
 	}
@@ -824,7 +825,7 @@ function buildList() {
 		t.className = "item";
 		t.setAttribute("data-value", tagList[i]);
 		t.innerHTML = tagList[i];
-		document.getElementById("tag-list").appendChild(t);
+		$("#tag-list").append(t);
 	}
 	let tLst = [];
 	for (let i in problist) {
@@ -860,8 +861,8 @@ function buildList() {
  * Import user problem statuses.
  */
 function importUser() {
-	let usrList = document.getElementById("user-name").value.split(" "), usrPrbStat = {};
-	window.localStorage.setItem("default-user-list", document.getElementById("user-name").value);
+	let usrList = $("#user-name").val().split(" "), usrPrbStat = {};
+	window.localStorage.setItem("default-user-list", $("#user-name").val());
 	for (let i in problist) {
 		problist[i].stat = 0;
 	}
@@ -963,32 +964,30 @@ function jumptobottom() {
 
 /**
  * Redirect to the individual contest page.
- * @returns null
  */
 function redr() {
-	let trans = new Base64(), invCode = document.getElementById("rev-code").value;
+	let trans = new Base64(), invCode = $("#rev-code").val();
 	try {
 		JSON.parse(trans.decode(invCode));
+		window.localStorage.setItem('inv-code', invCode);
+		window.location.href = "cont?id=" + escape(invCode);
 	} catch {
 		alert("邀请码有误");
-		return;
 	}
-	window.localStorage.setItem('inv-code', document.getElementById("rev-code").value);
-	window.location.href = "contest.html?id=" + escape(document.getElementById("rev-code").value);
 }
 /**
  * Show 'join contest' page in the contest lab.
  */
-function showjoinpage() {
-	document.getElementById("join-page").style.display = "block";
-	document.getElementById("create-page").style.display = "none";
+function showJoinPage() {
+	$("#join-page").css("display", "block");
+	$("#create-page").css("display", "none");
 }
 /**
  * Show 'create contest' page in the contest lab.
  */
 function showcreatepage() {
-	document.getElementById("join-page").style.display = "none";
-	document.getElementById("create-page").style.display = "block";
+	$("#join-page").css("display", "none");
+	$("#create-page").css("display", "block");
 }
 /**
  * Print invite code to input and clipboard.
@@ -996,7 +995,7 @@ function showcreatepage() {
  */
 function printInviteCode() {
 	let res = "", trans = new Base64();
-	res += '{"title":"' + document.getElementById("get-title").value + '","mod":';
+	res += '{"title":"' + $("#get-title").val() + '","mod":';
 	if ($("#cont-type-prac").checkbox("is checked")) {
 		res += '"practice"';
 	} else if ($("#cont-type-icpc").checkbox("is checked")) {
@@ -1008,14 +1007,14 @@ function printInviteCode() {
 		return;
 	}
 	res += ',"st":';
-	let str = document.getElementById("get-start-time").value,
+	let str = $("#get-start-time").val(),
 		time = new Date(str), st = Number(time), ed;
 	if (str == "") {
 		alert("开始时间不合法");
 		return;
 	}
 	res += '"' + st + '","ed":';
-	str = document.getElementById("get-finish-time").value;
+	str = $("#get-finish-time").val();
 	time = new Date(str), ed = Number(time);
 	if (str == "") {
 		alert("结束时间不合法");
@@ -1026,8 +1025,8 @@ function printInviteCode() {
 		return;
 	}
 	res += '"' + ed + '","problems":[';
-	let prblist = document.getElementById("get-problems").value.split(' '), scr = [];
-	if (document.getElementById("get-problems").value == "") {
+	let prblist = $("get-problems").val().split(' '), scr = [];
+	if ($("get-problems").val() == "") {
 		alert("没有题目");
 		return;
 	}
@@ -1049,8 +1048,8 @@ function printInviteCode() {
 	}
 	res = res.slice(0, res.length - 1);
 	res += '],"players":[';
-	let plylist = document.getElementById("get-players").value.split(' ');
-	if (document.getElementById("get-players").value == "") {
+	let plylist = $("#get-players").val().split(' ');
+	if ($("#get-players").val() === "") {
 		alert("没有参赛者");
 		return;
 	}
@@ -1064,7 +1063,7 @@ function printInviteCode() {
 		res += scr[i];
 	}
 	res += "]}";
-	document.getElementById("print-code").value = trans.encode(res);
+	$("#print-code").val(trans.encode(res));
 	copyToClipboard(trans.encode(res));
 }
 /**
@@ -1074,11 +1073,10 @@ function buildContestPage() {
 	let stTime = new Date(), edTime = new Date(Number(stTime) + 7200000),
 		startTime = formatDate(stTime, "yyyy-MM-ddThh:mm"),
 		finishTime = formatDate(edTime, "yyyy-MM-ddThh:mm");
-	document.getElementById("get-start-time").setAttribute("value", startTime);
-	document.getElementById("get-finish-time").setAttribute("value", finishTime);
-	let p = document.getElementById('rev-code');
-	if (window.localStorage.getItem('inv-code') != undefined)
-		p.value = window.localStorage.getItem('inv-code');
+	$("#get-start-time").val(startTime);
+	$("#get-finish-time").val(finishTime);
+	if (window.localStorage.getItem('inv-code') !== undefined)
+		$("#rev-code").val(window.localStorage.getItem('inv-code'));
 	$("#id-sample").accordion();
 	$('#getAccountInfo').popup({
 		popup: $("#accountInfo"),
@@ -1100,7 +1098,7 @@ function buildContestPage() {
 		content: "邀请码已复制到剪贴板",
 		on: "click"
 	});
-	showjoinpage();
+	showJoinPage();
 }
 /**
  * Clear datas in localStorage.
@@ -1160,8 +1158,8 @@ function buildMainPage() {
 	});
 	buildList();
 	buildContestPage();
-	showjoinpage();
-	document.getElementById("user-name").value = window.localStorage.getItem("default-user-list");
+	showJoinPage();
+	$("#user-name").val(window.localStorage.getItem("default-user-list"));
 	importUser();
 	switchTable('abc');
 }
