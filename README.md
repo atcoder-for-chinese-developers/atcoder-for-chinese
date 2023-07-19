@@ -14,17 +14,17 @@
 
 ## 临时通知
 
-11.11 更新后贡献格式有较大改变。如果只是想传题解不会对前端做出贡献的同学，可以删除在主团队内的 fork，改到 translations / solutions 仓库下。贡献格式见仓库内 README，仓库网址为：
+11.11 更新后贡献格式有较大改变。如果只是想传题解不会对前端做出贡献的同学，可以删除在主团队内的 fork，改到 translations / solutions 仓库下。贡献格式见仓库内 README，仓库地址为：
 
 <https://github.com/atcoder-for-chinese-developers/translations>
 
 <https://github.com/atcoder-for-chinese-developers/solutions>
 
-# AtCoder for Chinese
+# AtCoder for Chinese (Unofficial)
 
 Atcoder Descripution and Solution for Chinese. Now support both [web](https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/) and [script](https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B) version.
 
-# Atcoder 中文站
+# Atcoder 非官方中文站
 
 Atcoder 的中文版题解与题面。现在支持[网页版](https://atcoder-for-chinese-developers.github.io/atcoder-for-chinese/)和[插件版](https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B)。
 
@@ -87,6 +87,8 @@ Markdown 文件内写入题解/题面内容，题解没有特定格式要求。
 在根目录下 `tags.json` 中添加一项，在末尾添加一项名为 `contestId_problemId` 的数组数据，其中的值参考 [tag list](https://www.luogu.com.cn/paste/2o35avos)（右半部分，带 x 的弃用），值之间以 `,` 分隔，具体格式可参考已有的内容。
 
 建议是，不少题目有不止一种做法，可以都写上去，最大控制在 3 至 4 个。
+
+在提交翻译和题解时也可以加入标签，具体请参阅对应提交界面。
   
 
 ## 待办事项
@@ -108,9 +110,9 @@ Markdown 文件内写入题解/题面内容，题解没有特定格式要求。
 
 小项：
 
-- 支持爬取 other rated contests 和 other unrated contests。（计划）
+- ~~支持爬取 other rated contests 和 other unrated contests。（完成）~~
 
-- 筛选的表格可排序。（计划）
+- 筛选的表格可排序。（部分完成）
 
 - ~~比赛每个题有不同的分数。（完成）~~
 
@@ -122,13 +124,13 @@ Markdown 文件内写入题解/题面内容，题解没有特定格式要求。
 
 - $2022.9.27$ 爬取 ABC。
 
-- $2022.9.28$ 支持难度颜色，支持 markdown 转 html
+- $2022.9.28$ 支持难度颜色，支持 markdown 转 html。
 
 - $2022.9.29$ 支持高亮有题解、题面的题目，更新难度圆，更新了友链。
 
-- $2022.9.30$ 去除了对题目难度的静态存储，改为爬取 kenkoooo 的 api。
+- $2022.9.30$ 去除了对题目难度的静态存储，改为爬取 Kenkoooo AtCoder 的 API。
 
-- $2022.10.2$ 更新了 UI。
+- $2022.10.2$ 更新了 UI，使用 Semantic UI 支持。
 
 - $2022.10.4$ 支持了在 AT 中直接看翻译的 [插件](https://github.com/atcoder-for-chinese-developers/notwt-atcoder-for-chinese-helper)
 
@@ -154,12 +156,20 @@ Markdown 文件内写入题解/题面内容，题解没有特定格式要求。
 
 - $2022.12.28$ 加上了其他比赛的界面显示，给过长的筛选列表加了个页码。
 
+- $2023.2.19$ 确定开源协议为 [GPL-3.0](https://github.com/atcoder-for-chinese-developers/atcoder-for-chinese/blob/main/LICENSE) 。
+
+- $2023.5.5$ 重构前端主要部分。
+
+- $2023.5.17$ 在网页里添加了 Google Analytics。
+
+- $2023.7.6$ 部分重构题面显示和比赛界面。
+
 ## 友情链接
 
-- [AtCoder](https://atcoder.jp)
+- [AtCoder](https://atcoder.jp/)
 
 - [Kenkoooo AtCoder Problems](https://kenkoooo.com/atcoder/#/user/)
 
 - [Semantic UI](https://semantic-ui.com)
 
-- [Greasy Fork script](https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B)
+- [Greasy Fork script ver.](https://greasyfork.org/zh-CN/scripts/452449-atcoder-%E4%B8%AD%E6%96%87%E5%8A%A9%E6%89%8B)
