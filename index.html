@@ -50,12 +50,12 @@
 	<noscript> You need to enable JavaScript to view the page. </noscript>
 	<div class="ui main container">
 		<div id="page-top" class="display: inline;"></div>
-		<button class="circular ui icon button" onclick="jumptotop()"
+		<button class="circular ui icon button" onclick="_jumptotop()"
 			style="z-index: 999; position: fixed; right: 50; top: 50" id="button-top">
 			<i style="font-size: 1em" class="arrow up icon"> </i>
 			<p style="font-size: 10px; display: inline-block">&nbsp;到顶部</p>
 		</button>
-		<button class="circular ui icon button" onclick="jumptobottom()"
+		<button class="circular ui icon button" onclick="_jumptobottom()"
 			style="z-index: 999; position: fixed; right: 50; bottom: 80" id="button-end">
 			<i style="font-size: 1em" class="arrow down icon"> </i>
 			<p style="font-size: 10px; display: inline-block">&nbsp;到底部</p>
@@ -69,8 +69,8 @@
 			<a class="item" onclick="switchTable('abc_like')"> ABC-Like </a>
 			<a class="item" onclick="switchTable('arc_like')"> ARC-Like </a>
 			<a class="item" onclick="switchTable('agc_like')"> AGC-Like </a>
-			<a class="item" onclick="switchList('ahc')"> AHC </a>
-			<a class="item" onclick="switchList('others')"> 其他 </a>
+			<a class="item" onclick="_switchList('ahc')"> AHC </a>
+			<a class="item" onclick="_switchList('others')"> 其他 </a>
 			<a class="item" onclick="labToggle('prob-archive')"> 筛选 </a>
 			<a class="item" onclick="labToggle('cont-page')"> 比赛 </a>
 			<div class="right menu">
@@ -86,7 +86,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="item" onclick="clearStorage()" id="clear-storage">
+				<div class="item" onclick="_clearStorage()" id="clear-storage">
 					<i class="broom icon">
 					</i>
 				</div>
@@ -155,7 +155,7 @@
 				<button class="ui green basic button" onclick="clearFilter()">
 					重置
 				</button>
-				<button class="ui orange basic button" onclick="getRandProblem()">
+				<button class="ui orange basic button" onclick="_getRandProblem()">
 					随机跳题
 				</button>
 				<p></p>
@@ -174,11 +174,11 @@
 				<table class='ui fixed sortable celled table segment'>
 					<thead>
 						<tr>
-							<th onclick="setSortByTime()">编号</th>
-							<th onclick="setSortByTitle()">标题</th>
+							<th onclick="_setSortByTime()">编号</th>
+							<th onclick="_setSortByTitle()">标题</th>
 							<th>链接</th>
-							<th onclick="setSortByDiff()">难度</th>
-							<th onclick="setSortByTags()">标签</th>
+							<th onclick="_setSortByDiff()">难度</th>
+							<th onclick="_setSortByTags()">标签</th>
 						</tr>
 					</thead>
 					<tbody id="archive-show">
@@ -188,13 +188,13 @@
 		</div>
 		<div id="cont-page" style="display: none">
 			<div class="ui secondary menu">
-				<a class="item" onclick="showJoinPage()"> 参加 </a>
-				<a class="item" onclick="showCreatePage()"> 创建 </a>
+				<a class="item" onclick="_showJoinPage()"> 参加 </a>
+				<a class="item" onclick="_showCreatePage()"> 创建 </a>
 			</div>
 			<div id="join-page">
 				<div class="ui fluid input">
 					<input id="rev-code" placeholder="输入邀请码" />
-					<button class="ui button" onclick="redr()">
+					<button class="ui button" onclick="_redr()">
 						跳转到比赛界面
 					</button>
 				</div>
@@ -315,7 +315,7 @@
 				<h4 class="ui header">生成邀请码</h4>
 				<div class="ui fluid input">
 					<input id="print-code" placeholder="邀请码" />
-					<button class="ui primary button" onclick="printInviteCode()" id="getCode">
+					<button class="ui primary button" onclick="_printInviteCode()" id="getCode">
 						获取邀请码
 					</button>
 				</div>
@@ -355,6 +355,6 @@
 	</div>
 	<div id="page-end" style="display: inline"></div>
 	<script>
-		buildMainPage();
+		_buildMainPage();
 	</script>
 </body>

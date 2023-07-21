@@ -172,7 +172,14 @@ const statuses = [
 		color: "#9cf"
 	}
 ];
-let problist = [], contlist = [], rawd, traList, solList, tags = {}, prbs, tagList, probCell = {}, curProbs = [], probHTML = {}, cmp = (a, b) => problist[b].time - problist[a].time;
+let problist = [], contlist = [], rawd, traList, solList, tags = {}, prbs, tagList, probCell = {}, curProbs = [], probHTML = {};
+/**
+ * The compare function for the filtering page.
+ * @param {String} a Problem A
+ * @param {String} b Problem B
+ * @returns {Boolean} a bool result
+ */
+let cmp = (a, b) => problist[b].time - problist[a].time;
 /**
  * Transfer kenkoooo api difficulty to shown difficulty.
  * @param {number} d the difficulty from api.
@@ -303,7 +310,7 @@ function formatDate(s, fmt = "yyyy 年 MM 月 dd 日 hh 时 mm 分 ss 秒") {
 		if (/(y+)/.test(fmt)) {
 			fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").slice(4 - RegExp.$1.length));
 		}
-		for (var k in o) {
+		for (let k in o) {
 			if (new RegExp("(" + k + ")").test(fmt)) {
 				fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).slice(("" + o[k]).length)));
 			}
@@ -387,6 +394,11 @@ function initProbList() {
  * @param {string} name contest type
  */
 function switchTable(name) {
+	/**
+	 * Returns HTML of a progress showing (un)solved problems of the index
+	 * @param {String} i the problem index
+	 * @returns {String} HTML code
+	 */
 	const prg = (i) => "<div class='ui top attached progress' id='" + i + "' style='position: relative !important'><div class='bar' style='background-color: #fff'></div><div class='bar' style='background-color: #ffeeba'></div><div class='bar' style='background-color: #fd9'></div><div class='bar' style='background-color: #c3e6cb'></div><div class='bar' style='background-color: #9ad59e'></div><div class='bar' style='background-color: #9cf'></div></div>";
 	let prbIdx = labels[name].index, c = prbIdx.length, cnt = 0, cnte = 0, cnts = 0, cntt = 0, cnta = 0, cont = [], tbl = [], idxList = prbIdx.concat([]), data = rawd[name], cntIdx = {}, cntCont = {};
 	$("#cont-data").html("<div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div>");
@@ -499,7 +511,7 @@ function switchTable(name) {
  * Show problems list of a contest type.
  * @param {string} name contest type
  */
-function switchList(name) {
+function _switchList(name) {
 	let cnt = 0, cnte = 0, cnts = 0, cntt = 0, cnta = 0, cont = [], tbl = [], data = rawd[name];
 	$("#cont-data").html("<div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div>");
 	labToggle("cont-tbl");
@@ -701,8 +713,13 @@ function setFilter() {
 	$("#rndprob").html("");
 	$("#archive-show").html("<tr><div class='ui segment'><p></p><div class='ui active dimmer'><div class='ui loader'></div></div></div></tr>");
 	curProbs = [];
+	/**
+	 * Check if a problem is selected.
+	 * @param {Object} p the problem object
+	 * @returns {Boolean} true if selected
+	 */
 	let flt = function (p) {
-		if (!$("#" + contlist[p.cid].type + "-checkbox").checkbox("is checked") || !$("#" + statuses[p.stat].name + "-checkbox").checkbox("is checked")) {
+		if (!$(`#${contlist[p.cid].type}-checkbox`).checkbox("is checked") || !$("#" + statuses[p.stat].name + "-checkbox").checkbox("is checked")) {
 			return 0;
 		}
 		let dl = $("#diflb").val(), dr = $("#difrb").val(), utg = $(".ui.dropdown").dropdown("get value");
@@ -739,28 +756,28 @@ function setFilter() {
 /**
  * set menu sort by time (late to early).
  */
-function setSortByTime() {
+function _setSortByTime() {
 	cmp = (a, b) => problist[b].time - problist[a].time;
 	setFilter();
 }
 /**
  * set menu sort by title (lexicographically small to large).
  */
-function setSortByTitle() {
+function _setSortByTitle() {
 	cmp = (a, b) => problist[a].title.localeCompare(problist[b].title);
 	setFilter();
 }
 /**
  * set menu sort by difficulty (hard to easy).
  */
-function setSortByDiff() {
+function _setSortByDiff() {
 	cmp = (a, b) => problist[b].diff - problist[a].diff;
 	setFilter();
 }
 /**
  * set menu sort by tags (many to few/none).
  */
-function setSortByTags() {
+function _setSortByTags() {
 	cmp = (a, b) => problist[b].tag.length - problist[a].tag.length;
 	setFilter();
 }
@@ -785,7 +802,7 @@ function clearFilter() {
  * Get a random problem from the selected problems.
  * @returns null
  */
-function getRandProblem() {
+function _getRandProblem() {
 	$("#rndprob").html("");
 	if (curProbs == 0)
 		return;
@@ -867,6 +884,9 @@ function importUser() {
 		problist[i].stat = 0;
 	}
 	$("#sub-fetch-prog").progress("reset");
+	/**
+	 * Recording the users' submission.
+	 */
 	let recordUserSub = function (i, lst) {
 		window.localStorage.setItem("prob-stat-" + usrList[i], JSON.stringify({
 			lastFetchTime: lst,
@@ -880,7 +900,11 @@ function importUser() {
 		$("#sub-fetch-prog").progress({
 			percent: (i + 1) / usrList.length * 100
 		});
-	}, fetchUserSub = function (i, lst, f) {
+	};
+	/**
+	 * Fetch the users' submission.
+	 */
+	let fetchUserSub = function (i, lst, f) {
 		if (i >= usrList.length) {
 			setFilter();
 			switchTable("abc");
@@ -946,7 +970,7 @@ function importUser() {
 /** 
  * Jump to the top of the page.
  */
-function jumptotop() {
+function _jumptotop() {
 	window.scrollTo({
 		top: 0,
 		behavior: "smooth"
@@ -955,7 +979,7 @@ function jumptotop() {
 /**
  * Jump to the buttom of the page.
  */
-function jumptobottom() {
+function _jumptobottom() {
 	window.scrollTo({
 		top: $("#page-end").offset().top,
 		behavior: "smooth"
@@ -965,7 +989,7 @@ function jumptobottom() {
 /**
  * Redirect to the individual contest page.
  */
-function redr() {
+function _redr() {
 	let trans = new Base64(), invCode = $("#rev-code").val();
 	try {
 		JSON.parse(trans.decode(invCode));
@@ -978,14 +1002,14 @@ function redr() {
 /**
  * Show 'join contest' page in the contest lab.
  */
-function showJoinPage() {
+function _showJoinPage() {
 	$("#join-page").css("display", "block");
 	$("#create-page").css("display", "none");
 }
 /**
  * Show 'create contest' page in the contest lab.
  */
-function showCreatePage() {
+function _showCreatePage() {
 	$("#join-page").css("display", "none");
 	$("#create-page").css("display", "block");
 }
@@ -993,7 +1017,7 @@ function showCreatePage() {
  * Print invite code to input and clipboard.
  * @returns null
  */
-function printInviteCode() {
+function _printInviteCode() {
 	let res = "", trans = new Base64();
 	res += '{"title":"' + $("#get-title").val() + '","mod":';
 	if ($("#cont-type-prac").checkbox("is checked")) {
@@ -1105,14 +1129,14 @@ function buildContestPage() {
 /**
  * Clear datas in localStorage.
  */
-function clearStorage() {
+function _clearStorage() {
 	window.localStorage.clear();
 	location.reload();
 }
 /** 
  * Main function. Build the site.
 */
-function buildMainPage() {
+function _buildMainPage() {
 	$("#clear-storage").popup({
 		content: "在每次版本更新后，单击此键清空本地缓存用户数据",
 		on: "hover"

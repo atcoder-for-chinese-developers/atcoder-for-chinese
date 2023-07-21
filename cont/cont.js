@@ -116,7 +116,7 @@ function showlist() {
 /**
  * Show ranking table in current page.
  */
-function showtable() {
+function _showtable() {
 	$("#list").css("display", "none");
 	$("#table").css("display", "none");
 	let cur = new Date();
@@ -189,7 +189,7 @@ function getpercent() {
  * Refresh the timing.
  */
 function refreshtime() {
-	let cur = new Date(), tst = (Number(beg) - Number(cur)) / 1000., rem = (Number(end) - Number(cur)) / 1000.;
+	let cur = new Date(), tst = (Number(beg) - Number(cur)) / 1000, rem = (Number(end) - Number(cur)) / 1000;
 	if (tst > 0)
 		rem = tst;
 	let da = Math.floor(rem / 86400), ho = Math.floor(rem % 86400 / 3600), mi = Math.floor(rem % 3600 / 60), se = rem % 60;
@@ -204,6 +204,12 @@ function refreshtime() {
  * Refresh the ranking table.
  */
 function rankfresh(data) {
+	/**
+	 * Returns number x with leading zero if x<10.
+	 * @param {Number} x 
+	 * @returns {String}
+	 */
+	const z2 = x => String(x).padStart(2, '0');
 	beg = Number(data.st), end = Number(data.ed);
 	let subs = {}, acc = [], ple = [], id = [], hascf = 0, extp = [], cfid = [];
 	for (let i = 0; i < data.players.length; i++)
@@ -216,8 +222,8 @@ function rankfresh(data) {
 			data.players[i] = li[0], cfid.push(li[1].substr(0, li[1].length - 1));
 		else cfid.push(data.players[i]);
 	}
-	new Promise(function(resolve, reject){
-		!function(i) {
+	new Promise(function () {
+		!(function (i) {
 			if (i === data.players.length) {
 				return;
 			}
@@ -242,7 +248,7 @@ function rankfresh(data) {
 				let c = sub[t];
 				if (Number(c.epoch_second) * 1000 >= end)
 					continue;
-				for (var j = 0; j < data.problems.length; j++)
+				for (let j = 0; j < data.problems.length; j++)
 					if (c.problem_id == data.problems[j]) {
 						if (c.result == 'AC') {
 							subs[i].wj = 0;
@@ -256,7 +262,7 @@ function rankfresh(data) {
 								subs[i].pl[data.problems[j]] = 0;
 							if (data.mod == undefined || data.mod == "ICPC") ple[i] += (c.epoch_second * 1000 - beg) / 1000;
 							else if (data.mod == "atcoder") ple[i] = Math.max(ple[i], (c.epoch_second * 1000 - beg) / 1000);
-						} else if (47 < c.result[0] || c.result[0] < 58 || c.result == 'WJ') {
+						} else if (c.result[0] > 47 || c.result[0] < 58 || c.result == 'WJ') {
 							subs[i].wj = 1;
 						} else if (c.result != 'CE') {
 							subs[i].wj = 0;
@@ -301,16 +307,10 @@ function rankfresh(data) {
 				}
 			}
 			setTimeout(arguments.callee(i + 1), 1000);
-		}(0);
-	}).then(!function() {
-		function getp(x) { return ple[x] + extp[x]; }
-		id.sort(function (a, b) {
-			if (acc[a] == acc[b]) {
-				return getp(a) - getp(b);
-			}
-			else
-				return acc[b] - acc[a]
-		})
+		}(0));
+	}).then((function () {
+		const getp = x => ple[x] + extp[x];
+		id.sort((a, b) => acc[a] == acc[b] ? getp(a) - getp(b) : acc[b] - acc[a])
 		let res = '<thead><tr><th>选手列表</th>';
 		if (data.mod === 'atcoder') res += '<th>分数</th>';
 		else res += '<th>过题数</th>';
@@ -339,9 +339,6 @@ function rankfresh(data) {
 			res += '<tr><td>(' + (t + 1) + ') <a href=\"https://atcoder.jp/users/' + data.players[i] + "\">" + data.players[i] + '</a></td>';
 			let dr = Math.floor(getp(i)), hours = Math.floor(dr / 3600), minu = Math.floor(dr % 3600 / 60), seco = dr % 60;
 			res += '<td> ' + acc[i] + '</td>';
-			function z2(x) {
-				return String(x).padStart(2, '0');
-			}
 			if (data.mod === undefined || data.mod != "practice") res += '<td> ' + z2(hours) + ':' + z2(minu) + ':' + z2(seco) + '</td>';
 			for (let j = 0; j < data.problems.length; j++) {
 				if (subs[i].wj[data.problems[j]] == 1) {
@@ -366,14 +363,14 @@ function rankfresh(data) {
 		}
 		res += '<tbody>';
 		$("#table").html(res);
-	}());
+	}()));
 }
 
+let data;
 /**
  * Main function. Build the contest page.
  */
-var data;
-function buildPage() {
+function _buildPage() {
 	let s = window.location.href, trans = new Base64();
 	while (s.match('%22') !== null)
 		s = s.replace('%22', '"');
@@ -399,7 +396,7 @@ function buildPage() {
 		if (data.problems[i].substr(0, 2) !== 'CF')
 			t.innerHTML = '<tr><td>' + (Number(i) + 1) + '</td>' + ext + '<td><a href="https://atcoder.jp/contests/' + con + '/tasks/' + data.problems[i] + '">' + data.problems[i] + '</a></td></tr>';
 		else {
-			let c = data.problems[i].substr(2), p, q, pos = 0;
+			let c = data.problems[i].substr(2), pos = 0;
 			for (let j = 0; j < c.length; j++)
 				if (c[j] >= 'A') {
 					pos = j;

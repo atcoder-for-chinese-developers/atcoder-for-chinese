@@ -54,7 +54,7 @@ function getProbName_u() {
  */
 function getProbLink() {
 	let w = getProbName();
-	return "https://atcoder.jp/contests/" + w.split("_")[0] + "/tasks/" + w;
+	return `https://atcoder.jp/contests/${w.split("_")[0]}/tasks/${w}`;
 }
 /**
  * Get the title of the page.
@@ -141,8 +141,8 @@ function transdiff(d) {
  * Toggle problem tags to show or hide.
  */
 function tagToggle() {
-	document.getElementById("tags").style.position = "relative";
-	document.getElementById("tags").style.display == document.getElementById("tags").style.display == "none" ? "inline-block" : "none";
+	$("#tags").css("position", "relative");
+	$("#tags").css("display", $("#tags").css("display") == "none" ? "inline-block" : "none");
 }
 
 /**
@@ -183,7 +183,7 @@ function buildPage(content) {
 	});
 	readTextFile("../tags.json", "json", function (txt, sta) {
 		if (sta == "200") {
-			let tmp = JSON.parse(txt), str = getProbName_u(escape(window.location.href));
+			let tmp = JSON.parse(txt), str = getProbName_u();
 			if (str in tmp)
 				tg = tmp[str];
 		} else {
@@ -193,7 +193,7 @@ function buildPage(content) {
 	});
 	readTextFile("https://atcoder-for-chinese-developers.github.io/translations/list.json", "json", function (txt, sta) {
 		if (sta == "200") {
-			let tmp = JSON.parse(txt).data, cnt = getContName(escape(window.location.href)), prb = getProbName(escape(window.location.href));
+			let tmp = JSON.parse(txt).data, cnt = getContName(), prb = getProbName();
 			if (cnt in tmp && prb in tmp[cnt]) {
 				for (let i in tmp[cnt][prb]) {
 					let tt = tmp[cnt][prb][i].tags;
@@ -207,7 +207,7 @@ function buildPage(content) {
 	});
 	readTextFile("https://atcoder-for-chinese-developers.github.io/solutions/list.json", "json", function (txt, sta) {
 		if (sta == "200") {
-			let tmp = JSON.parse(txt).data, cnt = getContName(escape(window.location.href)), prb = getProbName(escape(window.location.href));
+			let tmp = JSON.parse(txt).data, cnt = getContName(), prb = getProbName();
 			if (cnt in tmp && prb in tmp[cnt]) {
 				for (let i in tmp[cnt][prb]) {
 					let tt = tmp[cnt][prb][i].tags;
@@ -219,7 +219,7 @@ function buildPage(content) {
 			return;
 		}
 	});
-	document.getElementById("tags").innerHTML = "";
+	$("#tags").html("");
 	if (tg.length > 0) {
 		for (let i = 0; i < tg.length; i++) {
 			let t = document.createElement("span");
@@ -235,10 +235,10 @@ function buildPage(content) {
 	}
 	document.getElementsByClassName("hidden content")[0].innerHTML = getProbName_u().replace("_", "");
 	document.getElementsByClassName("mdpagetop title")[0].innerHTML = getTitle();
-	document.getElementById("content").innerHTML = content;
+	$("#content").html(content);
 };
 
-!function () {
+!(function () {
 	document.title = getTitle();
 	let lnk = escape(window.location.href), pos = lnk.indexOf("%3Fpage%3D") + 10, name = lnk.slice(pos);
 	if (name[0] == 'T') {
@@ -262,4 +262,4 @@ function buildPage(content) {
 			}
 		});
 	}
-}();
+}());
