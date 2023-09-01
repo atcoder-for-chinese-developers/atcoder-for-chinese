@@ -1124,7 +1124,7 @@ function buildContestPage() {
 		content: "邀请码已复制到剪贴板",
 		on: "manual"
 	});
-	showJoinPage();
+	_showJoinPage();
 }
 /**
  * Clear datas in localStorage.
@@ -1184,7 +1184,7 @@ function _buildMainPage() {
 	});
 	buildList();
 	buildContestPage();
-	showJoinPage();
+	_showJoinPage();
 	$("#user-name").val(window.localStorage.getItem("default-user-list"));
 	importUser();
 	switchTable('abc');
