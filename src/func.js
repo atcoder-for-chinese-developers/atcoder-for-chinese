@@ -795,7 +795,7 @@ function clearFilter() {
 	$("#difrb").val("");
 	$(".ui.dropdown").dropdown("clear");
 	$("#tag-combined-or").checkbox("uncheck");
-	setSortByTime();
+	_setSortByTime();
 	setFilter();
 }
 /**
